@@ -1,0 +1,674 @@
+[
+  {
+    "year": "2024",
+    "country": "Switzerland",
+    "artist": "Nemo",
+    "title": "The Code",
+    "audio": "audio/2024_Switzerland_Nemo_The_Code.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Croatia",
+    "artist": "Baby Lasagna",
+    "title": "Rim Tim Tagi Dim",
+    "audio": "audio/2024_Croatia_Baby_Lasagna_Rim_Tim_Tagi_Dim.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Ukraine",
+    "artist": "alyona alyona & Jerry Heil",
+    "title": "Teresa & Maria",
+    "audio": "audio/2024_Ukraine_alyona_alyona_&_Jerry_Heil_Teresa_&_Maria.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "France",
+    "artist": "Slimane",
+    "title": "Mon amour",
+    "audio": "audio/2024_France_Slimane_Mon_amour.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Ireland",
+    "artist": "Bambie Thug",
+    "title": "Doomsday Blue",
+    "audio": "audio/2024_Ireland_Bambie_Thug_Doomsday_Blue.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Italy",
+    "artist": "Angelina Mango",
+    "title": "La noia",
+    "audio": "audio/2024_Italy_Angelina_Mango_La_noia.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Armenia",
+    "artist": "Ladaniva",
+    "title": "Jako",
+    "audio": "audio/2024_Armenia_Ladaniva_Jako.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Sweden",
+    "artist": "Marcus & Martinus",
+    "title": "Unforgettable",
+    "audio": "audio/2024_Sweden_Marcus_&_Martinus_Unforgettable.mp3"
+  },
+  {
+    "year": "2024",
+    "country": "Portugal",
+    "artist": "iolanda",
+    "title": "Grito",
+    "audio": "audio/2024_Portugal_iolanda_Grito.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Sweden",
+    "artist": "Loreen",
+    "title": "Tattoo",
+    "audio": "audio/2023_Sweden_Loreen_Tattoo.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Finland",
+    "artist": "K\u00e4\u00e4rij\u00e4",
+    "title": "Cha Cha Cha",
+    "audio": "audio/2023_Finland_K\u00e4\u00e4rij\u00e4_Cha_Cha_Cha.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Israel",
+    "artist": "Noa Kirel",
+    "title": "Unicorn",
+    "audio": "audio/2023_Israel_Noa_Kirel_Unicorn.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Italy",
+    "artist": "Marco Mengoni",
+    "title": "Due vite",
+    "audio": "audio/2023_Italy_Marco_Mengoni_Due_vite.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Norway",
+    "artist": "Alessandra",
+    "title": "Queen of Kings",
+    "audio": "audio/2023_Norway_Alessandra_Queen_of_Kings.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Ukraine",
+    "artist": "Tvorchi",
+    "title": "Heart of Steel",
+    "audio": "audio/2023_Ukraine_Tvorchi_Heart_of_Steel.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Belgium",
+    "artist": "Gustaph",
+    "title": "Because of You",
+    "audio": "audio/2023_Belgium_Gustaph_Because_of_You.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Estonia",
+    "artist": "Alika",
+    "title": "Bridges",
+    "audio": "audio/2023_Estonia_Alika_Bridges.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Australia",
+    "artist": "Voyager",
+    "title": "Promise",
+    "audio": "audio/2023_Australia_Voyager_Promise.mp3"
+  },
+  {
+    "year": "2023",
+    "country": "Czechia",
+    "artist": "Vesna",
+    "title": "My Sister's Crown",
+    "audio": "audio/2023_Czechia_Vesna_My_Sister's_Crown.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Ukraine",
+    "artist": "Kalush Orchestra",
+    "title": "Stefania",
+    "audio": "audio/2022_Ukraine_Kalush_Orchestra_Stefania.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "United Kingdom",
+    "artist": "Sam Ryder",
+    "title": "Space Man",
+    "audio": "audio/2022_United_Kingdom_Sam_Ryder_Space_Man.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Spain",
+    "artist": "Chanel",
+    "title": "SloMo",
+    "audio": "audio/2022_Spain_Chanel_SloMo.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Sweden",
+    "artist": "Cornelia Jakobs",
+    "title": "Hold Me Closer",
+    "audio": "audio/2022_Sweden_Cornelia_Jakobs_Hold_Me_Closer.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Serbia",
+    "artist": "Konstrakta",
+    "title": "In corpore sano",
+    "audio": "audio/2022_Serbia_Konstrakta_In_corpore_sano.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Italy",
+    "artist": "Mahmood & Blanco",
+    "title": "Brividi",
+    "audio": "audio/2022_Italy_Mahmood_&_Blanco_Brividi.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Moldova",
+    "artist": "Zdob \u0219i Zdub & Advahov Brothers",
+    "title": "Trenule\u021bul",
+    "audio": "audio/2022_Moldova_Zdob_\u0219i_Zdub_&_Advahov_Brothers_Trenule\u021bul.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Greece",
+    "artist": "Amanda Georgiadi Tenfjord",
+    "title": "Die Together",
+    "audio": "audio/2022_Greece_Amanda_Georgiadi_Tenfjord_Die_Together.mp3"
+  },
+  {
+    "year": "2022",
+    "country": "Portugal",
+    "artist": "Maro",
+    "title": "Saudade, saudade",
+    "audio": "audio/2022_Portugal_Maro_Saudade,_saudade.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Italy",
+    "artist": "M\u00e5neskin",
+    "title": "Zitti e buoni",
+    "audio": "audio/2021_Italy_M\u00e5neskin_Zitti_e_buoni.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "France",
+    "artist": "Barbara Pravi",
+    "title": "Voil\u00e0",
+    "audio": "audio/2021_France_Barbara_Pravi_Voil\u00e0.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Switzerland",
+    "artist": "Gjon's Tears",
+    "title": "Tout l'univers",
+    "audio": "audio/2021_Switzerland_Gjon's_Tears_Tout_l'univers.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Ukraine",
+    "artist": "Go_A",
+    "title": "Shum",
+    "audio": "audio/2021_Ukraine_Go_A_Shum.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Malta",
+    "artist": "Destiny",
+    "title": "Je Me Casse",
+    "audio": "audio/2021_Malta_Destiny_Je_Me_Casse.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Lithuania",
+    "artist": "The Roop",
+    "title": "Discoteque",
+    "audio": "audio/2021_Lithuania_The_Roop_Discoteque.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Russia",
+    "artist": "Manizha",
+    "title": "Russian Woman",
+    "audio": "audio/2021_Russia_Manizha_Russian_Woman.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Greece",
+    "artist": "Stefania",
+    "title": "Last Dance",
+    "audio": "audio/2021_Greece_Stefania_Last_Dance.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Netherlands",
+    "artist": "Duncan Laurence",
+    "title": "Arcade",
+    "audio": "audio/2019_Netherlands_Duncan_Laurence_Arcade.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Italy",
+    "artist": "Mahmood",
+    "title": "Soldi",
+    "audio": "audio/2019_Italy_Mahmood_Soldi.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Russia",
+    "artist": "Sergey Lazarev",
+    "title": "Scream",
+    "audio": "audio/2019_Russia_Sergey_Lazarev_Scream.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Switzerland",
+    "artist": "Luca H\u00e4nni",
+    "title": "She Got Me",
+    "audio": "audio/2019_Switzerland_Luca_H\u00e4nni_She_Got_Me.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Sweden",
+    "artist": "John Lundvik",
+    "title": "Too Late for Love",
+    "audio": "audio/2019_Sweden_John_Lundvik_Too_Late_for_Love.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Norway",
+    "artist": "KEiiNO",
+    "title": "Spirit in the Sky",
+    "audio": "audio/2019_Norway_KEiiNO_Spirit_in_the_Sky.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "North Macedonia",
+    "artist": "Tamara Todevska",
+    "title": "Proud",
+    "audio": "audio/2019_North_Macedonia_Tamara_Todevska_Proud.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Azerbaijan",
+    "artist": "Chingiz",
+    "title": "Truth",
+    "audio": "audio/2019_Azerbaijan_Chingiz_Truth.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Australia",
+    "artist": "Kate Miller-Heidke",
+    "title": "Zero Gravity",
+    "audio": "audio/2019_Australia_Kate_Miller-Heidke_Zero_Gravity.mp3"
+  },
+  {
+    "year": "2019",
+    "country": "Iceland",
+    "artist": "Hatari",
+    "title": "Hatri\u00f0 mun sigra",
+    "audio": "audio/2019_Iceland_Hatari_Hatri\u00f0_mun_sigra.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Israel",
+    "artist": "Netta",
+    "title": "Toy",
+    "audio": "audio/2018_Israel_Netta_Toy.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Cyprus",
+    "artist": "Eleni Foureira",
+    "title": "Fuego",
+    "audio": "audio/2018_Cyprus_Eleni_Foureira_Fuego.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Austria",
+    "artist": "Ces\u00e1r Sampson",
+    "title": "Nobody But You",
+    "audio": "audio/2018_Austria_Ces\u00e1r_Sampson_Nobody_But_You.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Germany",
+    "artist": "Michael Schulte",
+    "title": "You Let Me Walk Alone",
+    "audio": "audio/2018_Germany_Michael_Schulte_You_Let_Me_Walk_Alone.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Italy",
+    "artist": "Ermal Meta & Fabrizio Moro",
+    "title": "Non mi avete fatto niente",
+    "audio": "audio/2018_Italy_Ermal_Meta_&_Fabrizio_Moro_Non_mi_avete_fatto_niente.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Czechia",
+    "artist": "Mikolas Josef",
+    "title": "Lie to Me",
+    "audio": "audio/2018_Czechia_Mikolas_Josef_Lie_to_Me.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Sweden",
+    "artist": "Benjamin Ingrosso",
+    "title": "Dance You Off",
+    "audio": "audio/2018_Sweden_Benjamin_Ingrosso_Dance_You_Off.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Estonia",
+    "artist": "Elina Nechayeva",
+    "title": "La forza",
+    "audio": "audio/2018_Estonia_Elina_Nechayeva_La_forza.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Denmark",
+    "artist": "Rasmussen",
+    "title": "Higher Ground",
+    "audio": "audio/2018_Denmark_Rasmussen_Higher_Ground.mp3"
+  },
+  {
+    "year": "2018",
+    "country": "Moldova",
+    "artist": "DoReDos",
+    "title": "My Lucky Day",
+    "audio": "audio/2018_Moldova_DoReDos_My_Lucky_Day.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Portugal",
+    "artist": "Salvador Sobral",
+    "title": "Amar pelos dois",
+    "audio": "audio/2017_Portugal_Salvador_Sobral_Amar_pelos_dois.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Bulgaria",
+    "artist": "Kristian Kostov",
+    "title": "Beautiful Mess",
+    "audio": "audio/2017_Bulgaria_Kristian_Kostov_Beautiful_Mess.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Moldova",
+    "artist": "Sunstroke Project",
+    "title": "Hey, Mamma!",
+    "audio": "audio/2017_Moldova_Sunstroke_Project_Hey,_Mamma!.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Belgium",
+    "artist": "Blanche",
+    "title": "City Lights",
+    "audio": "audio/2017_Belgium_Blanche_City_Lights.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Sweden",
+    "artist": "Robin Bengtsson",
+    "title": "I Can't Go On",
+    "audio": "audio/2017_Sweden_Robin_Bengtsson_I_Can't_Go_On.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Italy",
+    "artist": "Francesco Gabbani",
+    "title": "Occidentali's Karma",
+    "audio": "audio/2017_Italy_Francesco_Gabbani_Occidentali's_Karma.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Romania",
+    "artist": "Ilinca ft. Alex Florea",
+    "title": "Yodel It!",
+    "audio": "audio/2017_Romania_Ilinca_ft._Alex_Florea_Yodel_It!.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Hungary",
+    "artist": "Joci P\u00e1pai",
+    "title": "Origo",
+    "audio": "audio/2017_Hungary_Joci_P\u00e1pai_Origo.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Australia",
+    "artist": "Isaiah",
+    "title": "Don't Come Easy",
+    "audio": "audio/2017_Australia_Isaiah_Don't_Come_Easy.mp3"
+  },
+  {
+    "year": "2017",
+    "country": "Norway",
+    "artist": "JOWST",
+    "title": "Grab the Moment",
+    "audio": "audio/2017_Norway_JOWST_Grab_the_Moment.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Ukraine",
+    "artist": "Jamala",
+    "title": "1944",
+    "audio": "audio/2016_Ukraine_Jamala_1944.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Australia",
+    "artist": "Dami Im",
+    "title": "Sound of Silence",
+    "audio": "audio/2016_Australia_Dami_Im_Sound_of_Silence.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Russia",
+    "artist": "Sergey Lazarev",
+    "title": "You Are the Only One",
+    "audio": "audio/2016_Russia_Sergey_Lazarev_You_Are_the_Only_One.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Bulgaria",
+    "artist": "Poli Genova",
+    "title": "If Love Was a Crime",
+    "audio": "audio/2016_Bulgaria_Poli_Genova_If_Love_Was_a_Crime.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Sweden",
+    "artist": "Frans",
+    "title": "If I Were Sorry",
+    "audio": "audio/2016_Sweden_Frans_If_I_Were_Sorry.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "France",
+    "artist": "Amir",
+    "title": "J'ai cherch\u00e9",
+    "audio": "audio/2016_France_Amir_J'ai_cherch\u00e9.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Armenia",
+    "artist": "Iveta Mukuchyan",
+    "title": "LoveWave",
+    "audio": "audio/2016_Armenia_Iveta_Mukuchyan_LoveWave.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Poland",
+    "artist": "Micha\u0142 Szpak",
+    "title": "Color of Your Life",
+    "audio": "audio/2016_Poland_Micha\u0142_Szpak_Color_of_Your_Life.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Lithuania",
+    "artist": "Donny Montell",
+    "title": "I've Been Waiting for This Night",
+    "audio": "audio/2016_Lithuania_Donny_Montell_I've_Been_Waiting_for_This_Night.mp3"
+  },
+  {
+    "year": "2016",
+    "country": "Belgium",
+    "artist": "Laura Tesoro",
+    "title": "What's the Pressure",
+    "audio": "audio/2016_Belgium_Laura_Tesoro_What's_the_Pressure.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Sweden",
+    "artist": "M\u00e5ns Zelmerl\u00f6w",
+    "title": "Heroes",
+    "audio": "audio/2015_Sweden_M\u00e5ns_Zelmerl\u00f6w_Heroes.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Russia",
+    "artist": "Polina Gagarina",
+    "title": "A Million Voices",
+    "audio": "audio/2015_Russia_Polina_Gagarina_A_Million_Voices.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Italy",
+    "artist": "Il Volo",
+    "title": "Grande amore",
+    "audio": "audio/2015_Italy_Il_Volo_Grande_amore.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Belgium",
+    "artist": "Lo\u00efc Nottet",
+    "title": "Rhythm Inside",
+    "audio": "audio/2015_Belgium_Lo\u00efc_Nottet_Rhythm_Inside.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Australia",
+    "artist": "Guy Sebastian",
+    "title": "Tonight Again",
+    "audio": "audio/2015_Australia_Guy_Sebastian_Tonight_Again.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Latvia",
+    "artist": "Aminata",
+    "title": "Love Injected",
+    "audio": "audio/2015_Latvia_Aminata_Love_Injected.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Estonia",
+    "artist": "Elina Born & Stig R\u00e4sta",
+    "title": "Goodbye to Yesterday",
+    "audio": "audio/2015_Estonia_Elina_Born_&_Stig_R\u00e4sta_Goodbye_to_Yesterday.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Norway",
+    "artist": "M\u00f8rland & Debrah Scarlett",
+    "title": "A Monster Like Me",
+    "audio": "audio/2015_Norway_M\u00f8rland_&_Debrah_Scarlett_A_Monster_Like_Me.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Israel",
+    "artist": "Nadav Guedj",
+    "title": "Golden Boy",
+    "audio": "audio/2015_Israel_Nadav_Guedj_Golden_Boy.mp3"
+  },
+  {
+    "year": "2015",
+    "country": "Serbia",
+    "artist": "Bojana Stamenov",
+    "title": "Beauty Never Lies",
+    "audio": "audio/2015_Serbia_Bojana_Stamenov_Beauty_Never_Lies.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Austria",
+    "artist": "Conchita Wurst",
+    "title": "Rise Like a Phoenix",
+    "audio": "audio/2014_Austria_Conchita_Wurst_Rise_Like_a_Phoenix.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Netherlands",
+    "artist": "The Common Linnets",
+    "title": "Calm After the Storm",
+    "audio": "audio/2014_Netherlands_The_Common_Linnets_Calm_After_the_Storm.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Sweden",
+    "artist": "Sanna Nielsen",
+    "title": "Undo",
+    "audio": "audio/2014_Sweden_Sanna_Nielsen_Undo.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Armenia",
+    "artist": "Aram MP3",
+    "title": "Not Alone",
+    "audio": "audio/2014_Armenia_Aram_MP3_Not_Alone.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Hungary",
+    "artist": "Andr\u00e1s K\u00e1llay-Saunders",
+    "title": "Running",
+    "audio": "audio/2014_Hungary_Andr\u00e1s_K\u00e1llay-Saunders_Running.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Ukraine",
+    "artist": "Mariya Yaremchuk",
+    "title": "Tick-Tock",
+    "audio": "audio/2014_Ukraine_Mariya_Yaremchuk_Tick-Tock.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Russia",
+    "artist": "Tolmachevy Sisters",
+    "title": "Shine",
+    "audio": "audio/2014_Russia_Tolmachevy_Sisters_Shine.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Norway",
+    "artist": "Carl Espen",
+    "title": "Silent Storm",
+    "audio": "audio/2014_Norway_Carl_Espen_Silent_Storm.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Denmark",
+    "artist": "Basim",
+    "title": "Cliche Love Song",
+    "audio": "audio/2014_Denmark_Basim_Cliche_Love_Song.mp3"
+  },
+  {
+    "year": "2014",
+    "country": "Spain",
+    "artist": "Ruth Lorenzo",
+    "title": "Dancing in the Rain",
+    "audio": "audio/2014_Spain_Ruth_Lorenzo_Dancing_in_the_Rain.mp3"
+  }
+]

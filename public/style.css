@@ -1,0 +1,414 @@
+:root {
+    --bg-gradient: linear-gradient(135deg, #1a0b2e 0%, #121212 100%);
+    --text-color: #ffffff;
+    --text-secondary: #cccccc;
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --accent-pink: #ff0055;
+    --accent-cyan: #00e5ff;
+    --accent-glow: rgba(255, 0, 85, 0.5);
+    --success-color: #00ff66;
+    --error-color: #ff3333;
+}
+
+body {
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    min-height: 100vh;
+    background-attachment: fixed;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+h1 {
+    font-weight: 900;
+    font-size: 2rem;
+    background: linear-gradient(to right, var(--accent-pink), var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+.stats {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 15px;
+}
+
+.stats b {
+    color: var(--text-color);
+}
+
+/* Current Card Area */
+.current-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Vinyl Animation */
+.vinyl-icon {
+    font-size: 4rem;
+    filter: drop-shadow(0 0 10px var(--accent-glow));
+    transition: transform 0.5s ease;
+}
+
+.playing .vinyl-icon {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.current-card-container .card {
+    transform: scale(1.05);
+    border: 1px solid var(--accent-pink);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--accent-pink), #ff4081);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.instruction {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* Timeline */
+.timeline-container {
+    padding: 10px 0;
+    position: relative;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding-bottom: 40px;
+}
+
+/* Card Styles */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card.placed {
+    border-left: 6px solid var(--accent-cyan);
+}
+
+.card h3 {
+    margin: 5px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.card p {
+    margin: 2px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.card .year-badge {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--accent-cyan);
+    display: block;
+    margin-bottom: 8px;
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    letter-spacing: -1px;
+}
+
+/* Slot Styles */
+.slot {
+    width: 100%;
+    max-width: 340px;
+    height: 50px;
+    margin: 8px 0;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 700;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.slot:hover {
+    background: rgba(255, 0, 85, 0.1);
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+}
+
+.slot::before {
+    content: "⬇";
+    transition: opacity 0.2s;
+}
+
+.slot:hover::before {
+    content: "⬇ PLACE HERE ⬇";
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.modal.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: #1e1e1e;
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    width: 300px;
+}
+
+.modal-content h2 {
+    color: var(--accent-pink);
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* Main Menu & Leaderboard */
+.view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+}
+
+.view.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.menu-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Country Game */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 20px;
+}
+
+.country-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.country-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
+}
+
+.country-btn.correct {
+    background: rgba(0, 255, 102, 0.2);
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.country-btn.wrong {
+    background: rgba(255, 51, 51, 0.2);
+    border-color: var(--error-color);
+    color: var(--error-color);
+    opacity: 0.6;
+}
+
+/* Leaderboard */
+.leaderboard-list {
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+    text-align: left;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-item:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-item .rank {
+    color: var(--accent-cyan);
+    font-weight: bold;
+    width: 30px;
+}
+
+.leaderboard-item .score {
+    color: var(--accent-pink);
+    font-weight: bold;
+}
+
+/* Input for Name */
+#player-name {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    width: 80%;
+    text-align: center;
+}

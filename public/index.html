@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESC Hitster</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>ESC Hitster</h1>
+            <div class="stats" id="game-stats">
+                <span>Score: <b id="score">0</b></span>
+                <span>Lives: <b id="lives">3</b></span>
+            </div>
+        </header>
+
+        <!-- MAIN MENU -->
+        <div id="view-menu" class="view">
+            <div class="menu-card">
+                <h2>Select Game Mode</h2>
+                <button id="btn-mode-timeline" class="btn-primary full-width">📅 Timeline Mode</button>
+                <button id="btn-mode-country" class="btn-primary full-width">🌍 Country Mode</button>
+                <button id="btn-view-leaderboard" class="btn-secondary full-width">🏆 Leaderboard</button>
+            </div>
+        </div>
+
+        <!-- TIMELINE GAME -->
+        <div id="view-timeline" class="view hidden">
+            <div class="current-card-container">
+                <div id="current-card" class="card unknown">
+                    <div class="card-content">
+                        <div class="vinyl-icon">🎵</div>
+                        <h3>???</h3>
+                        <p>Artist: <span id="current-artist">???</span></p>
+                        <p>Title: <span id="current-title">???</span></p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="play-btn" class="btn-primary">▶ Play Snippet</button>
+                    <p class="instruction">Select a position in the timeline below!</p>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div id="timeline" class="timeline">
+                    <!-- Cards and Slots will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- COUNTRY GAME -->
+        <div id="view-country" class="view hidden">
+            <div class="current-card-container">
+                <div class="card unknown" id="country-card">
+                    <div class="card-content">
+                        <div class="vinyl-icon">🎵</div>
+                        <h3>Guess the Country</h3>
+                        <p>Artist: <span id="country-artist">???</span></p>
+                        <p>Title: <span id="country-title">???</span></p>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="country-play-btn" class="btn-primary">▶ Play Snippet</button>
+                </div>
+            </div>
+
+            <div class="options-grid" id="country-options">
+                <!-- Buttons injected here -->
+            </div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="view-leaderboard" class="view hidden">
+            <div class="menu-card">
+                <h2>🏆 Leaderboard</h2>
+                <div class="leaderboard-list" id="leaderboard-list">
+                    <!-- Scores injected here -->
+                </div>
+                <button id="btn-back-menu" class="btn-secondary">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- GAME OVER MODAL -->
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                <p>Your Score: <span id="final-score">0</span></p>
+                <input type="text" id="player-name" placeholder="Enter your name" maxlength="15">
+                <button id="save-score-btn" class="btn-primary">Save Score</button>
+                <button id="restart-btn" class="btn-secondary">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+    <script src="app.js"></script>
+</body>
+
+</html>
