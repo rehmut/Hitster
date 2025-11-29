@@ -39,6 +39,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Event Listeners for Menu
+    if (modeButtons[0]) modeButtons[0].onclick = () => startGame('timeline');
+    if (modeButtons[1]) modeButtons[1].onclick = () => startGame('country');
+
+    const leaderboardBtn = document.getElementById('btn-view-leaderboard');
+    if (leaderboardBtn) leaderboardBtn.onclick = () => showLeaderboard();
+
+    const backMenuBtns = document.querySelectorAll('#btn-quit-timeline, #btn-quit-country, #btn-back-menu');
+    backMenuBtns.forEach(btn => {
+        btn.onclick = () => showView('menu');
+    });
+
+    // Game Over Modal Listeners
+    const saveScoreBtn = document.getElementById('save-score-btn');
+    if (saveScoreBtn) saveScoreBtn.onclick = () => saveScore();
+
+    const restartBtn = document.getElementById('restart-btn');
+    if (restartBtn) restartBtn.onclick = () => showView('menu');
+
     // Fetch Data
     fetch('data.json')
         .then(res => res.json())
@@ -65,28 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (viewName === 'menu' || viewName === 'leaderboard') {
             statsEl.classList.add('hidden');
-            stopAudio();
-        } else {
-            statsEl.classList.remove('hidden');
-        }
-    }
-
-    if (document.getElementById('btn-mode-timeline')) document.getElementById('btn-mode-timeline').onclick = () => startGame('timeline');
-    if (document.getElementById('btn-mode-country')) document.getElementById('btn-mode-country').onclick = () => startGame('country');
-    if (document.getElementById('btn-view-leaderboard')) document.getElementById('btn-view-leaderboard').onclick = showLeaderboard;
-    if (document.getElementById('btn-back-menu')) document.getElementById('btn-back-menu').onclick = () => showView('menu');
-    if (document.getElementById('restart-btn')) document.getElementById('restart-btn').onclick = () => startGame(currentMode);
-    if (document.getElementById('save-score-btn')) document.getElementById('save-score-btn').onclick = saveScore;
-
-    // --- Audio Control ---
-    function toggleAudio(btn, cardEl) {
-        if (isPlaying) {
-            audioPlayer.pause();
             isPlaying = false;
             btn.textContent = "▶ Play Snippet";
             cardEl.classList.remove('playing');
         } else {
-            if (audioPlayer.src) {
+            // Autoplay only for Timeline mode (or if preferred)
+            // User requested NO autoplay for Country Mode
+            if (currentMode !== 'country' && audioPlayer.src) {
                 audioPlayer.play()
                     .then(() => {
                         isPlaying = true;
@@ -118,6 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.onended = () => {
             resetAudioUI();
         };
+    }
+
+    function toggleAudio(btn, card) {
+        if (isPlaying) {
+            stopAudio();
+        } else {
+            if (audioPlayer.src) {
+                audioPlayer.play()
+                    .then(() => {
+                        isPlaying = true;
+                        btn.textContent = "⏸ Pause";
+                        if (card) card.classList.add('playing');
+                    })
+                    .catch(e => console.error("Playback failed:", e));
+            }
+        }
     }
 
     function prepareAudio(src) {
@@ -196,8 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (idx > -1) availableSongs.splice(idx, 1);
 
         // Update UI
-        document.getElementById('current-artist').textContent = currentSong.artist;
-        document.getElementById('current-title').textContent = currentSong.title;
+        // Update UI - HIDE INFO INITIALLY
+        document.getElementById('current-artist').textContent = "???";
+        document.getElementById('current-title').textContent = "???";
 
         prepareAudio(currentSong.audio);
         renderTimeline(true);
@@ -240,12 +261,21 @@ document.addEventListener('DOMContentLoaded', () => {
             lives--;
             alert(`Wrong! It was ${currentSong.year}`);
             if (lives <= 0) {
+                // Reveal info on game over
+                document.getElementById('current-artist').textContent = currentSong.artist;
+                document.getElementById('current-title').textContent = currentSong.title;
                 endGame();
                 return;
             }
         }
+
+        // Reveal info after guess
+        document.getElementById('current-artist').textContent = currentSong.artist;
+        document.getElementById('current-title').textContent = currentSong.title;
+
         updateStats();
-        nextTimelineTurn();
+        // Small delay to see the info before next turn
+        setTimeout(nextTimelineTurn, 2000);
     }
 
     // --- Country Game Logic ---
@@ -268,8 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (idx > -1) availableSongs.splice(idx, 1);
 
         // Update UI
-        document.getElementById('country-artist').textContent = currentSong.artist;
-        document.getElementById('country-title').textContent = currentSong.title;
+        // Update UI - HIDE INFO INITIALLY
+        document.getElementById('country-artist').textContent = "???";
+        document.getElementById('country-title').textContent = "???";
 
         prepareAudio(currentSong.audio);
         generateCountryOptions();
@@ -315,7 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
             score++;
             setTimeout(() => {
                 updateStats();
-                nextCountryTurn();
+                updateStats();
+                // Reveal info
+                document.getElementById('country-artist').textContent = currentSong.artist;
+                document.getElementById('country-title').textContent = currentSong.title;
+                setTimeout(nextCountryTurn, 1500);
             }, 1500);
         } else {
             lives--;
@@ -324,6 +359,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (lives <= 0) {
                 setTimeout(endGame, 1500);
             } else {
+                // Reveal info
+                document.getElementById('country-artist').textContent = currentSong.artist;
+                document.getElementById('country-title').textContent = currentSong.title;
                 setTimeout(nextCountryTurn, 1500);
             }
         }

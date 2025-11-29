@@ -29,6 +29,13 @@
   },
   {
     "year": "2024",
+    "country": "Israel",
+    "artist": "Eden Golan",
+    "title": "Hurricane",
+    "audio": "audio/2024_Israel_Eden_Golan_Hurricane.mp3"
+  },
+  {
+    "year": "2024",
     "country": "Ireland",
     "artist": "Bambie Thug",
     "title": "Doomsday Blue",
@@ -196,6 +203,13 @@
     "audio": "audio/2022_Portugal_Maro_Saudade,_saudade.mp3"
   },
   {
+    "year": "2022",
+    "country": "Norway",
+    "artist": "Subwoolfer",
+    "title": "Give That Wolf a Banana",
+    "audio": "audio/2022_Norway_Subwoolfer_Give_That_Wolf_a_Banana.mp3"
+  },
+  {
     "year": "2021",
     "country": "Italy",
     "artist": "M\u00e5neskin",
@@ -218,10 +232,24 @@
   },
   {
     "year": "2021",
+    "country": "Iceland",
+    "artist": "Da\u00f0i og Gagnamagni\u00f0",
+    "title": "10 Years",
+    "audio": "audio/2021_Iceland_Da\u00f0i_og_Gagnamagni\u00f0_10_Years.mp3"
+  },
+  {
+    "year": "2021",
     "country": "Ukraine",
     "artist": "Go_A",
     "title": "Shum",
     "audio": "audio/2021_Ukraine_Go_A_Shum.mp3"
+  },
+  {
+    "year": "2021",
+    "country": "Finland",
+    "artist": "Blind Channel",
+    "title": "Dark Side",
+    "audio": "audio/2021_Finland_Blind_Channel_Dark_Side.mp3"
   },
   {
     "year": "2021",
@@ -670,5 +698,432 @@
     "artist": "Ruth Lorenzo",
     "title": "Dancing in the Rain",
     "audio": "audio/2014_Spain_Ruth_Lorenzo_Dancing_in_the_Rain.mp3"
+  },
+  {
+    "year": "2013",
+    "country": "Denmark",
+    "artist": "Emmelie de Forest",
+    "title": "Only Teardrops",
+    "audio": "audio/2013_Denmark_Emmelie_de_Forest_Only_Teardrops.mp3"
+  },
+  {
+    "year": "2013",
+    "country": "Azerbaijan",
+    "artist": "Farid Mammadov",
+    "title": "Hold Me",
+    "audio": "audio/2013_Azerbaijan_Farid_Mammadov_Hold_Me.mp3"
+  },
+  {
+    "year": "2012",
+    "country": "Sweden",
+    "artist": "Loreen",
+    "title": "Euphoria",
+    "audio": "audio/2012_Sweden_Loreen_Euphoria.mp3"
+  },
+  {
+    "year": "2012",
+    "country": "Russia",
+    "artist": "Buranovskiye Babushki",
+    "title": "Party for Everybody",
+    "audio": "audio/2012_Russia_Buranovskiye_Babushki_Party_for_Everybody.mp3"
+  },
+  {
+    "year": "2011",
+    "country": "Azerbaijan",
+    "artist": "Ell & Nikki",
+    "title": "Running Scared",
+    "audio": "audio/2011_Azerbaijan_Ell_&_Nikki_Running_Scared.mp3"
+  },
+  {
+    "year": "2011",
+    "country": "Italy",
+    "artist": "Raphael Gualazzi",
+    "title": "Madness of Love",
+    "audio": "audio/2011_Italy_Raphael_Gualazzi_Madness_of_Love.mp3"
+  },
+  {
+    "year": "2010",
+    "country": "Germany",
+    "artist": "Lena",
+    "title": "Satellite",
+    "audio": "audio/2010_Germany_Lena_Satellite.mp3"
+  },
+  {
+    "year": "2010",
+    "country": "Turkey",
+    "artist": "maNga",
+    "title": "We Could Be The Same",
+    "audio": "audio/2010_Turkey_maNga_We_Could_Be_The_Same.mp3"
+  },
+  {
+    "year": "2009",
+    "country": "Norway",
+    "artist": "Alexander Rybak",
+    "title": "Fairytale",
+    "audio": "audio/2009_Norway_Alexander_Rybak_Fairytale.mp3"
+  },
+  {
+    "year": "2009",
+    "country": "Iceland",
+    "artist": "Yohanna",
+    "title": "Is It True?",
+    "audio": "audio/2009_Iceland_Yohanna_Is_It_True.mp3"
+  },
+  {
+    "year": "2008",
+    "country": "Russia",
+    "artist": "Dima Bilan",
+    "title": "Believe",
+    "audio": "audio/2008_Russia_Dima_Bilan_Believe.mp3"
+  },
+  {
+    "year": "2008",
+    "country": "Ukraine",
+    "artist": "Ani Lorak",
+    "title": "Shady Lady",
+    "audio": "audio/2008_Ukraine_Ani_Lorak_Shady_Lady.mp3"
+  },
+  {
+    "year": "2007",
+    "country": "Serbia",
+    "artist": "Marija \u0160erifovi\u0107",
+    "title": "Molitva",
+    "audio": "audio/2007_Serbia_Marija_\u0160erifovi\u0107_Molitva.mp3"
+  },
+  {
+    "year": "2007",
+    "country": "Ukraine",
+    "artist": "Verka Serduchka",
+    "title": "Dancing Lasha Tumbai",
+    "audio": "audio/2007_Ukraine_Verka_Serduchka_Dancing_Lasha_Tumbai.mp3"
+  },
+  {
+    "year": "2006",
+    "country": "Finland",
+    "artist": "Lordi",
+    "title": "Hard Rock Hallelujah",
+    "audio": "audio/2006_Finland_Lordi_Hard_Rock_Hallelujah.mp3"
+  },
+  {
+    "year": "2006",
+    "country": "Russia",
+    "artist": "Dima Bilan",
+    "title": "Never Let You Go",
+    "audio": "audio/2006_Russia_Dima_Bilan_Never_Let_You_Go.mp3"
+  },
+  {
+    "year": "2005",
+    "country": "Greece",
+    "artist": "Helena Paparizou",
+    "title": "My Number One",
+    "audio": "audio/2005_Greece_Helena_Paparizou_My_Number_One.mp3"
+  },
+  {
+    "year": "2005",
+    "country": "Malta",
+    "artist": "Chiara",
+    "title": "Angel",
+    "audio": "audio/2005_Malta_Chiara_Angel.mp3"
+  },
+  {
+    "year": "2004",
+    "country": "Ukraine",
+    "artist": "Ruslana",
+    "title": "Wild Dances",
+    "audio": "audio/2004_Ukraine_Ruslana_Wild_Dances.mp3"
+  },
+  {
+    "year": "2004",
+    "country": "Serbia and Montenegro",
+    "artist": "\u017deljko Joksimovi\u0107",
+    "title": "Lane Moje",
+    "audio": "audio/2004_Serbia_and_Montenegro_\u017deljko_Joksimovi\u0107_Lane_Moje.mp3"
+  },
+  {
+    "year": "2003",
+    "country": "Turkey",
+    "artist": "Sertab Erener",
+    "title": "Everyway That I Can",
+    "audio": "audio/2003_Turkey_Sertab_Erener_Everyway_That_I_Can.mp3"
+  },
+  {
+    "year": "2001",
+    "country": "Estonia",
+    "artist": "Tanel Padar, Dave Benton & 2XL",
+    "title": "Everybody",
+    "audio": "audio/2001_Estonia_Tanel_Padar,_Dave_Benton_&_2XL_Everybody.mp3"
+  },
+  {
+    "year": "2000",
+    "country": "Denmark",
+    "artist": "Olsen Brothers",
+    "title": "Fly on the Wings of Love",
+    "audio": "audio/2000_Denmark_Olsen_Brothers_Fly_on_the_Wings_of_Love.mp3"
+  },
+  {
+    "year": "1999",
+    "country": "Sweden",
+    "artist": "Charlotte Nilsson",
+    "title": "Take Me to Your Heaven",
+    "audio": "audio/1999_Sweden_Charlotte_Nilsson_Take_Me_to_Your_Heaven.mp3"
+  },
+  {
+    "year": "1998",
+    "country": "Israel",
+    "artist": "Dana International",
+    "title": "Diva",
+    "audio": "audio/1998_Israel_Dana_International_Diva.mp3"
+  },
+  {
+    "year": "1997",
+    "country": "United Kingdom",
+    "artist": "Katrina and the Waves",
+    "title": "Love Shine a Light",
+    "audio": "audio/1997_United_Kingdom_Katrina_and_the_Waves_Love_Shine_a_Light.mp3"
+  },
+  {
+    "year": "1995",
+    "country": "Norway",
+    "artist": "Secret Garden",
+    "title": "Nocturne",
+    "audio": "audio/1995_Norway_Secret_Garden_Nocturne.mp3"
+  },
+  {
+    "year": "1994",
+    "country": "Ireland",
+    "artist": "Paul Harrington & Charlie McGettigan",
+    "title": "Rock 'n' Roll Kids",
+    "audio": "audio/1994_Ireland_Paul_Harrington_&_Charlie_McGettigan_Rock_'n'_Roll_Kids.mp3"
+  },
+  {
+    "year": "1993",
+    "country": "Ireland",
+    "artist": "Niamh Kavanagh",
+    "title": "In Your Eyes",
+    "audio": "audio/1993_Ireland_Niamh_Kavanagh_In_Your_Eyes.mp3"
+  },
+  {
+    "year": "1989",
+    "country": "Yugoslavia",
+    "artist": "Riva",
+    "title": "Rock Me",
+    "audio": "audio/1989_Yugoslavia_Riva_Rock_Me.mp3"
+  },
+  {
+    "year": "1988",
+    "country": "Switzerland",
+    "artist": "C\u00e9line Dion",
+    "title": "Ne partez pas sans moi",
+    "audio": "audio/1988_Switzerland_C\u00e9line_Dion_Ne_partez_pas_sans_moi.mp3"
+  },
+  {
+    "year": "1987",
+    "country": "Ireland",
+    "artist": "Johnny Logan",
+    "title": "Hold Me Now",
+    "audio": "audio/1987_Ireland_Johnny_Logan_Hold_Me_Now.mp3"
+  },
+  {
+    "year": "1986",
+    "country": "Belgium",
+    "artist": "Sandra Kim",
+    "title": "J'aime la vie",
+    "audio": "audio/1986_Belgium_Sandra_Kim_J'aime_la_vie.mp3"
+  },
+  {
+    "year": "1985",
+    "country": "Norway",
+    "artist": "Bobbysocks!",
+    "title": "La det swinge",
+    "audio": "audio/1985_Norway_Bobbysocks!_La_det_swinge.mp3"
+  },
+  {
+    "year": "1984",
+    "country": "Sweden",
+    "artist": "Herreys",
+    "title": "Diggi-Loo Diggi-Ley",
+    "audio": "audio/1984_Sweden_Herreys_Diggi-Loo_Diggi-Ley.mp3"
+  },
+  {
+    "year": "1983",
+    "country": "Luxembourg",
+    "artist": "Corinne Herm\u00e8s",
+    "title": "Si la vie est cadeau",
+    "audio": "audio/1983_Luxembourg_Corinne_Herm\u00e8s_Si_la_vie_est_cadeau.mp3"
+  },
+  {
+    "year": "1982",
+    "country": "Germany",
+    "artist": "Nicole",
+    "title": "Ein bi\u00dfchen Frieden",
+    "audio": "audio/1982_Germany_Nicole_Ein_bi\u00dfchen_Frieden.mp3"
+  },
+  {
+    "year": "1981",
+    "country": "United Kingdom",
+    "artist": "Bucks Fizz",
+    "title": "Making Your Mind Up",
+    "audio": "audio/1981_United_Kingdom_Bucks_Fizz_Making_Your_Mind_Up.mp3"
+  },
+  {
+    "year": "1980",
+    "country": "Ireland",
+    "artist": "Johnny Logan",
+    "title": "What's Another Year",
+    "audio": "audio/1980_Ireland_Johnny_Logan_What's_Another_Year.mp3"
+  },
+  {
+    "year": "1979",
+    "country": "Israel",
+    "artist": "Gali Atari & Milk and Honey",
+    "title": "Hallelujah",
+    "audio": "audio/1979_Israel_Gali_Atari_&_Milk_and_Honey_Hallelujah.mp3"
+  },
+  {
+    "year": "1978",
+    "country": "Israel",
+    "artist": "Izhar Cohen and the Alphabeta",
+    "title": "A-Ba-Ni-Bi",
+    "audio": "audio/1978_Israel_Izhar_Cohen_and_the_Alphabeta_A-Ba-Ni-Bi.mp3"
+  },
+  {
+    "year": "1977",
+    "country": "France",
+    "artist": "Marie Myriam",
+    "title": "L'Oiseau et l'Enfant",
+    "audio": "audio/1977_France_Marie_Myriam_L'Oiseau_et_l'Enfant.mp3"
+  },
+  {
+    "year": "1975",
+    "country": "Netherlands",
+    "artist": "Teach-In",
+    "title": "Ding-a-dong",
+    "audio": "audio/1975_Netherlands_Teach-In_Ding-a-dong.mp3"
+  },
+  {
+    "year": "1974",
+    "country": "Sweden",
+    "artist": "ABBA",
+    "title": "Waterloo",
+    "audio": "audio/1974_Sweden_ABBA_Waterloo.mp3"
+  },
+  {
+    "year": "1973",
+    "country": "Luxembourg",
+    "artist": "Anne-Marie David",
+    "title": "Tu te reconna\u00eetras",
+    "audio": "audio/1973_Luxembourg_Anne-Marie_David_Tu_te_reconna\u00eetras.mp3"
+  },
+  {
+    "year": "1972",
+    "country": "Luxembourg",
+    "artist": "Vicky Leandros",
+    "title": "Apr\u00e8s toi",
+    "audio": "audio/1972_Luxembourg_Vicky_Leandros_Apr\u00e8s_toi.mp3"
+  },
+  {
+    "year": "1971",
+    "country": "Monaco",
+    "artist": "S\u00e9verine",
+    "title": "Un banc, un arbre, une rue",
+    "audio": "audio/1971_Monaco_S\u00e9verine_Un_banc,_un_arbre,_une_rue.mp3"
+  },
+  {
+    "year": "1970",
+    "country": "Ireland",
+    "artist": "Dana",
+    "title": "All Kinds of Everything",
+    "audio": "audio/1970_Ireland_Dana_All_Kinds_of_Everything.mp3"
+  },
+  {
+    "year": "1969",
+    "country": "Spain",
+    "artist": "Salom\u00e9",
+    "title": "Vivo cantando",
+    "audio": "audio/1969_Spain_Salom\u00e9_Vivo_cantando.mp3"
+  },
+  {
+    "year": "1969",
+    "country": "United Kingdom",
+    "artist": "Lulu",
+    "title": "Boom Bang-a-Bang",
+    "audio": "audio/1969_United_Kingdom_Lulu_Boom_Bang-a-Bang.mp3"
+  },
+  {
+    "year": "1969",
+    "country": "Netherlands",
+    "artist": "Lenny Kuhr",
+    "title": "De troubadour",
+    "audio": "audio/1969_Netherlands_Lenny_Kuhr_De_troubadour.mp3"
+  },
+  {
+    "year": "1969",
+    "country": "France",
+    "artist": "Frida Boccara",
+    "title": "Un jour, un enfant",
+    "audio": "audio/1969_France_Frida_Boccara_Un_jour,_un_enfant.mp3"
+  },
+  {
+    "year": "1968",
+    "country": "Spain",
+    "artist": "Massiel",
+    "title": "La, la, la",
+    "audio": "audio/1968_Spain_Massiel_La,_la,_la.mp3"
+  },
+  {
+    "year": "1967",
+    "country": "United Kingdom",
+    "artist": "Sandie Shaw",
+    "title": "Puppet on a String",
+    "audio": "audio/1967_United_Kingdom_Sandie_Shaw_Puppet_on_a_String.mp3"
+  },
+  {
+    "year": "1966",
+    "country": "Austria",
+    "artist": "Udo J\u00fcrgens",
+    "title": "Merci, Ch\u00e9rie",
+    "audio": "audio/1966_Austria_Udo_J\u00fcrgens_Merci,_Ch\u00e9rie.mp3"
+  },
+  {
+    "year": "1965",
+    "country": "Luxembourg",
+    "artist": "France Gall",
+    "title": "Poup\u00e9e de cire, poup\u00e9e de son",
+    "audio": "audio/1965_Luxembourg_France_Gall_Poup\u00e9e_de_cire,_poup\u00e9e_de_son.mp3"
+  },
+  {
+    "year": "1964",
+    "country": "Italy",
+    "artist": "Gigliola Cinquetti",
+    "title": "Non ho l'et\u00e0",
+    "audio": "audio/1964_Italy_Gigliola_Cinquetti_Non_ho_l'et\u00e0.mp3"
+  },
+  {
+    "year": "1963",
+    "country": "Denmark",
+    "artist": "Grethe & J\u00f8rgen Ingmann",
+    "title": "Dansevise",
+    "audio": "audio/1963_Denmark_Grethe_&_J\u00f8rgen_Ingmann_Dansevise.mp3"
+  },
+  {
+    "year": "1962",
+    "country": "France",
+    "artist": "Isabelle Aubret",
+    "title": "Un Premier Amour",
+    "audio": "audio/1962_France_Isabelle_Aubret_Un_Premier_Amour.mp3"
+  },
+  {
+    "year": "1961",
+    "country": "Luxembourg",
+    "artist": "Jean-Claude Pascal",
+    "title": "Nous les amoureux",
+    "audio": "audio/1961_Luxembourg_Jean-Claude_Pascal_Nous_les_amoureux.mp3"
+  },
+  {
+    "year": "1960",
+    "country": "France",
+    "artist": "Jacqueline Boyer",
+    "title": "Tom Pillibi",
+    "audio": "audio/1960_France_Jacqueline_Boyer_Tom_Pillibi.mp3"
   }
 ]
