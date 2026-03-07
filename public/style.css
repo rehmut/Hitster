@@ -30,6 +30,10 @@ body {
     box-sizing: border-box;
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Header */
 header {
     display: flex;
@@ -412,3 +416,115 @@ h1 {
     width: 80%;
     text-align: center;
 }
+
+/* Multiplayer HUD */
+#multiplayer-hud {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+#multiplayer-hud .hud-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+#multiplayer-hud #hud-players {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.player-pill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    font-size: 0.9rem;
+}
+
+.player-pill.self {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.invite-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px dashed var(--card-border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.invite-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.invite-row input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-color);
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--accent-cyan);
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 6px 0;
+}
+
+.btn-link.full-width {
+    width: 100%;
+    text-align: center;
+}
+
+.small-btn {
+    padding: 10px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+}
+
+.player-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.player-row:last-child {
+    border-bottom: none;
+}
+
+.player-status {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.player-status.ready {
+    color: var(--success-color);
+}
+
+.player-status.in-game {
+    color: var(--accent-cyan);
+}
+

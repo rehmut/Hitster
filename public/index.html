@@ -19,13 +19,65 @@
             </div>
         </header>
 
+        <div id="multiplayer-hud" class="hidden">
+            <div class="hud-row">
+                <span>Room <b id="hud-room-code">----</b></span>
+                <button id="btn-leave-hud" class="btn-link small" type="button">Leave</button>
+            </div>
+            <div id="hud-players"></div>
+        </div>
+
         <!-- MAIN MENU -->
         <div id="view-menu" class="view">
             <div class="menu-card">
                 <h2>Select Game Mode</h2>
                 <button id="btn-mode-timeline" class="btn-primary full-width">📅 Timeline Mode</button>
                 <button id="btn-mode-country" class="btn-primary full-width">🌍 Country Mode</button>
+                <button id="btn-mode-multiplayer" class="btn-primary full-width">👥 Multiplayer</button>
                 <button id="btn-view-leaderboard" class="btn-secondary full-width">🏆 Leaderboard</button>
+            </div>
+        </div>
+
+        <!-- MULTIPLAYER LOBBY -->
+        <div id="view-lobby" class="view hidden">
+            <div class="menu-card">
+                <h2>👥 Multiplayer Lobby</h2>
+                <input type="text" id="lobby-player-name" placeholder="Enter your name" maxlength="15"
+                    class="full-width" style="margin-bottom: 20px; padding: 10px;">
+
+                <div id="lobby-actions">
+                    <button id="btn-create-room" class="btn-primary full-width" style="margin-bottom: 10px;">Create
+                        Room</button>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="text" id="room-code-input" placeholder="Room Code"
+                            style="flex: 1; padding: 10px; text-transform: uppercase;">
+                        <button id="btn-join-room" class="btn-primary">Join</button>
+                    </div>
+                </div>
+
+                <div id="lobby-room-status" class="hidden">
+                    <h3>Room Code: <span id="display-room-code" style="color: var(--accent-cyan);">ABCD</span></h3>
+                    <div id="invite-link-container" class="invite-box hidden">
+                        <p class="invite-label">Invite Link</p>
+                        <div class="invite-row">
+                            <input type="text" id="invite-link" readonly value="">
+                            <button id="btn-copy-invite" class="btn-secondary small-btn">Copy</button>
+                            <button id="btn-share-invite" class="btn-secondary small-btn">Share</button>
+                        </div>
+                        <p class="hint">Share the code or link above with a friend so they can join.</p>
+                    </div>
+                    <div id="lobby-player-list"
+                        style="text-align: left; margin: 20px 0; border: 1px solid var(--card-border); padding: 10px; border-radius: 8px;">
+                        <!-- Players injected here -->
+                    </div>
+                    <p id="lobby-msg" style="color: var(--text-secondary);">Waiting for host...</p>
+                    <button id="btn-ready-toggle" class="btn-secondary full-width hidden">I'm Ready</button>
+                    <button id="btn-start-multiplayer" class="btn-primary full-width hidden">Start Game</button>
+                    <button id="btn-leave-room" class="btn-link full-width hidden" type="button">Leave Room</button>
+                </div>
+
+                <button id="btn-back-lobby" class="btn-secondary full-width" style="margin-top: 20px;">Back to
+                    Menu</button>
             </div>
         </div>
 
