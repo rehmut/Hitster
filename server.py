@@ -6,13 +6,8 @@ import urllib.parse
 
 PORT = 8000
 PUBLIC_DIR = os.path.join(os.path.dirname(__file__), 'public')
-LEADERBOARD_FILE = os.path.join(os.path.dirname(__file__), 'leaderboard.json')
 
-# Ensure leaderboard file exists
-if not os.path.exists(LEADERBOARD_FILE):
-    with open(LEADERBOARD_FILE, 'w') as f:
-        json.dump([], f)
-
+from api.leaderboard_store import add_score, get_leaderboard
 from api.multiplayer import manager
 
 
@@ -29,9 +24,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urllib.parse.urlparse(self.path)
         if parsed_path.path == '/api/leaderboard':
-            with open(LEADERBOARD_FILE, 'r') as f:
-                scores = json.load(f)
-            self._send_json(scores)
+            self._send_json(get_leaderboard())
         elif parsed_path.path == '/api/room/status':
             query = urllib.parse.parse_qs(parsed_path.query)
             code = query.get('code', [None])[0]
@@ -69,23 +62,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def _handle_leaderboard(self, payload):
         try:
             new_score = json.loads(payload)
-            if 'name' not in new_score or 'score' not in new_score or 'mode' not in new_score:
-                self.send_error(400, "Invalid data")
-                return
+        except json.JSONDecodeError as exc:
+            self.send_error(400, f'Invalid JSON: {exc}')
+            return
 
-            with open(LEADERBOARD_FILE, 'r+') as f:
-                data = json.load(f)
-                data.append(new_score)
-                data.sort(key=lambda x: x['score'], reverse=True)
-                data = data[:50]
-                f.seek(0)
-                json.dump(data, f, indent=2)
-                f.truncate()
+        if not all(k in new_score for k in ('name', 'score', 'mode')):
+            self.send_error(400, "Invalid data")
+            return
 
+        try:
+            add_score(new_score)
             self._send_json({"status": "success"})
-        except Exception as e:
-            print(f"Error saving score: {e}")
-            self.send_error(500, str(e))
+        except Exception as exc:
+            print(f"Error saving score: {exc}")
+            self.send_error(500, str(exc))
 
     def _handle_room_create(self, payload):
         try:

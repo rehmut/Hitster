@@ -59,11 +59,15 @@ class MultiplayerManager:
         data['last_updated'] = self._now()
         if KV_REST_API_URL and KV_REST_API_TOKEN:
             try:
-                headers = {'Authorization': f'Bearer {KV_REST_API_TOKEN}'}
+                headers = {
+                    'Authorization': f'Bearer {KV_REST_API_TOKEN}',
+                    'Content-Type': 'application/json'
+                }
+                payload = json.dumps(data).encode('utf-8')
                 requests.post(
                     f"{KV_REST_API_URL}/set/{self._get_room_key(code)}",
                     headers=headers,
-                    json=json.dumps(data)
+                    data=payload
                 )
             except Exception as e:
                 print(f"KV Save Error: {e}")
