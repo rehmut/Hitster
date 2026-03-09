@@ -630,6 +630,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update UI - HIDE INFO INITIALLY
         document.getElementById('current-artist').textContent = "???";
         document.getElementById('current-title').textContent = "???";
+        const yearReveal = document.getElementById('current-year');
+        if (yearReveal) { yearReveal.textContent = ''; yearReveal.parentElement.classList.add('hidden'); }
 
         prepareAudio(currentSong.audio);
         renderTimeline(true);
@@ -643,9 +645,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'card placed';
             card.innerHTML = `
-                <span class="year-badge">${song.year}</span>
-                <h3>${song.title}</h3>
-                <p>${song.artist}</p>
+                <div class="card-field">
+                    <span class="field-label">Year</span>
+                    <span class="year-badge">${song.year}</span>
+                </div>
+                <div class="card-divider"></div>
+                <div class="card-field">
+                    <span class="field-label">Title</span>
+                    <h3>${song.title}</h3>
+                </div>
+                <div class="card-divider"></div>
+                <div class="card-field">
+                    <span class="field-label">Artist</span>
+                    <p>${song.artist}</p>
+                </div>
             `;
             timelineEl.appendChild(card);
             if (enableSlots) timelineEl.appendChild(createSlot(index + 1));
@@ -671,6 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
             timeline.splice(index, 0, currentSong);
         } else {
             lives--;
+            const yearRevealEl = document.getElementById('current-year');
+            if (yearRevealEl) { yearRevealEl.textContent = currentSong.year; yearRevealEl.parentElement.classList.remove('hidden'); }
             if (lives <= 0) {
                 document.getElementById('current-artist').textContent = currentSong.artist;
                 document.getElementById('current-title').textContent = currentSong.title;
