@@ -570,12 +570,26 @@ document.addEventListener('DOMContentLoaded', () => {
         syncPlayerProgress();
     }
 
-    function endGame() {
+    function endGame(isWin = false) {
         stopAudio();
         finalScoreEl.textContent = score;
         if (multiplayer.active) {
             multiplayer.state = 'done';
             syncPlayerProgress(true);
+        }
+        const emoji = document.getElementById('modal-emoji');
+        const title = document.getElementById('modal-title');
+        const subtitle = document.getElementById('modal-subtitle');
+        if (isWin) {
+            gameOverModal.classList.add('win');
+            if (emoji) emoji.textContent = '🏆';
+            if (title) title.textContent = 'You Win!';
+            if (subtitle) subtitle.textContent = 'You placed every song — perfect run!';
+        } else {
+            gameOverModal.classList.remove('win');
+            if (emoji) emoji.textContent = '💀';
+            if (title) title.textContent = 'Game Over!';
+            if (subtitle) subtitle.textContent = '';
         }
         gameOverModal.classList.remove('hidden');
     }
@@ -603,8 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const candidates = availableSongs.filter(s => !timelineYears.has(s.year));
 
         if (candidates.length === 0) {
-            alert("You Win! No more unique years.");
-            endGame();
+            endGame(true);
             return;
         }
 
