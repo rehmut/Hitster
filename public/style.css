@@ -547,17 +547,44 @@ h1 {
 
 .invite-row {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 8px;
 }
 
 .invite-row input {
     flex: 1;
+    min-width: 0;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid var(--card-border);
     background: rgba(0, 0, 0, 0.2);
     color: var(--text-color);
+    box-sizing: border-box;
+}
+
+.invite-row .btn-secondary {
+    flex-shrink: 0;
+}
+
+.join-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+.join-code-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .hint {
