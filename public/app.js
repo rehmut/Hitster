@@ -664,15 +664,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextYear = index < timeline.length ? parseInt(timeline[index].year) : Infinity;
         const currentYear = parseInt(currentSong.year);
 
+        let correct = false;
         if (currentYear >= prevYear && currentYear <= nextYear) {
+            correct = true;
             score++;
             timeline.splice(index, 0, currentSong);
-            // alert(`Correct! ${currentSong.year}`);
         } else {
             lives--;
-            // alert(`Wrong! It was ${currentSong.year}`);
             if (lives <= 0) {
-                // Reveal info on game over
                 document.getElementById('current-artist').textContent = currentSong.artist;
                 document.getElementById('current-title').textContent = currentSong.title;
                 endGame();
@@ -685,8 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('current-title').textContent = currentSong.title;
 
         updateStats();
-        // Small delay to see the info before next turn
-        setTimeout(nextTimelineTurn, 500);
+        // Correct: move on quickly. Wrong: linger so player can read the answer.
+        setTimeout(nextTimelineTurn, correct ? 600 : 3000);
     }
 
     // --- Country Game Logic ---
@@ -768,12 +767,12 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('wrong');
             updateStats();
             if (lives <= 0) {
-                setTimeout(endGame, 1500);
+                setTimeout(endGame, 3000);
             } else {
-                // Reveal info
+                // Reveal info — give player time to read the correct answer
                 document.getElementById('country-artist').textContent = currentSong.artist;
                 document.getElementById('country-title').textContent = currentSong.title;
-                setTimeout(nextCountryTurn, 500);
+                setTimeout(nextCountryTurn, 3000);
             }
         }
     }
