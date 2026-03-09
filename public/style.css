@@ -562,3 +562,210 @@ h1 {
     color: var(--accent-cyan);
 }
 
+/* =====================================================
+   MOBILE: Fit gameplay in viewport — no page scrolling
+   ===================================================== */
+
+@media (max-width: 640px) {
+
+    /* Lock the entire app to the viewport height */
+    body {
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .app-container {
+        height: 100dvh;
+        min-height: unset;
+        overflow: hidden;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ── Header: much more compact ── */
+    header {
+        margin-bottom: 6px;
+        padding: 4px 0;
+        flex-shrink: 0;
+    }
+
+    h1 {
+        font-size: 1.15rem;
+        letter-spacing: 0;
+    }
+
+    .stats {
+        font-size: 0.8rem;
+        gap: 8px;
+    }
+
+    /* ── Multiplayer HUD compact ── */
+    #multiplayer-hud {
+        padding: 8px 12px;
+        margin-bottom: 6px;
+        flex-shrink: 0;
+    }
+
+    #multiplayer-hud .hud-row {
+        margin-bottom: 4px;
+    }
+
+    /* ── All views: fill remaining height ── */
+    .view {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto; /* menu/lobby/leaderboard can scroll internally */
+    }
+
+    /* ── Game views: no body scroll, internals scroll ── */
+    #view-timeline,
+    #view-country {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* ── Vinyl icon smaller ── */
+    .vinyl-icon {
+        font-size: 1.8rem;
+    }
+
+    /* ── Card: tighter padding and smaller text ── */
+    .card {
+        padding: 10px 14px;
+        border-radius: 12px;
+    }
+
+    .card h3 {
+        font-size: 0.95rem;
+        margin: 2px 0;
+    }
+
+    .card p {
+        font-size: 0.78rem;
+        margin: 1px 0;
+    }
+
+    .card .year-badge {
+        font-size: 1.7rem;
+        margin-bottom: 2px;
+    }
+
+    /* Remove the scale-up on the active card — it wastes space */
+    .current-card-container .card {
+        transform: none;
+    }
+
+    /* ── Current card container: tight ── */
+    .current-card-container {
+        gap: 8px;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    /* ── Buttons: slightly shorter ── */
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+        padding: 8px 16px;
+        font-size: 0.88rem;
+    }
+
+    .instruction {
+        font-size: 0.78rem;
+        margin-top: 0;
+    }
+
+    /* ── Controls row: tighter ── */
+    .controls {
+        gap: 6px;
+    }
+
+    /* ── COUNTRY MODE ── */
+
+    /* Card area doesn't grow, options fill the rest */
+    #view-country .current-card-container {
+        flex-shrink: 0;
+    }
+
+    #view-country .options-grid {
+        flex: 1;
+        min-height: 0;
+        /* explicit height makes 1fr rows resolve on Safari/iOS */
+        height: 100%;
+        margin-top: 0;
+        max-width: none;
+        gap: 8px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .country-btn {
+        padding: 8px 6px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        /* grid items stretch to fill cell by default — no height: 100% needed */
+    }
+
+    /* ── TIMELINE MODE ── */
+
+    /* Current card: pinned, doesn't grow */
+    #view-timeline .current-card-container {
+        flex-shrink: 0;
+    }
+
+    /* Timeline scrolls within its container */
+    #view-timeline .timeline-container {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 0 16px;
+    }
+
+    /* Tighter grid on mobile — 2 columns */
+    #view-timeline .timeline {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    #view-timeline .timeline .card {
+        padding: 10px 12px;
+    }
+
+    .slot {
+        min-height: 42px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+    }
+
+    /* ── Menu card: less padding ── */
+    .menu-card {
+        padding: 20px 18px;
+        gap: 12px;
+        border-radius: 18px;
+        max-width: 100%;
+    }
+
+    /* ── Modal compact ── */
+    .modal-content {
+        padding: 28px 20px;
+        border-radius: 18px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+        margin-bottom: 16px;
+    }
+}
