@@ -568,10 +568,16 @@ h1 {
 
 @media (max-width: 640px) {
 
-    /* Lock the entire app to the viewport height */
+    /* Lock the entire app to the viewport — no scroll in either direction */
+    html {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+
     body {
         height: 100dvh;
         overflow: hidden;
+        max-width: 100vw;
     }
 
     .app-container {
@@ -581,6 +587,8 @@ h1 {
         padding: 10px 12px;
         display: flex;
         flex-direction: column;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
 
     /* ── Header: much more compact ── */
