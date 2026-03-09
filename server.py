@@ -18,6 +18,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def _send_json(self, payload, status=200):
         self.send_response(status)
         self.send_header('Content-type', 'application/json')
+        self.send_header('Cache-Control', 'no-store')
         self.end_headers()
         self.wfile.write(json.dumps(payload).encode())
 

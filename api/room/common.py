@@ -12,5 +12,6 @@ def read_json(handler):
 def send_json(handler, payload, status=200):
     handler.send_response(status)
     handler.send_header('Content-type', 'application/json')
+    handler.send_header('Cache-Control', 'no-store')
     handler.end_headers()
     handler.wfile.write(json.dumps(payload).encode())

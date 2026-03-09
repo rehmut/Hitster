@@ -8,6 +8,7 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
+        self.send_header('Cache-Control', 'no-store')
         self.end_headers()
         self.wfile.write(json.dumps(get_leaderboard()).encode())
 
@@ -28,6 +29,7 @@ class handler(BaseHTTPRequestHandler):
             add_score(new_score)
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
+            self.send_header('Cache-Control', 'no-store')
             self.end_headers()
             self.wfile.write(json.dumps({'status': 'success'}).encode())
         except Exception as exc:

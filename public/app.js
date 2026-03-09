@@ -814,12 +814,20 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Save failed (${res.status}): ${text || 'Unknown error'}`);
+                }
+                return res.json();
+            })
             .then(() => {
-                // alert("Score Saved!");
                 showLeaderboard();
                 gameOverModal.classList.add('hidden');
             })
-            .catch(err => alert("Failed to save score."));
+            .catch(err => {
+                console.error('Leaderboard save failed', err);
+                alert(err.message || "Failed to save score. Check your connection and try again.");
+            });
     }
 });
