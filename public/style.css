@@ -619,11 +619,17 @@ h1 {
         margin-bottom: 4px;
     }
 
+    /* ── Global box-sizing fix — prevents input padding from adding to width ── */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
     /* ── All views: fill remaining height ── */
     .view {
         flex: 1;
         min-height: 0;
-        overflow-y: auto; /* menu/lobby/leaderboard can scroll internally */
+        overflow-x: hidden; /* must be explicit — setting overflow-y:auto implicitly sets overflow-x:auto */
+        overflow-y: auto;
     }
 
     /* ── Game views: no body scroll, internals scroll ── */
@@ -732,6 +738,7 @@ h1 {
     #view-timeline .timeline-container {
         flex: 1;
         min-height: 0;
+        overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         padding: 4px 0 16px;
