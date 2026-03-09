@@ -24,7 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    max-width: 600px;
+    width: min(1100px, 100%);
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
@@ -144,16 +144,16 @@ h1 {
 
 /* Timeline */
 .timeline-container {
-    padding: 10px 0;
+    padding: 10px 0 40px;
     position: relative;
+    width: 100%;
 }
 
 .timeline {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    padding-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    width: 100%;
 }
 
 /* Card Styles */
@@ -165,7 +165,7 @@ h1 {
     border-radius: 16px;
     padding: 20px;
     width: 100%;
-    max-width: 340px;
+    max-width: none;
     text-align: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -203,9 +203,7 @@ h1 {
 /* Slot Styles */
 .slot {
     width: 100%;
-    max-width: 340px;
-    height: 50px;
-    margin: 8px 0;
+    min-height: 56px;
     border: 2px dashed rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     display: flex;
@@ -223,8 +221,8 @@ h1 {
     background: rgba(255, 0, 85, 0.1);
     border-color: var(--accent-pink);
     color: var(--accent-pink);
-    transform: scale(1.03);
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.2);
 }
 
 .slot::before {
@@ -288,6 +286,42 @@ h1 {
     align-items: center;
     width: 100%;
     flex: 1;
+}
+
+#view-timeline {
+    width: 100%;
+}
+
+@media (min-width: 900px) {
+    #view-timeline {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 32px;
+    }
+
+    #view-timeline .current-card-container {
+        width: 320px;
+        position: sticky;
+        top: 20px;
+        align-self: flex-start;
+    }
+
+    #view-timeline .timeline-container {
+        flex: 1;
+    }
+}
+
+@media (min-width: 600px) {
+    .timeline {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
+@media (min-width: 1100px) {
+    .timeline {
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+        gap: 20px;
+    }
 }
 
 .view.hidden {
