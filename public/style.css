@@ -150,10 +150,25 @@ h1 {
 }
 
 .timeline {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
+    position: relative;
+    padding-left: 28px; /* room for rail + dot */
+}
+
+/* Vertical rail line running through the whole timeline */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-pink));
+    opacity: 0.35;
+    border-radius: 2px;
 }
 
 /* Card Styles */
@@ -174,7 +189,24 @@ h1 {
 }
 
 .card.placed {
-    border-left: 6px solid var(--accent-cyan);
+    border-left: none;
+    overflow: visible; /* allow dot marker to extend outside */
+}
+
+/* Dot marker on the rail for each placed card */
+.card.placed::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    border: 2px solid #1a0b2e;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+    z-index: 1;
 }
 
 .card h3 {
@@ -233,35 +265,45 @@ h1 {
 /* Slot Styles */
 .slot {
     width: 100%;
-    min-height: 56px;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
+    padding: 10px 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: rgba(255, 255, 255, 0.3);
-    font-weight: 700;
-    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 600;
+    font-size: 0.82rem;
     position: relative;
+    margin: 2px 0;
+}
+
+.slot::before {
+    content: none; /* labels are in inner HTML now */
+}
+
+.slot-icon {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.slot-label {
+    flex: 1;
 }
 
 .slot:hover {
     background: rgba(255, 0, 85, 0.1);
     border-color: var(--accent-pink);
     color: var(--accent-pink);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255, 0, 85, 0.2);
+    box-shadow: 0 0 12px rgba(255, 0, 85, 0.15);
 }
 
-.slot::before {
-    content: "⬇";
-    transition: opacity 0.2s;
-}
-
-.slot:hover::before {
-    content: "⬇ PLACE HERE ⬇";
+.slot:hover .slot-icon {
+    opacity: 1;
 }
 
 /* Modal */
@@ -341,18 +383,7 @@ h1 {
     }
 }
 
-@media (min-width: 600px) {
-    .timeline {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-}
-
-@media (min-width: 1100px) {
-    .timeline {
-        grid-template-columns: repeat(3, minmax(260px, 1fr));
-        gap: 20px;
-    }
-}
+/* Timeline is a flex column at all sizes — no grid overrides needed */
 
 .view.hidden {
     display: none;
@@ -849,20 +880,29 @@ h1 {
         padding: 4px 0 16px;
     }
 
-    /* Tighter grid on mobile — 2 columns */
+    /* Timeline is vertical flex — just tighten padding */
     #view-timeline .timeline {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        padding-left: 22px;
+        gap: 3px;
     }
 
-    #view-timeline .timeline .card {
+    #view-timeline .timeline::before {
+        left: 6px;
+    }
+
+    #view-timeline .timeline .card.placed {
         padding: 10px 12px;
     }
 
+    #view-timeline .timeline .card.placed::before {
+        left: -18px;
+        width: 10px;
+        height: 10px;
+    }
+
     .slot {
-        min-height: 42px;
-        font-size: 0.8rem;
-        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.75rem;
     }
 
     /* ── Menu card: less padding ── */

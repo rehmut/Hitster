@@ -668,6 +668,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function createSlot(index) {
         const slot = document.createElement('div');
         slot.className = 'slot';
+
+        const prevYear = index > 0 ? timeline[index - 1].year : null;
+        const nextYear = index < timeline.length ? timeline[index].year : null;
+
+        let label;
+        if (!prevYear)       label = `Before ${nextYear}`;
+        else if (!nextYear)  label = `After ${prevYear}`;
+        else                 label = `${prevYear} \u2192 ${nextYear}`;
+
+        slot.innerHTML = `<span class="slot-icon">+</span><span class="slot-label">Place here: <b>${label}</b></span>`;
         slot.onclick = () => handleTimelineGuess(index);
         return slot;
     }
