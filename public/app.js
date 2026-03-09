@@ -448,25 +448,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Navigation ---
     function showView(viewName) {
         Object.values(views).forEach(el => el.classList.add('hidden'));
-        views[viewName].classList.remove('hidden');
+        if (views[viewName]) {
+            views[viewName].classList.remove('hidden');
+        }
 
         if (viewName === 'menu' || viewName === 'leaderboard') {
             statsEl.classList.add('hidden');
-            isPlaying = false;
-            btn.textContent = "▶ Play Snippet";
-            cardEl.classList.remove('playing');
-        } else {
-            // Autoplay only for Timeline mode (or if preferred)
-            // User requested NO autoplay for Country Mode
-            if (currentMode !== 'country' && audioPlayer.src) {
-                audioPlayer.play()
-                    .then(() => {
-                        isPlaying = true;
-                        btn.textContent = "⏸ Pause";
-                        cardEl.classList.add('playing');
-                    })
-                    .catch(e => console.error("Playback failed:", e));
-            }
+            resetAudioUI();
+            return;
+        }
+
+        statsEl.classList.remove('hidden');
+
+        // Autoplay only for Timeline mode (per earlier request)
+        if (viewName === 'timeline' && audioPlayer && audioPlayer.src) {
+            audioPlayer.play()
+                .then(() => {
+                    isPlaying = true;
+                    if (timelinePlayBtn) timelinePlayBtn.textContent = "⏸ Pause";
+                    const timelineCard = document.getElementById('current-card');
+                    if (timelineCard) timelineCard.classList.add('playing');
+                })
+                .catch(e => console.error("Playback failed:", e));
         }
     }
 
