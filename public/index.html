@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESC Hitster</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -18,6 +18,15 @@
                 <span>Lives: <b id="lives">3</b></span>
             </div>
         </header>
+
+        <nav class="top-nav" id="top-nav">
+            <button class="nav-pill active" data-view="menu" type="button">Home</button>
+            <button class="nav-pill" data-view="menu" type="button">Games</button>
+            <button class="nav-pill" data-view="prediction" type="button">Semifinal Picks</button>
+            <button class="nav-pill" data-view="prediction" type="button">Final Picks</button>
+            <button class="nav-pill" data-view="leaderboard" type="button">Leaderboard</button>
+            <button class="nav-pill" data-view="prediction-rules" type="button">Rules</button>
+        </nav>
 
         <div id="multiplayer-hud" class="hidden">
             <div class="hud-row">
@@ -31,6 +40,7 @@
         <div id="view-menu" class="view">
             <div class="menu-card">
                 <h2>Select Game Mode</h2>
+                <button id="btn-mode-predictor" class="btn-primary full-width">ESC Predictor 2026</button>
                 <button id="btn-mode-esc2026" class="btn-primary full-width">ESC 2026 Country Quiz</button>
                 <button id="btn-mode-timeline" class="btn-primary full-width">📅 Timeline Mode</button>
                 <button id="btn-mode-country" class="btn-primary full-width">🌍 Country Mode</button>
@@ -130,6 +140,70 @@
 
             <div class="options-grid" id="country-options">
                 <!-- Buttons injected here -->
+            </div>
+        </div>
+
+        <!-- PREDICTOR -->
+        <div id="view-prediction" class="view hidden">
+            <section class="predictor-hero">
+                <div>
+                    <p class="hero-kicker">Eurovision 2026</p>
+                    <h2>Predict The ESC Results</h2>
+                    <p id="predictor-status-text">Rank semifinal acts now. Final prediction unlocks after semifinals are complete.</p>
+                </div>
+                <div class="hero-badge">✨</div>
+            </section>
+
+            <section class="predictor-grid">
+                <article class="predictor-card">
+                    <h3>Semifinal 1 Predictor</h3>
+                    <p class="predictor-sub">Top 10 qualifiers in order</p>
+                    <div class="predictor-layout">
+                        <ol id="semi1-slots" class="rank-slots"></ol>
+                        <div id="semi1-pool" class="act-pool"></div>
+                    </div>
+                </article>
+
+                <article class="predictor-card">
+                    <h3>Semifinal 2 Predictor</h3>
+                    <p class="predictor-sub">Top 10 qualifiers in order</p>
+                    <div class="predictor-layout">
+                        <ol id="semi2-slots" class="rank-slots"></ol>
+                        <div id="semi2-pool" class="act-pool"></div>
+                    </div>
+                </article>
+
+                <article class="predictor-card">
+                    <h3>Grand Final Predictor</h3>
+                    <p class="predictor-sub" id="final-predictor-sub">Unlocks after semifinals are complete</p>
+                    <div class="predictor-layout">
+                        <ol id="final-slots" class="rank-slots"></ol>
+                        <div id="final-pool" class="act-pool"></div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="predictor-actions">
+                <button id="btn-predictor-save" class="btn-secondary" type="button">Save Picks</button>
+                <button id="btn-predictor-score" class="btn-primary" type="button">Calculate Score</button>
+                <button id="btn-predictor-reset" class="btn-link" type="button">Reset Picks</button>
+            </section>
+
+            <section class="predictor-scoreboard" id="predictor-scoreboard">
+                <h3>Prediction Score</h3>
+                <p id="predictor-score-total">No score yet.</p>
+                <p id="predictor-score-breakdown" class="predictor-sub"></p>
+            </section>
+        </div>
+
+        <div id="view-prediction-rules" class="view hidden">
+            <div class="menu-card">
+                <h2>Prediction Rules</h2>
+                <p class="hint">1. Rank your top 10 qualifiers for both semifinals.</p>
+                <p class="hint">2. When semifinals are over, update <code>prediction-2026.json</code> qualifiers.</p>
+                <p class="hint">3. Grand final board unlocks automatically.</p>
+                <p class="hint">4. Score is based on position distance from real results.</p>
+                <button id="btn-back-rules" class="btn-secondary">Back to Predictor</button>
             </div>
         </div>
 

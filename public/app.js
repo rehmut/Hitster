@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let countryModeSettings = {
         optionCountries: []
     };
+    let predictorConfig = null;
+    let predictorState = null;
+    let predictorDragState = null;
 
     // Multiplayer State
     let multiplayer = {
@@ -31,7 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
         timeline: document.getElementById('view-timeline'),
         country: document.getElementById('view-country'),
         leaderboard: document.getElementById('view-leaderboard'),
-        lobby: document.getElementById('view-lobby')
+        lobby: document.getElementById('view-lobby'),
+        prediction: document.getElementById('view-prediction'),
+        'prediction-rules': document.getElementById('view-prediction-rules')
     };
 
     const audioPlayer = document.getElementById('audio-player');
@@ -56,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timelinePlayBtn = document.getElementById('play-btn');
     const countryPlayBtn = document.getElementById('country-play-btn');
     const modeButtons = [
+        document.getElementById('btn-mode-predictor'),
         document.getElementById('btn-mode-timeline'),
         document.getElementById('btn-mode-country'),
         document.getElementById('btn-mode-esc2026')
@@ -70,14 +76,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event Listeners for Menu
-    if (modeButtons[0]) modeButtons[0].onclick = () => startGame('timeline');
-    if (modeButtons[1]) modeButtons[1].onclick = () => startGame('country');
-    if (modeButtons[2]) modeButtons[2].onclick = () => startGame('esc2026-country');
+    if (modeButtons[0]) modeButtons[0].onclick = () => startGame('predictor');
+    if (modeButtons[1]) modeButtons[1].onclick = () => startGame('timeline');
+    if (modeButtons[2]) modeButtons[2].onclick = () => startGame('country');
+    if (modeButtons[3]) modeButtons[3].onclick = () => startGame('esc2026-country');
     const multiplayerBtn = document.getElementById('btn-mode-multiplayer');
     if (multiplayerBtn) multiplayerBtn.onclick = () => showView('lobby');
 
     const leaderboardBtn = document.getElementById('btn-view-leaderboard');
     if (leaderboardBtn) leaderboardBtn.onclick = () => showLeaderboard();
+    const topNav = document.getElementById('top-nav');
+    if (topNav) {
+        topNav.querySelectorAll('.nav-pill').forEach(btn => {
+            btn.onclick = () => {
+                const targetView = btn.dataset.view || 'menu';
+                if (targetView === 'leaderboard') showLeaderboard();
+                else showView(targetView);
+            };
+        });
+    }
 
     const backMenuBtns = document.querySelectorAll('#btn-quit-timeline, #btn-quit-country, #btn-back-menu, #btn-back-lobby');
     backMenuBtns.forEach(btn => {
@@ -86,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
             showView('menu');
         };
     });
+    const backRulesBtn = document.getElementById('btn-back-rules');
+    if (backRulesBtn) backRulesBtn.onclick = () => showView('prediction');
 
     // Multiplayer Listeners
     const createRoomBtn = document.getElementById('btn-create-room');
@@ -432,12 +451,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (restartBtn) restartBtn.onclick = () => showView('menu');
 
     // Fetch Data
-    fetch('data.json')
-        .then(res => res.json())
-        .then(data => {
-            allSongs = data;
+    Promise.all([
+        fetch('data.json').then(res => res.json()),
+        fetch('prediction-2026.json').then(res => {
+            if (!res.ok) return null;
+            return res.json();
+        }).catch(() => null)
+    ])
+        .then(([songs, prediction]) => {
+            allSongs = songs;
+            predictorConfig = prediction || buildFallbackPredictionConfig(songs);
+            initPredictorState();
             console.log("Loaded songs:", allSongs.length);
-            // Enable buttons
             modeButtons.forEach(btn => {
                 if (btn) {
                     btn.disabled = false;
@@ -456,10 +481,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (views[viewName]) {
             views[viewName].classList.remove('hidden');
         }
+        updateTopNav(viewName);
 
-        if (viewName === 'menu' || viewName === 'leaderboard') {
+        if (viewName === 'menu' || viewName === 'leaderboard' || viewName === 'prediction' || viewName === 'prediction-rules') {
             statsEl.classList.add('hidden');
             resetAudioUI();
+            if (viewName === 'prediction') renderPredictor();
             return;
         }
 
@@ -581,6 +608,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (mode === 'esc2026-country') {
             initCountryGame({ songs: esc2026Pool });
             showView('country');
+        } else if (mode === 'predictor') {
+            showView('prediction');
         }
     }
 
@@ -822,6 +851,226 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(nextCountryTurn, COUNTRY_REVEAL_MS);
             }
         }
+    }
+
+    // --- Predictor Logic ---
+    function buildFallbackPredictionConfig(songs) {
+        const esc2026 = songs.filter(song => String(song.year) === '2026');
+        const acts = esc2026.map(song => ({ country: song.country, artist: song.artist, title: song.title }));
+        return {
+            season: '2026',
+            semi1Acts: acts.filter((_, i) => i % 2 === 0),
+            semi2Acts: acts.filter((_, i) => i % 2 === 1),
+            qualifiedForFinal: [],
+            results: {
+                semi1: [],
+                semi2: [],
+                final: []
+            }
+        };
+    }
+
+    function initPredictorState() {
+        if (!predictorConfig) return;
+        const saved = loadSavedPredictorPicks();
+        predictorState = {
+            semi1: Array.from({ length: 10 }, (_, i) => saved?.semi1?.[i] || null),
+            semi2: Array.from({ length: 10 }, (_, i) => saved?.semi2?.[i] || null),
+            final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null)
+        };
+
+        const saveBtn = document.getElementById('btn-predictor-save');
+        const scoreBtn = document.getElementById('btn-predictor-score');
+        const resetBtn = document.getElementById('btn-predictor-reset');
+        if (saveBtn) saveBtn.onclick = savePredictorPicks;
+        if (scoreBtn) scoreBtn.onclick = calculatePredictorScore;
+        if (resetBtn) {
+            resetBtn.onclick = () => {
+                predictorState = { semi1: Array(10).fill(null), semi2: Array(10).fill(null), final: Array(10).fill(null) };
+                savePredictorPicks();
+                renderPredictor();
+            };
+        }
+    }
+
+    function loadSavedPredictorPicks() {
+        try {
+            return JSON.parse(localStorage.getItem('esc-predictor-2026') || 'null');
+        } catch {
+            return null;
+        }
+    }
+
+    function savePredictorPicks() {
+        if (!predictorState) return;
+        localStorage.setItem('esc-predictor-2026', JSON.stringify(predictorState));
+        const totalEl = document.getElementById('predictor-score-total');
+        if (totalEl) totalEl.textContent = 'Picks saved locally.';
+    }
+
+    function renderPredictor() {
+        if (!predictorConfig || !predictorState) return;
+        renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], true);
+        renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], true);
+        const finalUnlocked = (predictorConfig.qualifiedForFinal || []).length > 0;
+        renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked);
+
+        const finalSub = document.getElementById('final-predictor-sub');
+        if (finalSub) {
+            finalSub.textContent = finalUnlocked
+                ? 'Top 10 final placements'
+                : 'Unlocks when qualifiedForFinal is filled in prediction-2026.json';
+        }
+        const statusText = document.getElementById('predictor-status-text');
+        if (statusText) {
+            statusText.textContent = finalUnlocked
+                ? 'Semifinals are set. Predict the Grand Final top 10 too.'
+                : 'Rank semifinal acts now. Final prediction unlocks after semifinals are complete.';
+        }
+    }
+
+    function renderPredictorBoard(boardKey, acts, enabled) {
+        const slotsEl = document.getElementById(`${boardKey}-slots`);
+        const poolEl = document.getElementById(`${boardKey}-pool`);
+        if (!slotsEl || !poolEl) return;
+
+        const picks = predictorState[boardKey] || [];
+        const pickedCountries = new Set(picks.filter(Boolean).map(act => act.country));
+        const poolActs = acts.filter(act => !pickedCountries.has(act.country));
+
+        slotsEl.innerHTML = '';
+        for (let i = 0; i < 10; i++) {
+            const li = document.createElement('li');
+            li.className = `rank-slot${enabled ? '' : ' disabled'}`;
+            li.dataset.board = boardKey;
+            li.dataset.slotIndex = String(i);
+            const picked = picks[i];
+            if (picked) {
+                li.innerHTML = `<span class="rank-index">${i + 1}</span><span class="rank-country">${picked.country}</span><span class="rank-meta">${picked.artist} - ${picked.title}</span><button class="slot-remove" type="button">×</button>`;
+                li.draggable = enabled;
+                li.addEventListener('dragstart', () => {
+                    predictorDragState = { type: 'slot', boardKey, slotIndex: i, act: picked };
+                });
+                const removeBtn = li.querySelector('.slot-remove');
+                if (removeBtn) {
+                    removeBtn.onclick = (ev) => {
+                        ev.stopPropagation();
+                        predictorState[boardKey][i] = null;
+                        renderPredictor();
+                    };
+                }
+            } else {
+                li.innerHTML = `<span class="rank-index">${i + 1}</span><span class="rank-empty">${enabled ? 'Drop an act here' : 'Locked'}</span>`;
+            }
+
+            li.addEventListener('dragover', ev => {
+                if (!enabled) return;
+                ev.preventDefault();
+                li.classList.add('drag-over');
+            });
+            li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
+            li.addEventListener('drop', ev => {
+                li.classList.remove('drag-over');
+                if (!enabled) return;
+                ev.preventDefault();
+                handlePredictorDrop(boardKey, i);
+            });
+            slotsEl.appendChild(li);
+        }
+
+        poolEl.innerHTML = '';
+        poolActs.forEach(act => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `pool-act${enabled ? '' : ' disabled'}`;
+            btn.textContent = `${act.country} - ${act.artist}`;
+            btn.draggable = enabled;
+            btn.onclick = () => {
+                if (!enabled) return;
+                const firstEmpty = predictorState[boardKey].findIndex(item => !item);
+                if (firstEmpty !== -1) {
+                    predictorState[boardKey][firstEmpty] = act;
+                    renderPredictor();
+                }
+            };
+            btn.addEventListener('dragstart', () => {
+                predictorDragState = { type: 'pool', boardKey, act };
+            });
+            poolEl.appendChild(btn);
+        });
+    }
+
+    function handlePredictorDrop(targetBoard, targetSlotIndex) {
+        if (!predictorDragState) return;
+        if (predictorDragState.boardKey !== targetBoard) return;
+
+        const targetAct = predictorState[targetBoard][targetSlotIndex];
+        if (predictorDragState.type === 'pool') {
+            predictorState[targetBoard][targetSlotIndex] = predictorDragState.act;
+            if (targetAct && targetAct.country !== predictorDragState.act.country) {
+                // Dropped over occupied slot: old act goes back to pool automatically.
+            }
+            // Remove duplicates in other slots of the same board.
+            predictorState[targetBoard] = predictorState[targetBoard].map((act, idx) => {
+                if (idx === targetSlotIndex) return act;
+                return act && act.country === predictorDragState.act.country ? null : act;
+            });
+        } else if (predictorDragState.type === 'slot') {
+            const sourceIndex = predictorDragState.slotIndex;
+            if (sourceIndex === targetSlotIndex) return;
+            predictorState[targetBoard][sourceIndex] = targetAct || null;
+            predictorState[targetBoard][targetSlotIndex] = predictorDragState.act;
+        }
+
+        predictorDragState = null;
+        renderPredictor();
+    }
+
+    function calculatePredictorScore() {
+        if (!predictorConfig || !predictorState) return;
+        const results = predictorConfig.results || {};
+        const semi1Score = scorePredictionBoard(predictorState.semi1, results.semi1 || []);
+        const semi2Score = scorePredictionBoard(predictorState.semi2, results.semi2 || []);
+        const finalScore = scorePredictionBoard(predictorState.final, results.final || []);
+        const total = semi1Score.points + semi2Score.points + finalScore.points;
+
+        const totalEl = document.getElementById('predictor-score-total');
+        const breakdownEl = document.getElementById('predictor-score-breakdown');
+        if (totalEl) totalEl.textContent = `Total points: ${total}`;
+        if (breakdownEl) {
+            breakdownEl.textContent = `Semi 1: ${semi1Score.points} | Semi 2: ${semi2Score.points} | Final: ${finalScore.points}`;
+        }
+    }
+
+    function scorePredictionBoard(picks, actualResults) {
+        if (!actualResults || actualResults.length === 0) {
+            return { points: 0 };
+        }
+        const actualMap = new Map(actualResults.map((act, idx) => [typeof act === 'string' ? act : act.country, idx]));
+        let points = 0;
+        picks.forEach((pick, idx) => {
+            if (!pick || !actualMap.has(pick.country)) return;
+            const diff = Math.abs(idx - actualMap.get(pick.country));
+            if (diff === 0) points += 12;
+            else if (diff === 1) points += 9;
+            else if (diff === 2) points += 6;
+            else if (diff === 3) points += 3;
+        });
+        return { points };
+    }
+
+    function updateTopNav(viewName) {
+        const topNav = document.getElementById('top-nav');
+        if (!topNav) return;
+        topNav.querySelectorAll('.nav-pill').forEach(btn => {
+            const target = btn.dataset.view || 'menu';
+            const isActive =
+                (viewName === 'prediction' && target === 'prediction') ||
+                (viewName === 'prediction-rules' && target === 'prediction-rules') ||
+                (viewName === 'leaderboard' && target === 'leaderboard') ||
+                (viewName === 'menu' && target === 'menu');
+            btn.classList.toggle('active', isActive);
+        });
     }
 
     // --- Shared Helpers ---

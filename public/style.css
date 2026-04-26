@@ -17,7 +17,7 @@ body {
     min-height: 100vh;
     background-attachment: fixed;
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
 .app-container {
@@ -698,6 +698,236 @@ h1 {
     color: var(--accent-cyan);
 }
 
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0 0 18px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(120deg, rgba(34, 16, 78, 0.75), rgba(17, 37, 102, 0.7));
+    box-shadow: 0 10px 26px rgba(7, 2, 30, 0.35);
+}
+
+.nav-pill {
+    border: 1px solid transparent;
+    color: var(--text-color);
+    background: transparent;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.nav-pill:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-pill.active {
+    border-color: rgba(255, 255, 255, 0.24);
+    background: linear-gradient(45deg, rgba(255, 0, 85, 0.45), rgba(0, 229, 255, 0.3));
+}
+
+/* Predictor Mode */
+#view-prediction {
+    align-items: stretch;
+    gap: 18px;
+}
+
+.predictor-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background:
+        radial-gradient(circle at 18% 40%, rgba(255, 128, 200, 0.32), transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(104, 180, 255, 0.38), transparent 36%),
+        linear-gradient(110deg, #16083d, #0f1458 65%, #260a44);
+    padding: 26px 28px;
+    box-shadow: 0 18px 42px rgba(10, 6, 36, 0.4);
+}
+
+.hero-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+    color: #c8c2ff;
+}
+
+.predictor-hero h2 {
+    margin: 8px 0 10px;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.1;
+}
+
+.predictor-hero p {
+    margin: 0;
+    max-width: 640px;
+    color: #efedff;
+}
+
+.hero-badge {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.9rem;
+    background: linear-gradient(150deg, #ff6ccf, #7b8dff);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2), 0 14px 30px rgba(17, 12, 56, 0.42);
+}
+
+.predictor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.predictor-card {
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+    padding: 16px;
+    backdrop-filter: blur(8px);
+}
+
+.predictor-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.predictor-sub {
+    margin: 6px 0 14px;
+    color: #d8d4ff;
+    font-size: 0.9rem;
+}
+
+.predictor-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 10px;
+}
+
+.rank-slots {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rank-slot {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto auto;
+    gap: 8px;
+    align-items: center;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    background: rgba(12, 11, 42, 0.4);
+    border-radius: 12px;
+    padding: 8px 10px;
+    min-height: 44px;
+}
+
+.rank-slot.drag-over {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.22);
+}
+
+.rank-slot.disabled {
+    opacity: 0.55;
+}
+
+.rank-index {
+    font-weight: 800;
+    color: #ffd07a;
+}
+
+.rank-country {
+    font-weight: 700;
+}
+
+.rank-meta {
+    color: #bcb7e8;
+    font-size: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rank-empty {
+    color: #aaa4d4;
+    font-size: 0.85rem;
+}
+
+.slot-remove {
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+.act-pool {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.pool-act {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    padding: 8px 10px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    text-align: left;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.pool-act:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.pool-act.disabled {
+    cursor: default;
+    opacity: 0.65;
+}
+
+.predictor-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.predictor-scoreboard {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(19, 17, 47, 0.75);
+    padding: 14px 16px;
+}
+
+.predictor-scoreboard h3 {
+    margin: 0 0 6px;
+}
+
+.predictor-scoreboard p {
+    margin: 4px 0;
+}
+
 /* =====================================================
    MOBILE: Fit gameplay in viewport — no page scrolling
    ===================================================== */
@@ -766,6 +996,35 @@ h1 {
         min-height: 0;
         overflow-x: hidden; /* must be explicit — setting overflow-y:auto implicitly sets overflow-x:auto */
         overflow-y: auto;
+    }
+
+    .top-nav {
+        border-radius: 20px;
+        padding: 8px;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .nav-pill {
+        font-size: 0.78rem;
+        padding: 7px 10px;
+    }
+
+    .predictor-hero {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .predictor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .predictor-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .act-pool {
+        max-height: 190px;
     }
 
     /* ── Game views: no body scroll, internals scroll ── */

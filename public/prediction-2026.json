@@ -1,0 +1,37 @@
+{
+  "season": "2026",
+  "semi1Acts": [
+    { "country": "Bulgaria", "artist": "DARA", "title": "Bangaranga" },
+    { "country": "Georgia", "artist": "Bzikebi", "title": "On Replay" },
+    { "country": "Czechia", "artist": "Daniel Zizka", "title": "CROSSROADS" },
+    { "country": "Armenia", "artist": "SIMÓN", "title": "Paloma Rumba" },
+    { "country": "Lithuania", "artist": "Lion Ceccah", "title": "Sólo Quiero Más" },
+    { "country": "Switzerland", "artist": "Veronica Fusaro", "title": "Alice" },
+    { "country": "Malta", "artist": "AIDAN", "title": "Bella" },
+    { "country": "Estonia", "artist": "Vanilla Ninja", "title": "Too Epic To Be True" },
+    { "country": "Azerbaijan", "artist": "JIVA", "title": "Just Go" },
+    { "country": "Montenegro", "artist": "Tamara Živkovi", "title": "Nova Zora" },
+    { "country": "United Kingdom", "artist": "LOOK MUM NO COMPUTER", "title": "Eins, Zwei, Drei" },
+    { "country": "Serbia", "artist": "LAVINA", "title": "Kraj Mene" }
+  ],
+  "semi2Acts": [
+    { "country": "Romania", "artist": "Alexandra Cpitnescu", "title": "Choke Me" },
+    { "country": "Albania", "artist": "Alis", "title": "Nân" },
+    { "country": "Croatia", "artist": "LELEK", "title": "Andromeda" },
+    { "country": "Italy", "artist": "Sal Da Vinci", "title": "Per Sempre Sì" },
+    { "country": "Germany", "artist": "Sarah Engels", "title": "Fire" },
+    { "country": "Greece", "artist": "Akylas", "title": "Ferto" },
+    { "country": "Moldova", "artist": "Satoshi", "title": "Viva, Moldova!" },
+    { "country": "Austria", "artist": "COSMÓ", "title": "Tanzschein" },
+    { "country": "Ukraine", "artist": "LELÉKA", "title": "Ridnym" },
+    { "country": "France", "artist": "Monroe", "title": "Regarde !" },
+    { "country": "Israel", "artist": "Noam Bettan", "title": "Michelle" },
+    { "country": "Australia", "artist": "Delta Goodrem", "title": "Eclipse" }
+  ],
+  "qualifiedForFinal": [],
+  "results": {
+    "semi1": [],
+    "semi2": [],
+    "final": []
+  }
+}
