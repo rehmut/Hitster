@@ -2,7 +2,31 @@
     "version": 2,
     "builds": [
         {
-            "src": "api/**/*.py",
+            "src": "api/leaderboard.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/create.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/join.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/leave.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/player.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/status.py",
+            "use": "@vercel/python"
+        },
+        {
+            "src": "api/room/update.py",
             "use": "@vercel/python"
         },
         {
