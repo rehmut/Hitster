@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Global State
     let allSongs = [];
-    let currentMode = null; // 'timeline' or 'country'
+    let currentMode = null; // 'timeline' | 'country' | 'esc2026-country'
     let score = 0;
     let lives = 3;
     let isPlaying = false;
     let currentSong = null;
+    let countryModeSettings = {
+        revealSongInfoFirst: false,
+        optionCountries: []
+    };
 
     // Multiplayer State
     let multiplayer = {
@@ -54,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const countryPlayBtn = document.getElementById('country-play-btn');
     const modeButtons = [
         document.getElementById('btn-mode-timeline'),
-        document.getElementById('btn-mode-country')
+        document.getElementById('btn-mode-country'),
+        document.getElementById('btn-mode-esc2026')
     ];
 
     // Disable buttons initially
@@ -68,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listeners for Menu
     if (modeButtons[0]) modeButtons[0].onclick = () => startGame('timeline');
     if (modeButtons[1]) modeButtons[1].onclick = () => startGame('country');
+    if (modeButtons[2]) modeButtons[2].onclick = () => startGame('esc2026-country');
     const multiplayerBtn = document.getElementById('btn-mode-multiplayer');
     if (multiplayerBtn) multiplayerBtn.onclick = () => showView('lobby');
 
@@ -528,6 +534,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let randomGenerator = Math.random;
 
     function startGame(mode, seed = null) {
+        const esc2026Pool = allSongs.filter(song => String(song.year) === '2026');
+        if (mode === 'esc2026-country' && esc2026Pool.length === 0) {
+            alert('No ESC 2026 songs found in data.json yet. Add entries with year "2026" first.');
+            return;
+        }
+
         currentMode = mode;
         if (seed) {
             // Simple seeded RNG (Mulberry32)
@@ -554,12 +566,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
         gameOverModal.classList.add('hidden');
         playerNameInput.value = '';
+        const countryModeTitle = document.getElementById('country-mode-title');
+        if (countryModeTitle) {
+            countryModeTitle.textContent = mode === 'esc2026-country'
+                ? 'Guess the Country (ESC 2026)'
+                : 'Guess the Country';
+        }
 
         if (mode === 'timeline') {
             initTimelineGame();
             showView('timeline');
         } else if (mode === 'country') {
-            initCountryGame();
+            initCountryGame({ songs: allSongs, revealSongInfoFirst: false });
+            showView('country');
+        } else if (mode === 'esc2026-country') {
+            initCountryGame({ songs: esc2026Pool, revealSongInfoFirst: true });
             showView('country');
         }
     }
@@ -716,8 +737,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Country Game Logic ---
     const countryOptionsEl = document.getElementById('country-options');
 
-    function initCountryGame() {
-        availableSongs = [...allSongs];
+    function initCountryGame(settings = {}) {
+        const songs = Array.isArray(settings.songs) ? settings.songs : allSongs;
+        availableSongs = [...songs];
+        countryModeSettings = {
+            revealSongInfoFirst: Boolean(settings.revealSongInfoFirst),
+            optionCountries: [...new Set(songs.map(song => song.country))]
+        };
         nextCountryTurn();
     }
 
@@ -733,9 +759,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (idx > -1) availableSongs.splice(idx, 1);
 
         // Update UI
-        // Update UI - HIDE INFO INITIALLY
-        document.getElementById('country-artist').textContent = "???";
-        document.getElementById('country-title').textContent = "???";
+        if (countryModeSettings.revealSongInfoFirst) {
+            document.getElementById('country-artist').textContent = currentSong.artist;
+            document.getElementById('country-title').textContent = currentSong.title;
+        } else {
+            document.getElementById('country-artist').textContent = "???";
+            document.getElementById('country-title').textContent = "???";
+        }
 
         prepareAudio(currentSong.audio);
         generateCountryOptions();
@@ -746,7 +776,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const correctCountry = currentSong.country;
 
         // Get 3 random wrong countries
-        const allCountries = [...new Set(allSongs.map(s => s.country))];
+        const allCountries = countryModeSettings.optionCountries.length > 0
+            ? countryModeSettings.optionCountries
+            : [...new Set(allSongs.map(s => s.country))];
         const wrongCountries = allCountries.filter(c => c !== correctCountry);
         const options = [correctCountry];
 
@@ -780,7 +812,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (guess === currentSong.country) {
             score++;
             setTimeout(() => {
-                updateStats();
                 updateStats();
                 // Reveal info
                 document.getElementById('country-artist').textContent = currentSong.artist;
