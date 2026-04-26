@@ -4,40 +4,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESC Hitster</title>
+    <title>ESC Predictor — Predict the Eurovision Results</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="app-container">
-        <header>
-            <h1>ESC Hitster</h1>
-            <div class="stats" id="game-stats">
-                <span>Score: <b id="score">0</b></span>
-                <span>Lives: <b id="lives">3</b></span>
+    <!-- ============ HEADER / NAV ============ -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="#" data-view="home" aria-label="ESC Predictor home">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21s-7.5-4.6-9.6-9.2C1 8.5 3.2 5 6.5 5c1.9 0 3.4 1 4.5 2.5C12.1 6 13.6 5 15.5 5 18.8 5 21 8.5 19.6 11.8 17.5 16.4 12 21 12 21z" fill="white"/>
+                    </svg>
+                </span>
+                <span class="brand-text">
+                    <small>Eurovision</small>
+                    <strong>ESC Predictor</strong>
+                </span>
+            </a>
+
+            <nav class="top-nav" id="top-nav" aria-label="Primary">
+                <button class="nav-pill active" data-view="home" type="button">Home</button>
+                <button class="nav-pill" data-view="menu" type="button">Games</button>
+                <button class="nav-pill" data-view="prediction" type="button">Semifinal Picks</button>
+                <button class="nav-pill" data-view="prediction" type="button">Final Picks</button>
+                <button class="nav-pill" data-view="leaderboard" type="button">Leaderboard</button>
+                <button class="nav-pill" data-view="prediction-rules" type="button">Rules</button>
+            </nav>
+
+            <div class="header-right">
+                <div class="profile-chip" title="Profile">
+                    <span class="profile-avatar" aria-hidden="true">👤</span>
+                    <span>Profile</span>
+                </div>
+                <button class="audio-toggle" type="button" aria-label="Toggle sound">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 5 6 9H3v6h3l5 4V5z" fill="white"/>
+                        <path d="M16 8a5 5 0 0 1 0 8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </div>
-        </header>
+        </div>
+        <div id="game-stats" class="game-stats hidden">
+            <span>Score: <b id="score">0</b></span>
+            <span>Lives: <b id="lives">3</b></span>
+        </div>
+    </header>
 
-        <nav class="top-nav" id="top-nav">
-            <button class="nav-pill active" data-view="home" type="button">Home</button>
-            <button class="nav-pill" data-view="menu" type="button">Games</button>
-            <button class="nav-pill" data-view="prediction" type="button">Semifinal Picks</button>
-            <button class="nav-pill" data-view="prediction" type="button">Final Picks</button>
-            <button class="nav-pill" data-view="leaderboard" type="button">Leaderboard</button>
-            <button class="nav-pill" data-view="prediction-rules" type="button">Rules</button>
-        </nav>
-
+    <!-- ============ MAIN ============ -->
+    <main class="app-container">
         <div id="multiplayer-hud" class="hidden">
             <div class="hud-row">
                 <span>Room <b id="hud-room-code">----</b></span>
-                <button id="btn-leave-hud" class="btn-link small" type="button">Leave</button>
+                <button id="btn-leave-hud" class="btn-link small-btn" type="button">Leave</button>
             </div>
             <div id="hud-players"></div>
         </div>
 
-        <!-- HOME -->
+        <!-- ============ HOME ============ -->
         <div id="view-home" class="view">
+            <section class="hero">
+                <div class="hero-content">
+                    <p class="hero-eyebrow">Eurovision Song Contest 2026</p>
+                    <h1 class="hero-title">Predict the <span class="grad">ESC</span> Results!</h1>
+                    <p class="hero-sub">Guess the semifinal and final placements, earn points and compete with friends.</p>
+                    <div class="hero-cta">
+                        <button class="btn-primary" data-view="prediction" type="button">Make Your Picks</button>
+                        <button class="btn-secondary" data-view="menu" type="button">Browse Games</button>
+                    </div>
+                </div>
+
+                <div class="hero-decor" aria-hidden="true">
+                    <span class="deco heart-1">💗</span>
+                    <span class="deco heart-2">💜</span>
+                    <span class="deco spark-1">✦</span>
+                    <span class="deco spark-2">✧</span>
+                    <span class="deco note-1">♪</span>
+                    <span class="deco note-2">♫</span>
+                    <span class="deco bubble b1"></span>
+                    <span class="deco bubble b2"></span>
+                    <span class="deco bubble b3"></span>
+                    <svg class="deco mic" viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="micGrad" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#7b66ff"/>
+                                <stop offset="100%" stop-color="#3f2a9a"/>
+                            </linearGradient>
+                            <radialGradient id="meshGrad" cx="0.3" cy="0.3" r="0.8">
+                                <stop offset="0%" stop-color="#a795ff"/>
+                                <stop offset="100%" stop-color="#3f2a9a"/>
+                            </radialGradient>
+                        </defs>
+                        <rect x="52" y="86" width="16" height="64" rx="8" fill="url(#micGrad)"/>
+                        <ellipse cx="60" cy="160" rx="36" ry="10" fill="#2c1d6e" opacity="0.7"/>
+                        <ellipse cx="60" cy="158" rx="32" ry="8" fill="#1a0f4a"/>
+                        <circle cx="60" cy="58" r="40" fill="url(#meshGrad)"/>
+                        <g stroke="rgba(255,255,255,0.18)" stroke-width="1.2" fill="none">
+                            <line x1="28" y1="40" x2="92" y2="40"/>
+                            <line x1="22" y1="58" x2="98" y2="58"/>
+                            <line x1="28" y1="76" x2="92" y2="76"/>
+                            <line x1="40" y1="22" x2="40" y2="94"/>
+                            <line x1="60" y1="18" x2="60" y2="98"/>
+                            <line x1="80" y1="22" x2="80" y2="94"/>
+                        </g>
+                        <ellipse cx="48" cy="44" rx="6" ry="3" fill="rgba(255,255,255,0.45)"/>
+                    </svg>
+                </div>
+            </section>
+
+            <section class="feature-grid" aria-label="Quick links">
+                <article class="feature-card semi">
+                    <div class="feature-head">
+                        <div class="feature-icon">★</div>
+                        <h3>Semifinal Predictor</h3>
+                    </div>
+                    <p class="feature-sub">Drag and drop to rank your top 10</p>
+                    <button class="feature-cta" data-view="prediction" type="button">Open Predictor</button>
+                </article>
+
+                <article class="feature-card final">
+                    <div class="feature-head">
+                        <div class="feature-icon">♛</div>
+                        <h3>Grand Final Predictor</h3>
+                    </div>
+                    <p class="feature-sub">Drag and drop to rank your top 10</p>
+                    <button class="feature-cta" data-view="prediction" type="button">Open Predictor</button>
+                </article>
+
+                <article class="feature-card scoring">
+                    <div class="feature-head">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Scoring System</h3>
+                    </div>
+                    <ul class="score-tiers">
+                        <li>
+                            <span class="tier-pill amber">12</span>
+                            <div class="tier-text"><b>Perfect match</b><span>12 pts for each correct position</span></div>
+                        </li>
+                        <li>
+                            <span class="tier-pill cyan">8–10</span>
+                            <div class="tier-text"><b>Close is awesome!</b><span>Off by one position</span></div>
+                        </li>
+                        <li>
+                            <span class="tier-pill sky">4–7</span>
+                            <div class="tier-text"><b>Not far off</b><span>Off by two positions</span></div>
+                        </li>
+                        <li>
+                            <span class="tier-pill rose">0–3</span>
+                            <div class="tier-text"><b>Keep trying!</b><span>Off by three or more</span></div>
+                        </li>
+                    </ul>
+                    <p class="tier-banner">Highest score wins!</p>
+                    <button class="feature-cta gradient" data-view="prediction" type="button">Calculate Score</button>
+                </article>
+
+                <article class="feature-card leaderboard">
+                    <div class="feature-head">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Leaderboard</h3>
+                    </div>
+                    <ol class="lb-preview" id="home-leaderboard">
+                        <li><span class="lb-rank">1</span><span class="lb-name">Loading…</span><span class="lb-score">—</span></li>
+                    </ol>
+                    <button class="feature-cta" data-view="leaderboard" type="button">View Full Leaderboard</button>
+                </article>
+            </section>
+
+            <section class="how-it-works" aria-label="How it works">
+                <h2>How it works</h2>
+                <ol class="steps">
+                    <li>
+                        <span class="step-num">1</span>
+                        <div class="step-body">
+                            <h4>Make your picks</h4>
+                            <p>Rank the countries in the semifinals and final in the order you think they'll finish.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-num">2</span>
+                        <div class="step-body">
+                            <h4>Submit predictions</h4>
+                            <p>Lock in your predictions before the show and get ready for the results!</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-num">3</span>
+                        <div class="step-body">
+                            <h4>See who wins</h4>
+                            <p>We calculate the scores and the best predictor claims the crown.</p>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
             <section class="playlist-card">
                 <h3>ESC Kompakt Playlist</h3>
                 <div class="playlist-embed">
@@ -52,16 +213,16 @@
             </section>
         </div>
 
-        <!-- MAIN MENU -->
+        <!-- ============ MAIN MENU ============ -->
         <div id="view-menu" class="view hidden">
             <div class="menu-card">
                 <h2>Select Game Mode</h2>
                 <button id="btn-mode-predictor" class="btn-primary full-width">ESC Predictor 2026</button>
                 <button id="btn-mode-esc2026" class="btn-primary full-width">ESC 2026 Country Quiz</button>
-                <button id="btn-mode-timeline" class="btn-primary full-width">📅 Timeline Mode</button>
-                <button id="btn-mode-country" class="btn-primary full-width">🌍 Country Mode</button>
-                <button id="btn-mode-multiplayer" class="btn-primary full-width">👥 Multiplayer</button>
-                <button id="btn-view-leaderboard" class="btn-secondary full-width">🏆 Leaderboard</button>
+                <button id="btn-mode-timeline" class="btn-secondary full-width">📅 Timeline Mode</button>
+                <button id="btn-mode-country" class="btn-secondary full-width">🌍 Country Mode</button>
+                <button id="btn-mode-multiplayer" class="btn-secondary full-width">👥 Multiplayer</button>
+                <button id="btn-view-leaderboard" class="btn-link full-width">🏆 Leaderboard</button>
             </div>
             <section class="playlist-card">
                 <h3>ESC Kompakt Playlist</h3>
@@ -77,25 +238,22 @@
             </section>
         </div>
 
-        <!-- MULTIPLAYER LOBBY -->
+        <!-- ============ MULTIPLAYER LOBBY ============ -->
         <div id="view-lobby" class="view hidden">
             <div class="menu-card">
                 <h2>👥 Multiplayer Lobby</h2>
-                <input type="text" id="lobby-player-name" placeholder="Enter your name" maxlength="15"
-                    class="full-width" style="margin-bottom: 20px; padding: 10px;">
+                <input type="text" id="lobby-player-name" placeholder="Enter your name" maxlength="15" class="full-width">
 
                 <div id="lobby-actions">
-                    <button id="btn-create-room" class="btn-primary full-width" style="margin-bottom: 10px;">Create
-                        Room</button>
+                    <button id="btn-create-room" class="btn-primary full-width">Create Room</button>
                     <div class="join-row">
-                        <input type="text" id="room-code-input" placeholder="Room Code"
-                            class="join-code-input">
+                        <input type="text" id="room-code-input" placeholder="Room Code" class="join-code-input">
                         <button id="btn-join-room" class="btn-primary">Join</button>
                     </div>
                 </div>
 
                 <div id="lobby-room-status" class="hidden">
-                    <h3>Room Code: <span id="display-room-code" style="color: var(--accent-cyan);">ABCD</span></h3>
+                    <h3>Room Code: <span id="display-room-code">ABCD</span></h3>
                     <div id="invite-link-container" class="invite-box hidden">
                         <p class="invite-label">Invite Link</p>
                         <div class="invite-row">
@@ -105,22 +263,20 @@
                         </div>
                         <p class="hint">Share the code or link above with a friend so they can join.</p>
                     </div>
-                    <div id="lobby-player-list"
-                        style="text-align: left; margin: 20px 0; border: 1px solid var(--card-border); padding: 10px; border-radius: 8px;">
+                    <div id="lobby-player-list" class="invite-box">
                         <!-- Players injected here -->
                     </div>
-                    <p id="lobby-msg" style="color: var(--text-secondary);">Waiting for host...</p>
+                    <p id="lobby-msg" class="hint">Waiting for host...</p>
                     <button id="btn-ready-toggle" class="btn-secondary full-width hidden">I'm Ready</button>
                     <button id="btn-start-multiplayer" class="btn-primary full-width hidden">Start Game</button>
                     <button id="btn-leave-room" class="btn-link full-width hidden" type="button">Leave Room</button>
                 </div>
 
-                <button id="btn-back-lobby" class="btn-secondary full-width" style="margin-top: 20px;">Back to
-                    Menu</button>
+                <button id="btn-back-lobby" class="btn-link full-width">Back to Menu</button>
             </div>
         </div>
 
-        <!-- TIMELINE GAME -->
+        <!-- ============ TIMELINE GAME ============ -->
         <div id="view-timeline" class="view hidden">
             <div class="current-card-container">
                 <div id="current-card" class="card unknown">
@@ -136,8 +292,7 @@
                 <div class="controls">
                     <button id="play-btn" class="btn-primary">▶ Play Snippet</button>
                     <p class="instruction">Select a position in the timeline below!</p>
-                    <button id="btn-quit-timeline" class="btn-secondary small-btn" style="margin-top: 10px;">Back to
-                        Menu</button>
+                    <button id="btn-quit-timeline" class="btn-link small-btn">Back to Menu</button>
                 </div>
             </div>
 
@@ -148,7 +303,7 @@
             </div>
         </div>
 
-        <!-- COUNTRY GAME -->
+        <!-- ============ COUNTRY GAME ============ -->
         <div id="view-country" class="view hidden">
             <div class="current-card-container">
                 <div class="card unknown" id="country-card">
@@ -161,8 +316,7 @@
                 </div>
                 <div class="controls">
                     <button id="country-play-btn" class="btn-primary">▶ Play Snippet</button>
-                    <button id="btn-quit-country" class="btn-secondary small-btn" style="margin-top: 10px;">Back to
-                        Menu</button>
+                    <button id="btn-quit-country" class="btn-link small-btn">Back to Menu</button>
                 </div>
             </div>
 
@@ -171,12 +325,12 @@
             </div>
         </div>
 
-        <!-- PREDICTOR -->
+        <!-- ============ PREDICTOR ============ -->
         <div id="view-prediction" class="view hidden">
             <section class="predictor-hero">
                 <div>
                     <p class="hero-kicker">Eurovision 2026</p>
-                    <h2>Predict The ESC Results</h2>
+                    <h2>Predict the ESC Results</h2>
                     <p id="predictor-status-text">Rank semifinal acts now. Final prediction unlocks after semifinals are complete.</p>
                 </div>
                 <div class="hero-badge">✨</div>
@@ -224,6 +378,7 @@
             </section>
         </div>
 
+        <!-- ============ PREDICTION RULES ============ -->
         <div id="view-prediction-rules" class="view hidden">
             <div class="menu-card">
                 <h2>Prediction Rules</h2>
@@ -235,18 +390,18 @@
             </div>
         </div>
 
-        <!-- LEADERBOARD -->
+        <!-- ============ LEADERBOARD ============ -->
         <div id="view-leaderboard" class="view hidden">
             <div class="menu-card">
                 <h2>🏆 Leaderboard</h2>
                 <div class="leaderboard-list" id="leaderboard-list">
                     <!-- Scores injected here -->
                 </div>
-                <button id="btn-back-menu" class="btn-secondary">Back to Menu</button>
+                <button id="btn-back-menu" class="btn-link">Back to Menu</button>
             </div>
         </div>
 
-        <!-- GAME OVER MODAL -->
+        <!-- ============ GAME OVER MODAL ============ -->
         <div id="game-over-modal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-emoji" id="modal-emoji">💀</div>
@@ -258,10 +413,104 @@
                 <button id="restart-btn" class="btn-secondary">Play Again</button>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21s-7.5-4.6-9.6-9.2C1 8.5 3.2 5 6.5 5c1.9 0 3.4 1 4.5 2.5C12.1 6 13.6 5 15.5 5 18.8 5 21 8.5 19.6 11.8 17.5 16.4 12 21 12 21z" fill="white"/>
+                    </svg>
+                </span>
+                <h4>ESC Predictor</h4>
+                <p>Predict. Compete. Celebrate ESC!</p>
+            </div>
+
+            <div class="footer-col">
+                <h5>Follow us</h5>
+                <div class="socials">
+                    <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.8-.1zm0 2.2c-3.1 0-3.5 0-4.8.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.3.8-.4.4-.6.8-.8 1.3-.2.4-.3 1-.4 2.1-.1 1.3-.1 1.7-.1 4.8s0 3.5.1 4.8c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.3.4.4.8.6 1.3.8.4.2 1 .3 2.1.4 1.3.1 1.7.1 4.8.1s3.5 0 4.8-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.3-.8.4-.4.6-.8.8-1.3.2-.4.3-1 .4-2.1.1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c-.1-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.3-.4-.4-.8-.6-1.3-.8-.4-.2-1-.3-2.1-.4-1.3-.1-1.7-.1-4.8-.1zm0 3.7a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 1.7a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6zm5.1-2c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1z"/></svg></a>
+                    <a href="#" aria-label="X / Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h2.9l-6.3 7.2L21.5 21h-5.7l-4.5-5.9L6.2 21H3.3l6.7-7.7L2.5 3h5.8l4 5.4L17.5 3zm-1 16h1.6L7.6 5H5.9l10.6 14z"/></svg></a>
+                    <a href="#" aria-label="TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8.4a6.8 6.8 0 0 1-4-1.3v8.7a5.4 5.4 0 1 1-5.4-5.4c.3 0 .5 0 .8.1v2.7a2.7 2.7 0 1 0 1.9 2.6V2h2.7a4 4 0 0 0 4 4v2.4z"/></svg></a>
+                    <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.6a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.5A3 3 0 0 0 1 7.6 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.4a3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.6zM10 15.5v-7l6 3.5-6 3.5z"/></svg></a>
+                    <a href="#" aria-label="Discord"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4.6A19 19 0 0 0 15.5 3l-.2.4a14 14 0 0 0-6.6 0L8.5 3A19 19 0 0 0 4 4.6 20 20 0 0 0 .5 18a19 19 0 0 0 5.7 2.9l.4-.6a13 13 0 0 1-2-1c.2-.1.3-.2.5-.4a13.6 13.6 0 0 0 11.8 0l.5.4a13 13 0 0 1-2 1l.4.6A19 19 0 0 0 23.5 18 20 20 0 0 0 20 4.6zM8.5 14.7c-1 0-1.9-.9-1.9-2s.9-2 1.9-2 1.9.9 1.9 2-.9 2-1.9 2zm7 0c-1 0-1.9-.9-1.9-2s.9-2 1.9-2 1.9.9 1.9 2-.9 2-1.9 2z"/></svg></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h5>About</h5>
+                <ul>
+                    <li><a href="#">About ESC Predictor</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h5>Contact</h5>
+                <ul>
+                    <li><a href="mailto:hello@escpredictor.com">hello@escpredictor.com</a></li>
+                </ul>
+                <p style="margin-top:8px; color: rgba(255,255,255,0.6); font-size:0.86rem;">We'd love to hear from you!</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">© 2026 ESC Predictor. All rights reserved. 💗</div>
+    </footer>
 
     <audio id="audio-player"></audio>
     <script src="app.js"></script>
+
+    <!-- Lightweight wiring for new home-page elements (data-view CTAs and leaderboard preview) -->
+    <script>
+        (function () {
+            // Wire any element with data-view (outside of #top-nav, which app.js handles)
+            document.addEventListener('click', function (e) {
+                var trigger = e.target.closest('[data-view]');
+                if (!trigger) return;
+                if (trigger.closest('#top-nav')) return; // app.js handles top-nav
+                var viewName = trigger.dataset.view;
+                if (!viewName) return;
+                e.preventDefault();
+                // Click the matching nav-pill so app.js does the actual navigation
+                var pill = document.querySelector('#top-nav .nav-pill[data-view="' + viewName + '"]');
+                if (pill) pill.click();
+            });
+
+            // Populate the small leaderboard preview on home from the same API the full view uses
+            function loadHomeLeaderboard() {
+                var ol = document.getElementById('home-leaderboard');
+                if (!ol) return;
+                fetch('/api/leaderboard')
+                    .then(function (r) { return r.ok ? r.json() : []; })
+                    .then(function (data) {
+                        ol.innerHTML = '';
+                        var items = (data || []).slice(0, 5);
+                        if (items.length === 0) {
+                            ol.innerHTML = '<li><span class="lb-rank">—</span><span class="lb-name">No scores yet</span><span class="lb-score"></span></li>';
+                            return;
+                        }
+                        items.forEach(function (entry, i) {
+                            var li = document.createElement('li');
+                            var name = (entry.name || 'Anonymous').replace(/[<>&]/g, '');
+                            var score = Number(entry.score || 0);
+                            li.innerHTML =
+                                '<span class="lb-rank">' + (i + 1) + '</span>' +
+                                '<span class="lb-name">' + name + '</span>' +
+                                '<span class="lb-score">' + score + '</span>';
+                            ol.appendChild(li);
+                        });
+                    })
+                    .catch(function () {
+                        ol.innerHTML = '<li><span class="lb-rank">—</span><span class="lb-name">Couldn\'t load scores</span><span class="lb-score"></span></li>';
+                    });
+            }
+            loadHomeLeaderboard();
+        })();
+    </script>
 </body>
 
 </html>
