@@ -20,7 +20,7 @@
         </header>
 
         <nav class="top-nav" id="top-nav">
-            <button class="nav-pill active" data-view="menu" type="button">Home</button>
+            <button class="nav-pill active" data-view="home" type="button">Home</button>
             <button class="nav-pill" data-view="menu" type="button">Games</button>
             <button class="nav-pill" data-view="prediction" type="button">Semifinal Picks</button>
             <button class="nav-pill" data-view="prediction" type="button">Final Picks</button>
@@ -36,8 +36,24 @@
             <div id="hud-players"></div>
         </div>
 
+        <!-- HOME -->
+        <div id="view-home" class="view">
+            <section class="playlist-card">
+                <h3>ESC Kompakt Playlist</h3>
+                <div class="playlist-embed">
+                    <iframe
+                        src="https://www.youtube.com/embed/videoseries?list=PLAq7NLS4_INJnQ0RwLUfVyrH4wEzy7ySK"
+                        title="ESC Kompakt Playlist"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen></iframe>
+                </div>
+            </section>
+        </div>
+
         <!-- MAIN MENU -->
-        <div id="view-menu" class="view">
+        <div id="view-menu" class="view hidden">
             <div class="menu-card">
                 <h2>Select Game Mode</h2>
                 <button id="btn-mode-predictor" class="btn-primary full-width">ESC Predictor 2026</button>

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let predictorConfig = null;
     let predictorState = null;
     let predictorDragState = null;
+    let predictorSelectedAct = null;
 
     // Multiplayer State
     let multiplayer = {
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DOM Elements
     const views = {
+        home: document.getElementById('view-home'),
         menu: document.getElementById('view-menu'),
         timeline: document.getElementById('view-timeline'),
         country: document.getElementById('view-country'),
@@ -483,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateTopNav(viewName);
 
-        if (viewName === 'menu' || viewName === 'leaderboard' || viewName === 'prediction' || viewName === 'prediction-rules') {
+        if (viewName === 'home' || viewName === 'menu' || viewName === 'leaderboard' || viewName === 'prediction' || viewName === 'prediction-rules') {
             statsEl.classList.add('hidden');
             resetAudioUI();
             if (viewName === 'prediction') renderPredictor();
@@ -975,6 +977,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 ev.preventDefault();
                 handlePredictorDrop(boardKey, i);
             });
+            li.addEventListener('click', () => {
+                if (!enabled || !predictorSelectedAct) return;
+                if (predictorSelectedAct.boardKey !== boardKey) return;
+                placeActInPredictorSlot(boardKey, i, predictorSelectedAct.act);
+                predictorSelectedAct = null;
+                renderPredictor();
+            });
             slotsEl.appendChild(li);
         }
 
@@ -983,18 +992,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = `pool-act${enabled ? '' : ' disabled'}`;
+            if (predictorSelectedAct && predictorSelectedAct.boardKey === boardKey && predictorSelectedAct.act.country === act.country) {
+                btn.classList.add('selected');
+            }
             btn.textContent = `${act.country} - ${act.artist}`;
             btn.draggable = enabled;
             btn.onclick = () => {
                 if (!enabled) return;
-                const firstEmpty = predictorState[boardKey].findIndex(item => !item);
-                if (firstEmpty !== -1) {
-                    predictorState[boardKey][firstEmpty] = act;
-                    renderPredictor();
-                }
+                predictorSelectedAct = { boardKey, act };
+                playPredictorSnippet(act);
+                renderPredictor();
             };
             btn.addEventListener('dragstart', () => {
                 predictorDragState = { type: 'pool', boardKey, act };
+                playPredictorSnippet(act);
             });
             poolEl.appendChild(btn);
         });
@@ -1006,15 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const targetAct = predictorState[targetBoard][targetSlotIndex];
         if (predictorDragState.type === 'pool') {
-            predictorState[targetBoard][targetSlotIndex] = predictorDragState.act;
-            if (targetAct && targetAct.country !== predictorDragState.act.country) {
-                // Dropped over occupied slot: old act goes back to pool automatically.
-            }
-            // Remove duplicates in other slots of the same board.
-            predictorState[targetBoard] = predictorState[targetBoard].map((act, idx) => {
-                if (idx === targetSlotIndex) return act;
-                return act && act.country === predictorDragState.act.country ? null : act;
-            });
+            placeActInPredictorSlot(targetBoard, targetSlotIndex, predictorDragState.act);
         } else if (predictorDragState.type === 'slot') {
             const sourceIndex = predictorDragState.slotIndex;
             if (sourceIndex === targetSlotIndex) return;
@@ -1023,7 +1026,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         predictorDragState = null;
+        predictorSelectedAct = null;
         renderPredictor();
+    }
+
+    function placeActInPredictorSlot(boardKey, slotIndex, actToPlace) {
+        predictorState[boardKey][slotIndex] = actToPlace;
+        predictorState[boardKey] = predictorState[boardKey].map((act, idx) => {
+            if (idx === slotIndex) return act;
+            return act && act.country === actToPlace.country ? null : act;
+        });
+    }
+
+    function playPredictorSnippet(act) {
+        if (!act) return;
+        const source = resolvePredictorActAudio(act);
+        if (!source) return;
+        prepareAudio(source);
+        if (audioPlayer) {
+            audioPlayer.play().catch(() => { });
+        }
+    }
+
+    function resolvePredictorActAudio(act) {
+        if (act.audio) return act.audio;
+        const byTitleArtist = allSongs.find(song =>
+            String(song.year) === '2026' &&
+            song.country === act.country &&
+            song.title === act.title &&
+            song.artist === act.artist
+        );
+        if (byTitleArtist) return byTitleArtist.audio;
+        const byCountry = allSongs.find(song =>
+            String(song.year) === '2026' &&
+            song.country === act.country
+        );
+        return byCountry ? byCountry.audio : null;
     }
 
     function calculatePredictorScore() {
@@ -1065,6 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         topNav.querySelectorAll('.nav-pill').forEach(btn => {
             const target = btn.dataset.view || 'menu';
             const isActive =
+                (viewName === 'home' && target === 'home') ||
                 (viewName === 'prediction' && target === 'prediction') ||
                 (viewName === 'prediction-rules' && target === 'prediction-rules') ||
                 (viewName === 'leaderboard' && target === 'leaderboard') ||

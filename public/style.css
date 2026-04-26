@@ -938,6 +938,12 @@ h1 {
     background: rgba(255, 255, 255, 0.14);
 }
 
+.pool-act.selected {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 229, 255, 0.18);
+    box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.3) inset;
+}
+
 .pool-act.disabled {
     cursor: default;
     opacity: 0.65;
