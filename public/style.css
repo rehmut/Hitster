@@ -23,7 +23,7 @@
     --bg-mint:       linear-gradient(160deg, #e3f7ff 0%, #f0fbff 100%);
     --bg-rose:       linear-gradient(160deg, #ffe4ef 0%, #fff0f5 100%);
 
-    /* Navy chrome (nav + footer) */
+    /* Navy chrome */
     --navy-1: #100a3a;
     --navy-2: #1a1148;
     --navy-3: #2a1773;
@@ -236,30 +236,8 @@ body {
     flex-shrink: 0;
 }
 
-.profile-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px 6px 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.88rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.profile-avatar {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff8fc7, #8fb6ff);
-    display: grid;
-    place-items: center;
-    font-size: 0.85rem;
-}
-
 .audio-toggle {
+    position: relative;
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -270,6 +248,22 @@ body {
     display: grid;
     place-items: center;
     box-shadow: 0 4px 14px rgba(255, 100, 180, 0.4);
+}
+
+.audio-toggle.is-muted {
+    background: linear-gradient(135deg, #475569, #1e293b);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+}
+
+.audio-toggle.is-muted::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 22px;
+    border-radius: 2px;
+    background: #fff;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.4);
 }
 
 /* Game stats — only shown during gameplay */
@@ -1567,133 +1561,6 @@ button.feature-cta.gradient {
 }
 
 /* =====================================================
-   Footer
-   ===================================================== */
-
-.site-footer {
-    margin-top: 60px;
-    color: var(--text-on-dark);
-    background:
-        radial-gradient(800px 400px at 90% 10%, rgba(255, 168, 211, 0.18), transparent 60%),
-        radial-gradient(800px 400px at 10% 90%, rgba(168, 196, 255, 0.18), transparent 60%),
-        linear-gradient(120deg, var(--navy-1), var(--navy-2) 50%, var(--navy-3));
-    border-top-left-radius: 36px;
-    border-top-right-radius: 36px;
-    padding: 50px clamp(20px, 5vw, 60px) 28px;
-    position: relative;
-    overflow: hidden;
-}
-
-.site-footer::before,
-.site-footer::after {
-    content: '';
-    position: absolute;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.18), transparent 60%);
-    pointer-events: none;
-}
-
-.site-footer::before { left: -80px; bottom: -80px; }
-.site-footer::after  { right: -80px; top: -80px;   background: radial-gradient(circle at 70% 30%, rgba(255, 200, 240, 0.14), transparent 60%); }
-
-.footer-inner {
-    max-width: 1240px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr 1fr;
-    gap: 36px;
-    align-items: start;
-    position: relative;
-    z-index: 1;
-}
-
-.footer-brand {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.footer-brand .brand-mark { width: 40px; height: 40px; }
-
-.footer-brand h4 {
-    margin: 6px 0 4px;
-    font-size: 1.4rem;
-    background: linear-gradient(90deg, #ff9ad6, #c8a8ff 60%, #8fb6ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.footer-brand p {
-    margin: 0;
-    color: var(--text-on-dark-soft);
-    font-size: 0.92rem;
-}
-
-.footer-col h5 {
-    margin: 0 0 14px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1.4px;
-    color: #fff;
-}
-
-.footer-col ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.footer-col a {
-    color: var(--text-on-dark-soft);
-    text-decoration: none;
-    font-size: 0.92rem;
-    transition: color 0.15s;
-}
-
-.footer-col a:hover { color: #fff; }
-
-.socials {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-}
-
-.socials a {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    display: grid;
-    place-items: center;
-    color: #fff;
-    transition: background 0.15s, transform 0.15s;
-}
-
-.socials a:hover {
-    background: rgba(255, 255, 255, 0.16);
-    transform: translateY(-1px);
-}
-
-.footer-bottom {
-    max-width: 1240px;
-    margin: 30px auto 0;
-    padding-top: 18px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-    color: var(--text-on-dark-soft);
-    font-size: 0.84rem;
-    position: relative;
-    z-index: 1;
-}
-
-/* =====================================================
    Responsive
    ===================================================== */
 
@@ -1718,8 +1585,6 @@ button.feature-cta.gradient {
 
 @media (max-width: 1000px) {
     .predictor-grid { grid-template-columns: 1fr; }
-    .footer-inner { grid-template-columns: 1.4fr 1fr 1fr; }
-    .footer-brand { grid-row: span 2; }
 }
 
 @media (max-width: 760px) {
@@ -1783,9 +1648,6 @@ button.feature-cta.gradient {
         box-shadow: 0 10px 22px rgba(255, 79, 147, 0.5);
     }
 
-    .profile-chip span:not(.profile-avatar) { display: none; }
-    .profile-chip { padding: 3px; gap: 0; border: none; background: transparent; }
-    .profile-avatar { width: 30px; height: 30px; }
     .audio-toggle { width: 34px; height: 34px; }
 
     .hero { padding: 28px 22px; }
@@ -1797,9 +1659,6 @@ button.feature-cta.gradient {
 
     .steps { grid-template-columns: 1fr; gap: 16px; }
     .steps li:not(:last-child)::after { display: none; }
-
-    .footer-inner { grid-template-columns: 1fr; gap: 28px; }
-    .footer-brand { grid-row: auto; }
 
     .predictor-hero { flex-direction: column; align-items: flex-start; padding: 22px; }
     .hero-badge { align-self: flex-end; }
@@ -1835,6 +1694,4 @@ button.feature-cta.gradient {
 
     .btn-primary { padding: 12px 20px; font-size: 0.92rem; }
     .btn-secondary { padding: 11px 18px; font-size: 0.9rem; }
-
-    .site-footer { border-top-left-radius: 22px; border-top-right-radius: 22px; padding: 36px 20px 20px; }
 }

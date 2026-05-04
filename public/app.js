@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0;
     let lives = 3;
     let isPlaying = false;
+    let audioMuted = false;
     let currentSong = null;
     let countryModeSettings = {
         optionCountries: []
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const audioPlayer = document.getElementById('audio-player');
+    const audioToggleBtn = document.getElementById('audio-toggle');
     const scoreEl = document.getElementById('score');
     const livesEl = document.getElementById('lives');
     const statsEl = document.getElementById('game-stats');
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modeButtons[1]) modeButtons[1].onclick = () => startGame('timeline');
     if (modeButtons[2]) modeButtons[2].onclick = () => startGame('country');
     if (modeButtons[3]) modeButtons[3].onclick = () => startGame('esc2026-country');
+    if (audioToggleBtn) audioToggleBtn.onclick = () => toggleGlobalMute();
     const multiplayerBtn = document.getElementById('btn-mode-multiplayer');
     if (multiplayerBtn) multiplayerBtn.onclick = () => showView('lobby');
 
@@ -528,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resetAudioUI();
         };
     }
+    updateGlobalMuteUI();
 
     function toggleAudio(btn, card) {
         if (isPlaying) {
@@ -549,6 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stopAudio();
         if (audioPlayer) {
             audioPlayer.src = src;
+            audioPlayer.muted = audioMuted;
             audioPlayer.load();
         }
     }
@@ -556,6 +561,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopAudio() {
         if (audioPlayer) audioPlayer.pause();
         resetAudioUI();
+    }
+
+    function toggleGlobalMute() {
+        audioMuted = !audioMuted;
+        if (audioPlayer) audioPlayer.muted = audioMuted;
+        updateGlobalMuteUI();
+    }
+
+    function updateGlobalMuteUI() {
+        if (!audioToggleBtn) return;
+        audioToggleBtn.classList.toggle('is-muted', audioMuted);
+        audioToggleBtn.setAttribute('aria-pressed', String(audioMuted));
+        audioToggleBtn.setAttribute('aria-label', audioMuted ? 'Unmute sound' : 'Mute sound');
+        audioToggleBtn.title = audioMuted ? 'Unmute sound' : 'Mute sound';
     }
 
     // --- Game Manager ---
