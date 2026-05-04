@@ -895,8 +895,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!predictorConfig) return;
         const saved = loadSavedPredictorPicks();
         predictorState = {
-            semi1: Array.from({ length: 10 }, (_, i) => saved?.semi1?.[i] || null),
-            semi2: Array.from({ length: 10 }, (_, i) => saved?.semi2?.[i] || null),
+            semi1: normalizeSemiPicks(saved?.semi1, predictorConfig.semi1Acts || []),
+            semi2: normalizeSemiPicks(saved?.semi2, predictorConfig.semi2Acts || []),
             final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null)
         };
 
@@ -907,11 +907,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (scoreBtn) scoreBtn.onclick = calculatePredictorScore;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: Array(10).fill(null), semi2: Array(10).fill(null), final: Array(10).fill(null) };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null) };
                 savePredictorPicks();
                 renderPredictor();
             };
         }
+    }
+
+    function normalizeSemiPicks(savedBoard, acts) {
+        const normalized = {};
+        if (Array.isArray(savedBoard)) {
+            savedBoard.filter(Boolean).forEach(act => {
+                normalized[act.country] = true;
+            });
+            return normalized;
+        }
+        if (savedBoard && typeof savedBoard === 'object') {
+            acts.forEach(act => {
+                if (savedBoard[act.country] === true || savedBoard[act.country] === false) {
+                    normalized[act.country] = savedBoard[act.country];
+                }
+            });
+        }
+        return normalized;
     }
 
     function loadSavedPredictorPicks() {
@@ -946,11 +964,61 @@ document.addEventListener('DOMContentLoaded', () => {
         if (statusText) {
             statusText.textContent = finalUnlocked
                 ? 'Semifinals are set. Predict the Grand Final top 10 too.'
-                : 'Rank semifinal acts now. Final prediction unlocks after semifinals are complete.';
+                : 'Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.';
         }
     }
 
     function renderPredictorBoard(boardKey, acts, enabled) {
+        if (boardKey === 'semi1' || boardKey === 'semi2') {
+            renderSemiQualifierBoard(boardKey, acts);
+            return;
+        }
+
+        renderFinalRankingBoard(boardKey, acts, enabled);
+    }
+
+    function renderSemiQualifierBoard(boardKey, acts) {
+        const poolEl = document.getElementById(`${boardKey}-pool`);
+        if (!poolEl) return;
+
+        const picks = predictorState[boardKey] || {};
+        poolEl.innerHTML = '';
+        acts.forEach(act => {
+            const pick = picks[act.country];
+            const card = document.createElement('div');
+            card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}`;
+            card.innerHTML = `
+                <button class="semi-act-main" type="button" aria-label="Play ${act.country}">
+                    <span class="semi-country">${act.country}</span>
+                    <span class="semi-song">${act.artist} - ${act.title}</span>
+                </button>
+                <div class="semi-pick-controls" aria-label="Prediction for ${act.country}">
+                    <button class="semi-pick yes" type="button" aria-pressed="${pick === true}">✓</button>
+                    <button class="semi-pick no" type="button" aria-pressed="${pick === false}">×</button>
+                </div>
+            `;
+
+            const mainBtn = card.querySelector('.semi-act-main');
+            const yesBtn = card.querySelector('.semi-pick.yes');
+            const noBtn = card.querySelector('.semi-pick.no');
+            mainBtn.onclick = () => playPredictorSnippet(act);
+            yesBtn.onclick = () => setSemiPick(boardKey, act.country, true);
+            noBtn.onclick = () => setSemiPick(boardKey, act.country, false);
+            poolEl.appendChild(card);
+        });
+    }
+
+    function setSemiPick(boardKey, country, willQualify) {
+        predictorState[boardKey] = predictorState[boardKey] || {};
+        if (predictorState[boardKey][country] === willQualify) {
+            delete predictorState[boardKey][country];
+        } else {
+            predictorState[boardKey][country] = willQualify;
+        }
+        renderPredictor();
+    }
+
+    function renderFinalRankingBoard(boardKey, acts, enabled) {
         const slotsEl = document.getElementById(`${boardKey}-slots`);
         const poolEl = document.getElementById(`${boardKey}-pool`);
         if (!slotsEl || !poolEl) return;
@@ -1086,20 +1154,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculatePredictorScore() {
         if (!predictorConfig || !predictorState) return;
         const results = predictorConfig.results || {};
-        const semi1Score = scorePredictionBoard(predictorState.semi1, results.semi1 || []);
-        const semi2Score = scorePredictionBoard(predictorState.semi2, results.semi2 || []);
-        const finalScore = scorePredictionBoard(predictorState.final, results.final || []);
+        const semi1Score = scoreSemiQualificationBoard(predictorState.semi1, predictorConfig.semi1Acts || [], results.semi1 || []);
+        const semi2Score = scoreSemiQualificationBoard(predictorState.semi2, predictorConfig.semi2Acts || [], results.semi2 || []);
+        const finalScore = scoreFinalRankingBoard(predictorState.final, results.final || []);
         const total = semi1Score.points + semi2Score.points + finalScore.points;
 
         const totalEl = document.getElementById('predictor-score-total');
         const breakdownEl = document.getElementById('predictor-score-breakdown');
         if (totalEl) totalEl.textContent = `Total points: ${total}`;
         if (breakdownEl) {
-            breakdownEl.textContent = `Semi 1: ${semi1Score.points} | Semi 2: ${semi2Score.points} | Final: ${finalScore.points}`;
+            breakdownEl.textContent = `Semi 1 calls: ${semi1Score.points}/${semi1Score.max} | Semi 2 calls: ${semi2Score.points}/${semi2Score.max} | Final ranking: ${finalScore.points}`;
         }
     }
 
-    function scorePredictionBoard(picks, actualResults) {
+    function scoreSemiQualificationBoard(picks, acts, actualResults) {
+        if (!actualResults || actualResults.length === 0) {
+            return { points: 0, max: acts.length };
+        }
+        const actualQualifiers = new Set(actualResults.map(result => typeof result === 'string' ? result : result.country));
+        let points = 0;
+        acts.forEach(act => {
+            if (!picks || typeof picks[act.country] !== 'boolean') return;
+            const actuallyQualified = actualQualifiers.has(act.country);
+            if (picks[act.country] === actuallyQualified) points += 1;
+        });
+        return { points, max: acts.length };
+    }
+
+    function scoreFinalRankingBoard(picks, actualResults) {
         if (!actualResults || actualResults.length === 0) {
             return { points: 0 };
         }

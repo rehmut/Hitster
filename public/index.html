@@ -89,7 +89,7 @@
                 <div class="hero-content">
                     <p class="hero-eyebrow">Eurovision Song Contest 2026</p>
                     <h1 class="hero-title">Predict the <span class="grad">ESC</span> Results!</h1>
-                    <p class="hero-sub">Guess the semifinal and final placements, earn points and compete with friends.</p>
+                    <p class="hero-sub">Pick who qualifies from each semifinal, rank the Grand Final, earn points and compete with friends.</p>
                     <div class="hero-cta">
                         <button class="btn-primary" data-view="prediction" type="button">Make Your Picks</button>
                         <button class="btn-secondary" data-view="menu" type="button">Browse Games</button>
@@ -140,7 +140,7 @@
                         <div class="feature-icon">★</div>
                         <h3>Semifinal Predictor</h3>
                     </div>
-                    <p class="feature-sub">Drag and drop to rank your top 10</p>
+                    <p class="feature-sub">Mark each act as qualifier or non-qualifier</p>
                     <button class="feature-cta" data-view="prediction" type="button">Open Predictor</button>
                 </article>
 
@@ -149,7 +149,7 @@
                         <div class="feature-icon">♛</div>
                         <h3>Grand Final Predictor</h3>
                     </div>
-                    <p class="feature-sub">Drag and drop to rank your top 10</p>
+                    <p class="feature-sub">Rank the Grand Final top 10 once finalists are known</p>
                     <button class="feature-cta" data-view="prediction" type="button">Open Predictor</button>
                 </article>
 
@@ -160,20 +160,20 @@
                     </div>
                     <ul class="score-tiers">
                         <li>
-                            <span class="tier-pill amber">12</span>
-                            <div class="tier-text"><b>Perfect match</b><span>12 pts for each correct position</span></div>
+                            <span class="tier-pill amber">Q</span>
+                            <div class="tier-text"><b>Semifinal calls</b><span>Pick qualifier or non-qualifier for every act</span></div>
                         </li>
                         <li>
-                            <span class="tier-pill cyan">8–10</span>
-                            <div class="tier-text"><b>Close is awesome!</b><span>Off by one position</span></div>
+                            <span class="tier-pill cyan">12</span>
+                            <div class="tier-text"><b>Final exact</b><span>12 pts for each correct final position</span></div>
                         </li>
                         <li>
-                            <span class="tier-pill sky">4–7</span>
-                            <div class="tier-text"><b>Not far off</b><span>Off by two positions</span></div>
+                            <span class="tier-pill sky">9/6</span>
+                            <div class="tier-text"><b>Final close</b><span>Near misses still score</span></div>
                         </li>
                         <li>
-                            <span class="tier-pill rose">0–3</span>
-                            <div class="tier-text"><b>Keep trying!</b><span>Off by three or more</span></div>
+                            <span class="tier-pill rose">3</span>
+                            <div class="tier-text"><b>Final long shot</b><span>Within three places gets points</span></div>
                         </li>
                     </ul>
                     <p class="tier-banner">Highest score wins!</p>
@@ -199,7 +199,7 @@
                         <span class="step-num">1</span>
                         <div class="step-body">
                             <h4>Make your picks</h4>
-                            <p>Rank the countries in the semifinals and final in the order you think they'll finish.</p>
+                            <p>Choose which semifinal acts qualify, then rank the Grand Final top 10.</p>
                         </div>
                     </li>
                     <li>
@@ -339,7 +339,7 @@
                 <div>
                     <p class="hero-kicker">Eurovision 2026</p>
                     <h2>Predict the ESC Results</h2>
-                    <p id="predictor-status-text">Rank semifinal acts now. Final prediction unlocks after semifinals are complete.</p>
+                    <p id="predictor-status-text">Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.</p>
                 </div>
                 <div class="hero-badge">✨</div>
             </section>
@@ -347,19 +347,17 @@
             <section class="predictor-grid">
                 <article class="predictor-card">
                     <h3>Semifinal 1 Predictor</h3>
-                    <p class="predictor-sub">Top 10 qualifiers in order</p>
-                    <div class="predictor-layout">
-                        <ol id="semi1-slots" class="rank-slots"></ol>
-                        <div id="semi1-pool" class="act-pool"></div>
+                    <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
+                    <div class="predictor-layout semi-layout">
+                        <div id="semi1-pool" class="act-pool semi-act-list"></div>
                     </div>
                 </article>
 
                 <article class="predictor-card">
                     <h3>Semifinal 2 Predictor</h3>
-                    <p class="predictor-sub">Top 10 qualifiers in order</p>
-                    <div class="predictor-layout">
-                        <ol id="semi2-slots" class="rank-slots"></ol>
-                        <div id="semi2-pool" class="act-pool"></div>
+                    <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
+                    <div class="predictor-layout semi-layout">
+                        <div id="semi2-pool" class="act-pool semi-act-list"></div>
                     </div>
                 </article>
 
@@ -390,10 +388,10 @@
         <div id="view-prediction-rules" class="view hidden">
             <div class="menu-card">
                 <h2>Prediction Rules</h2>
-                <p class="hint">1. Rank your top 10 qualifiers for both semifinals.</p>
+                <p class="hint">1. For semifinals, predict whether each act qualifies for the final.</p>
                 <p class="hint">2. When semifinals are over, update <code>prediction-2026.json</code> qualifiers.</p>
-                <p class="hint">3. Grand final board unlocks automatically.</p>
-                <p class="hint">4. Score is based on position distance from real results.</p>
+                <p class="hint">3. The Grand Final ranking board unlocks automatically.</p>
+                <p class="hint">4. Semifinals score qualification calls; the final scores position distance.</p>
                 <button id="btn-back-rules" class="btn-secondary">Back to Predictor</button>
             </div>
         </div>
