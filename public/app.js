@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lives = 3;
     let isPlaying = false;
     let audioMuted = false;
+    let predictorSnippetPlayId = 0;
     let currentSong = null;
     let countryModeSettings = {
         optionCountries: []
@@ -897,17 +898,21 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState = {
             semi1: normalizeSemiPicks(saved?.semi1, predictorConfig.semi1Acts || []),
             semi2: normalizeSemiPicks(saved?.semi2, predictorConfig.semi2Acts || []),
-            final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null)
+            final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null),
+            locks: {
+                semi1: Boolean(saved?.locks?.semi1),
+                semi2: Boolean(saved?.locks?.semi2)
+            }
         };
 
         const saveBtn = document.getElementById('btn-predictor-save');
         const scoreBtn = document.getElementById('btn-predictor-score');
         const resetBtn = document.getElementById('btn-predictor-reset');
-        if (saveBtn) saveBtn.onclick = savePredictorPicks;
+        if (saveBtn) saveBtn.onclick = submitPredictorPicks;
         if (scoreBtn) scoreBtn.onclick = calculatePredictorScore;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null) };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), locks: { semi1: false, semi2: false } };
                 savePredictorPicks();
                 renderPredictor();
             };
@@ -947,6 +952,58 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalEl) totalEl.textContent = 'Picks saved locally.';
     }
 
+    async function submitPredictorPicks() {
+        if (!predictorState) return;
+        savePredictorPicks();
+
+        const totalEl = document.getElementById('predictor-score-total');
+        const breakdownEl = document.getElementById('predictor-score-breakdown');
+        if (!predictorState.locks?.semi1 || !predictorState.locks?.semi2) {
+            if (totalEl) totalEl.textContent = 'Lock both semifinals before submitting.';
+            if (breakdownEl) breakdownEl.textContent = 'Each semifinal needs exactly 10 qualifiers.';
+            return;
+        }
+
+        const storedName = localStorage.getItem('esc-predictor-player-name') || '';
+        const name = (window.prompt('Name for the prediction leaderboard:', storedName) || '').trim() || 'Anonymous';
+        localStorage.setItem('esc-predictor-player-name', name);
+
+        const payload = {
+            name,
+            season: predictorConfig?.season || '2026',
+            picks: {
+                semi1: predictorState.semi1 || {},
+                semi2: predictorState.semi2 || {},
+                final: predictorState.final || []
+            }
+        };
+
+        if (totalEl) totalEl.textContent = 'Submitting picks...';
+        if (breakdownEl) breakdownEl.textContent = '';
+
+        try {
+            const response = await fetch('/api/predictions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || `Submit failed (${response.status})`);
+            }
+            const result = await response.json();
+            const score = result.submission?.score;
+            if (totalEl) totalEl.textContent = `Picks submitted for ${name}. Server score: ${score?.total ?? 0}`;
+            if (breakdownEl && score) {
+                breakdownEl.textContent = `Semi 1: ${score.semi1.points}/${score.semi1.max} | Semi 2: ${score.semi2.points}/${score.semi2.max} | Final: ${score.final.points}`;
+            }
+        } catch (err) {
+            console.error('Prediction submit failed', err);
+            if (totalEl) totalEl.textContent = 'Could not submit picks.';
+            if (breakdownEl) breakdownEl.textContent = err.message || 'Server submission failed.';
+        }
+    }
+
     function renderPredictor() {
         if (!predictorConfig || !predictorState) return;
         renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], true);
@@ -982,19 +1039,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!poolEl) return;
 
         const picks = predictorState[boardKey] || {};
+        const locked = Boolean(predictorState.locks?.[boardKey]);
+        const qualifierCount = countSemiQualifiers(boardKey);
         poolEl.innerHTML = '';
+        const lockPanel = document.createElement('div');
+        lockPanel.className = `semi-lock-panel${locked ? ' locked' : ''}`;
+        lockPanel.innerHTML = `
+            <div>
+                <strong>${qualifierCount}/10 qualifiers picked</strong>
+                <span>${locked ? 'Picks are locked.' : 'Pick exactly 10 qualifiers to lock this semifinal.'}</span>
+            </div>
+            <button class="semi-lock-btn" type="button" ${!locked && qualifierCount !== 10 ? 'disabled' : ''}>
+                ${locked ? 'Unlock picks' : 'Lock semifinal'}
+            </button>
+        `;
+        const lockBtn = lockPanel.querySelector('.semi-lock-btn');
+        lockBtn.onclick = () => toggleSemiLock(boardKey);
+        poolEl.appendChild(lockPanel);
+
         acts.forEach(act => {
             const pick = picks[act.country];
+            const yesDisabled = locked || (pick !== true && qualifierCount >= 10);
             const card = document.createElement('div');
-            card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}`;
+            card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}${locked ? ' locked' : ''}`;
             card.innerHTML = `
                 <button class="semi-act-main" type="button" aria-label="Play ${act.country}">
                     <span class="semi-country">${act.country}</span>
                     <span class="semi-song">${act.artist} - ${act.title}</span>
                 </button>
                 <div class="semi-pick-controls" aria-label="Prediction for ${act.country}">
-                    <button class="semi-pick yes" type="button" aria-pressed="${pick === true}">✓</button>
-                    <button class="semi-pick no" type="button" aria-pressed="${pick === false}">×</button>
+                    <button class="semi-pick yes" type="button" aria-pressed="${pick === true}" ${yesDisabled ? 'disabled' : ''}>✓</button>
+                    <button class="semi-pick no" type="button" aria-pressed="${pick === false}" ${locked ? 'disabled' : ''}>×</button>
                 </div>
             `;
 
@@ -1009,12 +1084,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setSemiPick(boardKey, country, willQualify) {
+        if (predictorState.locks?.[boardKey]) return;
         predictorState[boardKey] = predictorState[boardKey] || {};
+        if (willQualify && predictorState[boardKey][country] !== true && countSemiQualifiers(boardKey) >= 10) return;
         if (predictorState[boardKey][country] === willQualify) {
             delete predictorState[boardKey][country];
         } else {
             predictorState[boardKey][country] = willQualify;
         }
+        renderPredictor();
+    }
+
+    function countSemiQualifiers(boardKey) {
+        return Object.values(predictorState?.[boardKey] || {}).filter(value => value === true).length;
+    }
+
+    function toggleSemiLock(boardKey) {
+        predictorState.locks = predictorState.locks || { semi1: false, semi2: false };
+        if (!predictorState.locks[boardKey] && countSemiQualifiers(boardKey) !== 10) return;
+        predictorState.locks[boardKey] = !predictorState.locks[boardKey];
+        savePredictorPicks();
         renderPredictor();
     }
 
@@ -1125,13 +1214,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function playPredictorSnippet(act) {
+    async function playPredictorSnippet(act) {
         if (!act) return;
         const source = resolvePredictorActAudio(act);
-        if (!source) return;
-        prepareAudio(source);
-        if (audioPlayer) {
-            audioPlayer.play().catch(() => { });
+        if (!source || !audioPlayer) return;
+
+        const playId = ++predictorSnippetPlayId;
+        const resolvedSource = new URL(source, window.location.href).href;
+        try {
+            audioPlayer.pause();
+            audioPlayer.muted = audioMuted;
+            if (audioPlayer.src !== resolvedSource) {
+                audioPlayer.src = resolvedSource;
+                audioPlayer.load();
+            }
+            audioPlayer.currentTime = 0;
+            await audioPlayer.play();
+        } catch (err) {
+            if (playId === predictorSnippetPlayId && err.name !== 'AbortError') {
+                console.warn('Predictor snippet playback failed', err);
+            }
         }
     }
 

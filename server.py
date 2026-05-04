@@ -9,6 +9,7 @@ PUBLIC_DIR = os.path.join(os.path.dirname(__file__), 'public')
 
 from api.leaderboard_store import add_score, get_leaderboard
 from api.multiplayer import manager
+from api.prediction_store import add_prediction_submission, get_prediction_leaderboard
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -26,6 +27,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         parsed_path = urllib.parse.urlparse(self.path)
         if parsed_path.path == '/api/leaderboard':
             self._send_json(get_leaderboard())
+        elif parsed_path.path == '/api/predictions':
+            self._send_json(get_prediction_leaderboard())
         elif parsed_path.path == '/api/room/status':
             query = urllib.parse.parse_qs(parsed_path.query)
             code = query.get('code', [None])[0]
@@ -47,6 +50,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
         if self.path == '/api/leaderboard':
             self._handle_leaderboard(post_data)
+        elif self.path == '/api/predictions':
+            self._handle_predictions(post_data)
         elif self.path == '/api/room/create':
             self._handle_room_create(post_data)
         elif self.path == '/api/room/join':
@@ -76,6 +81,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self._send_json({"status": "success"})
         except Exception as exc:
             print(f"Error saving score: {exc}")
+            self.send_error(500, str(exc))
+
+    def _handle_predictions(self, payload):
+        try:
+            data = json.loads(payload)
+        except json.JSONDecodeError as exc:
+            self.send_error(400, f'Invalid JSON: {exc}')
+            return
+
+        try:
+            submission = add_prediction_submission(data)
+            self._send_json({"status": "success", "submission": submission})
+        except ValueError as exc:
+            self.send_error(400, str(exc))
+        except Exception as exc:
+            print(f"Error saving prediction: {exc}")
             self.send_error(500, str(exc))
 
     def _handle_room_create(self, payload):

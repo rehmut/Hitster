@@ -1156,6 +1156,59 @@ button.feature-cta.gradient {
     max-height: 620px;
 }
 
+.semi-lock-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(139, 92, 246, 0.18);
+    box-shadow: 0 8px 18px rgba(93, 53, 177, 0.06);
+}
+
+.semi-lock-panel strong,
+.semi-lock-panel span {
+    display: block;
+}
+
+.semi-lock-panel strong {
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.semi-lock-panel span {
+    margin-top: 2px;
+    color: var(--text-soft);
+    font-size: 0.75rem;
+}
+
+.semi-lock-panel.locked {
+    border-color: rgba(22, 163, 74, 0.38);
+    background: rgba(240, 253, 244, 0.88);
+}
+
+.semi-lock-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 12px;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, var(--brand-pink), var(--brand-purple));
+    font-weight: 800;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    box-shadow: 0 8px 18px rgba(139, 92, 246, 0.22);
+}
+
+.semi-lock-btn:disabled {
+    cursor: not-allowed;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(21, 12, 64, 0.08);
+}
+
 .semi-act-card {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1183,6 +1236,10 @@ button.feature-cta.gradient {
 .semi-act-card.picked-no {
     border-color: rgba(244, 63, 94, 0.42);
     background: rgba(255, 241, 242, 0.86);
+}
+
+.semi-act-card.locked {
+    opacity: 0.88;
 }
 
 .semi-act-main {
@@ -1237,14 +1294,23 @@ button.feature-cta.gradient {
     box-shadow: inset 0 0 0 1px rgba(21, 12, 64, 0.12), var(--shadow-sm);
 }
 
+.semi-pick:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    transform: none;
+    box-shadow: inset 0 0 0 1px rgba(21, 12, 64, 0.08);
+}
+
 .semi-pick.yes[aria-pressed="true"] {
     color: #fff;
     background: linear-gradient(135deg, #22c55e, #15803d);
+    opacity: 1;
 }
 
 .semi-pick.no[aria-pressed="true"] {
     color: #fff;
     background: linear-gradient(135deg, #fb7185, #be123c);
+    opacity: 1;
 }
 
 .pool-act {
@@ -1801,6 +1867,15 @@ button.feature-cta.gradient {
 
     .semi-act-card {
         grid-template-columns: 1fr;
+    }
+
+    .semi-lock-panel {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .semi-lock-btn {
+        width: 100%;
     }
 
     .semi-pick-controls {

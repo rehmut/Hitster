@@ -6,6 +6,10 @@
             "use": "@vercel/python"
         },
         {
+            "src": "api/predictions.py",
+            "use": "@vercel/python"
+        },
+        {
             "src": "api/room/create.py",
             "use": "@vercel/python"
         },
