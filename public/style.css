@@ -1594,6 +1594,32 @@ button.feature-cta.gradient {
 
 #view-leaderboard .menu-card { max-width: 720px; }
 
+.leaderboard-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0 18px;
+}
+
+.leaderboard-tab {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 9px 10px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--text-soft);
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.78rem;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.leaderboard-tab.active {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--brand-pink), var(--brand-purple));
+    box-shadow: 0 10px 22px rgba(139, 92, 246, 0.24);
+}
+
 .leaderboard-list {
     width: 100%;
     text-align: left;
@@ -1613,6 +1639,21 @@ button.feature-cta.gradient {
     border-radius: 12px;
     background: #fbf8ff;
     color: var(--text);
+}
+
+.leaderboard-item strong,
+.leaderboard-item small {
+    display: block;
+}
+
+.leaderboard-item strong {
+    color: var(--text);
+}
+
+.leaderboard-item small {
+    margin-top: 2px;
+    color: var(--text-soft);
+    font-size: 0.75rem;
 }
 
 .leaderboard-item .rank {
@@ -1864,6 +1905,10 @@ button.feature-cta.gradient {
     .card .year-badge { font-size: 1.8rem; }
 
     .options-grid { grid-template-columns: 1fr 1fr; }
+
+    .leaderboard-tabs {
+        grid-template-columns: 1fr 1fr;
+    }
 
     .semi-act-card {
         grid-template-columns: 1fr;

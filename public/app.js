@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const audioPlayer = document.getElementById('audio-player');
     const audioToggleBtn = document.getElementById('audio-toggle');
+    const leaderboardTabs = document.getElementById('leaderboard-tabs');
+    const leaderboardList = document.getElementById('leaderboard-list');
     const scoreEl = document.getElementById('score');
     const livesEl = document.getElementById('lives');
     const statsEl = document.getElementById('game-stats');
@@ -91,6 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const leaderboardBtn = document.getElementById('btn-view-leaderboard');
     if (leaderboardBtn) leaderboardBtn.onclick = () => showLeaderboard();
+    if (leaderboardTabs) {
+        leaderboardTabs.querySelectorAll('.leaderboard-tab').forEach(btn => {
+            btn.onclick = () => showLeaderboard(btn.dataset.mode || 'prediction');
+        });
+    }
     const topNav = document.getElementById('top-nav');
     if (topNav) {
         topNav.querySelectorAll('.nav-pill').forEach(btn => {
@@ -904,6 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 semi2: Boolean(saved?.locks?.semi2)
             }
         };
+        normalizePredictorLocks();
 
         const saveBtn = document.getElementById('btn-predictor-save');
         const scoreBtn = document.getElementById('btn-predictor-score');
@@ -947,9 +955,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function savePredictorPicks() {
         if (!predictorState) return;
+        normalizePredictorLocks();
         localStorage.setItem('esc-predictor-2026', JSON.stringify(predictorState));
         const totalEl = document.getElementById('predictor-score-total');
         if (totalEl) totalEl.textContent = 'Picks saved locally.';
+    }
+
+    function normalizePredictorLocks() {
+        predictorState.locks = predictorState.locks || {};
+        predictorState.locks.semi1 = Boolean(predictorState.locks.semi1) && countSemiQualifiers('semi1') === 10;
+        predictorState.locks.semi2 = Boolean(predictorState.locks.semi2) && countSemiQualifiers('semi2') === 10;
     }
 
     async function submitPredictorPicks() {
@@ -989,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (!response.ok) {
                 const text = await response.text();
-                throw new Error(text || `Submit failed (${response.status})`);
+                throw new Error(extractServerError(text) || `Submit failed (${response.status})`);
             }
             const result = await response.json();
             const score = result.submission?.score;
@@ -1002,6 +1017,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (totalEl) totalEl.textContent = 'Could not submit picks.';
             if (breakdownEl) breakdownEl.textContent = err.message || 'Server submission failed.';
         }
+    }
+
+    function extractServerError(text) {
+        if (!text) return '';
+        const titleMatch = text.match(/<p>Message:\s*([^<]+)<\/p>/i);
+        if (titleMatch) return titleMatch[1];
+        return text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     }
 
     function renderPredictor() {
@@ -1323,35 +1345,91 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Leaderboard ---
-    function showLeaderboard() {
+    async function showLeaderboard(mode = 'prediction') {
         showView('leaderboard');
-        const list = document.getElementById('leaderboard-list');
+        const list = leaderboardList || document.getElementById('leaderboard-list');
+        if (!list) return;
+
+        updateLeaderboardTabs(mode);
         list.innerHTML = 'Loading...';
 
-        fetch('/api/leaderboard')
-            .then(res => res.json())
-            .then(data => {
-                list.innerHTML = '';
-                if (data.length === 0) {
-                    list.innerHTML = '<p>No scores yet!</p>';
-                    return;
-                }
+        try {
+            const entries = mode === 'prediction'
+                ? await fetchPredictionLeaderboard()
+                : await fetchGameLeaderboard(mode);
+            renderLeaderboardEntries(list, entries, mode);
+        } catch (err) {
+            list.innerHTML = 'Error loading leaderboard.';
+            console.error(err);
+        }
+    }
 
-                data.forEach((entry, i) => {
-                    const item = document.createElement('div');
-                    item.className = 'leaderboard-item';
-                    item.innerHTML = `
-                        <span class="rank">#${i + 1}</span>
-                        <span>${entry.name} (${entry.mode})</span>
-                        <span class="score">${entry.score}</span>
-                    `;
-                    list.appendChild(item);
-                });
-            })
-            .catch(err => {
-                list.innerHTML = 'Error loading leaderboard.';
-                console.error(err);
-            });
+    function updateLeaderboardTabs(mode) {
+        if (!leaderboardTabs) return;
+        leaderboardTabs.querySelectorAll('.leaderboard-tab').forEach(btn => {
+            btn.classList.toggle('active', (btn.dataset.mode || '') === mode);
+        });
+    }
+
+    async function fetchPredictionLeaderboard() {
+        const response = await fetch('/api/predictions');
+        if (!response.ok) throw new Error(await response.text());
+        return response.json();
+    }
+
+    async function fetchGameLeaderboard(mode) {
+        const response = await fetch('/api/leaderboard');
+        if (!response.ok) throw new Error(await response.text());
+        const data = await response.json();
+        return (data || []).filter(entry => entry.mode === mode);
+    }
+
+    function renderLeaderboardEntries(list, entries, mode) {
+        list.innerHTML = '';
+        if (!entries || entries.length === 0) {
+            list.innerHTML = `<p>No scores yet for ${getLeaderboardModeLabel(mode)}.</p>`;
+            return;
+        }
+
+        entries.forEach((entry, i) => {
+            const item = document.createElement('div');
+            item.className = 'leaderboard-item';
+            const score = mode === 'prediction'
+                ? entry.score?.total ?? 0
+                : entry.score ?? 0;
+            const meta = mode === 'prediction'
+                ? formatPredictionScoreMeta(entry.score)
+                : getLeaderboardModeLabel(entry.mode);
+            const rank = document.createElement('span');
+            rank.className = 'rank';
+            rank.textContent = `#${i + 1}`;
+            const nameWrap = document.createElement('span');
+            const name = document.createElement('strong');
+            name.textContent = entry.name || 'Anonymous';
+            const metaEl = document.createElement('small');
+            metaEl.textContent = meta;
+            const scoreEl = document.createElement('span');
+            scoreEl.className = 'score';
+            scoreEl.textContent = String(score);
+            nameWrap.append(name, metaEl);
+            item.append(rank, nameWrap, scoreEl);
+            list.appendChild(item);
+        });
+    }
+
+    function getLeaderboardModeLabel(mode) {
+        const labels = {
+            prediction: 'ESC Predictor',
+            timeline: 'Timeline Mode',
+            country: 'Country Mode',
+            'esc2026-country': 'ESC 2026 Country Quiz'
+        };
+        return labels[mode] || mode || 'Unknown mode';
+    }
+
+    function formatPredictionScoreMeta(score) {
+        if (!score) return 'Server scored';
+        return `Semi 1 ${score.semi1?.points ?? 0}/${score.semi1?.max ?? 0} | Semi 2 ${score.semi2?.points ?? 0}/${score.semi2?.max ?? 0} | Final ${score.final?.points ?? 0}`;
     }
 
     function saveScore() {
@@ -1375,7 +1453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return res.json();
             })
             .then(() => {
-                showLeaderboard();
+                showLeaderboard(currentMode || 'timeline');
                 gameOverModal.classList.add('hidden');
             })
             .catch(err => {

@@ -400,6 +400,12 @@
         <div id="view-leaderboard" class="view hidden">
             <div class="menu-card">
                 <h2>🏆 Leaderboard</h2>
+                <div class="leaderboard-tabs" id="leaderboard-tabs" aria-label="Leaderboard modes">
+                    <button class="leaderboard-tab active" data-mode="prediction" type="button">Predictor</button>
+                    <button class="leaderboard-tab" data-mode="timeline" type="button">Timeline</button>
+                    <button class="leaderboard-tab" data-mode="country" type="button">Country</button>
+                    <button class="leaderboard-tab" data-mode="esc2026-country" type="button">ESC 2026</button>
+                </div>
                 <div class="leaderboard-list" id="leaderboard-list">
                     <!-- Scores injected here -->
                 </div>
