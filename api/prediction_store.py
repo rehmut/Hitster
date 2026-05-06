@@ -12,7 +12,10 @@ RUNNING_ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 LOCAL_PREDICTIONS_FILE = PROJECT_ROOT / "prediction_submissions.json"
-PREDICTION_CONFIG_FILE = PROJECT_ROOT / "public" / "prediction-2026.json"
+PREDICTION_CONFIG_FILES = (
+    PROJECT_ROOT / "public" / "prediction-2026.json",
+    Path(__file__).resolve().with_name("prediction-2026.json"),
+)
 
 
 def _kv_headers():
@@ -34,7 +37,11 @@ def _read_json_file(path, fallback):
 
 
 def get_prediction_config():
-    return _read_json_file(PREDICTION_CONFIG_FILE, {})
+    for path in PREDICTION_CONFIG_FILES:
+        config = _read_json_file(path, None)
+        if config:
+            return config
+    return {}
 
 
 def get_prediction_submissions():

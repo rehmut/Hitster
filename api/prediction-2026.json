@@ -1,0 +1,43 @@
+{
+  "season": "2026",
+  "semi1Acts": [
+    { "country": "Georgia", "artist": "Bzikebi", "title": "On Replay" },
+    { "country": "Portugal", "artist": "Bandidos do Cante", "title": "Rosa" },
+    { "country": "Croatia", "artist": "LELEK", "title": "Andromeda" },
+    { "country": "Sweden", "artist": "FELICIA", "title": "My System" },
+    { "country": "Finland", "artist": "Linda Lampenius x Pete Parkkonen", "title": "Liekinheitin" },
+    { "country": "Moldova", "artist": "Satoshi", "title": "Viva, Moldova!" },
+    { "country": "Greece", "artist": "Akylas", "title": "Ferto" },
+    { "country": "Montenegro", "artist": "Tamara Zivkovi", "title": "Nova Zora" },
+    { "country": "Estonia", "artist": "Vanilla Ninja", "title": "Too Epic To Be True" },
+    { "country": "San Marino", "artist": "SENHIT", "title": "Superstar" },
+    { "country": "Poland", "artist": "ALICJA", "title": "Pray" },
+    { "country": "Belgium", "artist": "ESSYLA", "title": "Dancing on the Ice" },
+    { "country": "Lithuania", "artist": "Lion Ceccah", "title": "Solo Quiero Mas" },
+    { "country": "Serbia", "artist": "LAVINA", "title": "Kraj Mene" },
+    { "country": "Israel", "artist": "Noam Bettan", "title": "Michelle" }
+  ],
+  "semi2Acts": [
+    { "country": "Armenia", "artist": "SIMON", "title": "Paloma Rumba" },
+    { "country": "Romania", "artist": "Alexandra Cpitnescu", "title": "Choke Me" },
+    { "country": "Switzerland", "artist": "Veronica Fusaro", "title": "Alice" },
+    { "country": "Azerbaijan", "artist": "JIVA", "title": "Just Go" },
+    { "country": "Luxembourg", "artist": "Eva Marija", "title": "Mother Nature" },
+    { "country": "Bulgaria", "artist": "DARA", "title": "Bangaranga" },
+    { "country": "Czechia", "artist": "Daniel Zizka", "title": "CROSSROADS" },
+    { "country": "Albania", "artist": "Alis", "title": "Nan" },
+    { "country": "Denmark", "artist": "Soren Torpegaard Lund", "title": "For Vi Gar Hjem" },
+    { "country": "Cyprus", "artist": "Antigoni", "title": "JALLA" },
+    { "country": "Norway", "artist": "JONAS LOVV", "title": "YA YA YA" },
+    { "country": "Malta", "artist": "AIDAN", "title": "Bella" },
+    { "country": "Australia", "artist": "Delta Goodrem", "title": "Eclipse" },
+    { "country": "Ukraine", "artist": "LELEKA", "title": "Ridnym" },
+    { "country": "Latvia", "artist": "Atvara", "title": "n" }
+  ],
+  "qualifiedForFinal": [],
+  "results": {
+    "semi1": [],
+    "semi2": [],
+    "final": []
+  }
+}
