@@ -914,9 +914,14 @@ document.addEventListener('DOMContentLoaded', () => {
         normalizePredictorLocks();
 
         const saveBtn = document.getElementById('btn-predictor-save');
+        const submitBtn = document.getElementById('btn-predictor-submit');
         const scoreBtn = document.getElementById('btn-predictor-score');
         const resetBtn = document.getElementById('btn-predictor-reset');
-        if (saveBtn) saveBtn.onclick = submitPredictorPicks;
+        if (saveBtn) saveBtn.onclick = () => {
+            savePredictorPicks();
+            renderPredictor();
+        };
+        if (submitBtn) submitBtn.onclick = submitPredictorPicks;
         if (scoreBtn) scoreBtn.onclick = calculatePredictorScore;
         if (resetBtn) {
             resetBtn.onclick = () => {
