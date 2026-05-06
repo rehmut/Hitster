@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let predictorState = null;
     let predictorDragState = null;
     let predictorSelectedAct = null;
+    let predictorPlayingKey = null;
 
     // Multiplayer State
     let multiplayer = {
@@ -45,6 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const audioPlayer = document.getElementById('audio-player');
     const audioToggleBtn = document.getElementById('audio-toggle');
+    if (audioPlayer) {
+        audioPlayer.addEventListener('ended', stopPredictorSnippet);
+        audioPlayer.addEventListener('pause', () => {
+            if (!audioPlayer.ended) return;
+            stopPredictorSnippet();
+        });
+    }
     const leaderboardTabs = document.getElementById('leaderboard-tabs');
     const leaderboardList = document.getElementById('leaderboard-list');
     const scoreEl = document.getElementById('score');
@@ -958,12 +966,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function savePredictorPicks() {
+    function savePredictorPicks(showMessage = true) {
         if (!predictorState) return;
         normalizePredictorLocks();
         localStorage.setItem('esc-predictor-2026', JSON.stringify(predictorState));
         const totalEl = document.getElementById('predictor-score-total');
-        if (totalEl) totalEl.textContent = 'Picks saved locally.';
+        if (showMessage && totalEl) totalEl.textContent = 'Draft saved on this device.';
     }
 
     function normalizePredictorLocks() {
@@ -998,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        if (totalEl) totalEl.textContent = 'Submitting picks...';
+        if (totalEl) totalEl.textContent = 'Submitting picks to the leaderboard...';
         if (breakdownEl) breakdownEl.textContent = '';
 
         try {
@@ -1087,10 +1095,12 @@ document.addEventListener('DOMContentLoaded', () => {
         acts.forEach(act => {
             const pick = picks[act.country];
             const yesDisabled = locked || (pick !== true && qualifierCount >= 10);
+            const isPlayingAct = isPredictorActPlaying(act);
             const card = document.createElement('div');
-            card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}${locked ? ' locked' : ''}`;
+            card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}${locked ? ' locked' : ''}${isPlayingAct ? ' is-playing' : ''}`;
             card.innerHTML = `
-                <button class="semi-act-main" type="button" aria-label="Play ${act.country}">
+                <button class="semi-act-main" type="button" aria-label="${isPlayingAct ? 'Stop' : 'Play'} ${act.country}">
+                    <span class="play-indicator" aria-hidden="true"></span>
                     <span class="semi-country">${act.country}</span>
                     <span class="semi-song">${act.artist} - ${act.title}</span>
                 </button>
@@ -1119,6 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             predictorState[boardKey][country] = willQualify;
         }
+        savePredictorPicks(false);
         renderPredictor();
     }
 
@@ -1195,10 +1206,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = `pool-act${enabled ? '' : ' disabled'}`;
+            if (isPredictorActPlaying(act)) {
+                btn.classList.add('is-playing');
+            }
             if (predictorSelectedAct && predictorSelectedAct.boardKey === boardKey && predictorSelectedAct.act.country === act.country) {
                 btn.classList.add('selected');
             }
-            btn.textContent = `${act.country} - ${act.artist}`;
+            const indicator = document.createElement('span');
+            indicator.className = 'play-indicator';
+            indicator.setAttribute('aria-hidden', 'true');
+            const label = document.createElement('span');
+            label.textContent = `${act.country} - ${act.artist}`;
+            btn.append(indicator, label);
             btn.draggable = enabled;
             btn.onclick = () => {
                 if (!enabled) return;
@@ -1246,8 +1265,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const source = resolvePredictorActAudio(act);
         if (!source || !audioPlayer) return;
 
-        const playId = ++predictorSnippetPlayId;
+        const actKey = getPredictorActKey(act);
         const resolvedSource = new URL(source, window.location.href).href;
+        if (predictorPlayingKey === actKey && audioPlayer.src === resolvedSource && !audioPlayer.paused) {
+            stopPredictorSnippet();
+            return;
+        }
+
+        const playId = ++predictorSnippetPlayId;
+        predictorPlayingKey = actKey;
+        renderPredictor();
         try {
             audioPlayer.pause();
             audioPlayer.muted = audioMuted;
@@ -1260,8 +1287,28 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             if (playId === predictorSnippetPlayId && err.name !== 'AbortError') {
                 console.warn('Predictor snippet playback failed', err);
+                predictorPlayingKey = null;
+                renderPredictor();
             }
         }
+    }
+
+    function stopPredictorSnippet() {
+        if (!predictorPlayingKey) return;
+        predictorSnippetPlayId += 1;
+        predictorPlayingKey = null;
+        if (audioPlayer && !audioPlayer.paused) {
+            audioPlayer.pause();
+        }
+        renderPredictor();
+    }
+
+    function isPredictorActPlaying(act) {
+        return Boolean(predictorPlayingKey && getPredictorActKey(act) === predictorPlayingKey);
+    }
+
+    function getPredictorActKey(act) {
+        return `${act.country || ''}|${act.artist || ''}|${act.title || ''}`;
     }
 
     function resolvePredictorActAudio(act) {
@@ -1416,10 +1463,62 @@ document.addEventListener('DOMContentLoaded', () => {
             const scoreEl = document.createElement('span');
             scoreEl.className = 'score';
             scoreEl.textContent = String(score);
+            const scoreWrap = document.createElement('span');
+            scoreWrap.className = 'score-wrap';
+            scoreWrap.append(scoreEl);
+            if (mode === 'prediction') {
+                const picksToggle = document.createElement('button');
+                picksToggle.className = 'leaderboard-picks-toggle';
+                picksToggle.type = 'button';
+                picksToggle.textContent = 'View picks';
+                picksToggle.onclick = () => item.classList.toggle('show-picks');
+                scoreWrap.append(picksToggle);
+            }
+
             nameWrap.append(name, metaEl);
-            item.append(rank, nameWrap, scoreEl);
+            item.append(rank, nameWrap, scoreWrap);
+            if (mode === 'prediction') {
+                item.appendChild(buildPredictionPicksPanel(entry));
+            }
             list.appendChild(item);
         });
+    }
+
+    function buildPredictionPicksPanel(entry) {
+        const panel = document.createElement('div');
+        panel.className = 'prediction-picks-panel';
+        const picks = entry.picks || {};
+        panel.append(
+            buildPredictionPickLine('Semi 1 Q', getPickedCountries(picks.semi1, true)),
+            buildPredictionPickLine('Semi 2 Q', getPickedCountries(picks.semi2, true)),
+            buildPredictionPickLine('Final top 10', getFinalPickedCountries(picks.final))
+        );
+        return panel;
+    }
+
+    function buildPredictionPickLine(label, countries) {
+        const row = document.createElement('p');
+        const strong = document.createElement('strong');
+        const span = document.createElement('span');
+        strong.textContent = label;
+        span.textContent = countries.length ? countries.join(', ') : 'No picks yet';
+        row.append(strong, span);
+        return row;
+    }
+
+    function getPickedCountries(board, value) {
+        if (!board || typeof board !== 'object') return [];
+        return Object.entries(board)
+            .filter(([, pick]) => pick === value)
+            .map(([country]) => country);
+    }
+
+    function getFinalPickedCountries(finalPicks) {
+        if (!Array.isArray(finalPicks)) return [];
+        return finalPicks
+            .filter(Boolean)
+            .map(pick => typeof pick === 'string' ? pick : pick.country)
+            .filter(Boolean);
     }
 
     function getLeaderboardModeLabel(mode) {
