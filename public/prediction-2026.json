@@ -36,7 +36,18 @@
   ],
   "qualifiedForFinal": [],
   "results": {
-    "semi1": [],
+    "semi1": [
+      "Greece",
+      "Finland",
+      "Belgium",
+      "Sweden",
+      "Croatia",
+      "Israel",
+      "Lithuania",
+      "Serbia",
+      "Moldova",
+      "Poland"
+    ],
     "semi2": [],
     "final": []
   }
