@@ -7,7 +7,7 @@ import requests
 
 KV_REST_API_URL = os.environ.get("KV_REST_API_URL")
 KV_REST_API_TOKEN = os.environ.get("KV_REST_API_TOKEN")
-KV_PREDICTIONS_KEY = "hitster_predictions_2026"
+KV_PREDICTIONS_KEY = "hitster_predictions_2026_reset_20260512"
 RUNNING_ON_VERCEL = bool(os.environ.get("VERCEL"))
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
