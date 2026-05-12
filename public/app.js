@@ -922,8 +922,10 @@ document.addEventListener('DOMContentLoaded', () => {
         normalizePredictorLocks();
 
         const saveBtn = document.getElementById('btn-predictor-save');
+        const loadBtn = document.getElementById('btn-predictor-load');
         const resetBtn = document.getElementById('btn-predictor-reset');
         if (saveBtn) saveBtn.onclick = savePredictorSubmission;
+        if (loadBtn) loadBtn.onclick = loadSubmittedPredictorPicks;
         if (resetBtn) {
             resetBtn.onclick = () => {
                 predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), locks: { semi1: false, semi2: false } };
@@ -931,6 +933,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderPredictor();
             };
         }
+    }
+
+    async function loadSubmittedPredictorPicks() {
+        if (!predictorConfig || !predictorState) return;
+        const totalEl = document.getElementById('predictor-score-total');
+        const breakdownEl = document.getElementById('predictor-score-breakdown');
+        const storedName = localStorage.getItem('esc-predictor-player-name') || '';
+        const name = (window.prompt('Name used for the saved picks:', storedName) || '').trim();
+        if (!name) return;
+
+        if (totalEl) totalEl.textContent = 'Loading saved picks...';
+        if (breakdownEl) breakdownEl.textContent = '';
+
+        try {
+            const entries = await fetchPredictionLeaderboard();
+            const season = String(predictorConfig.season || '2026');
+            const match = (entries || []).find(entry =>
+                String(entry.season || season) === season &&
+                String(entry.name || '').trim().toLowerCase() === name.toLowerCase()
+            );
+            if (!match) {
+                if (totalEl) totalEl.textContent = 'No saved picks found for that name.';
+                return;
+            }
+
+            applySubmittedPredictorPicks(match.picks || {});
+            localStorage.setItem('esc-predictor-player-name', match.name || name);
+            savePredictorPicks(false);
+            renderPredictor();
+            if (totalEl) totalEl.textContent = `Loaded saved picks for ${match.name || name}.`;
+            if (breakdownEl) breakdownEl.textContent = 'Unlock a semifinal, edit it, lock it again, then Save Picks.';
+        } catch (err) {
+            console.error('Prediction load failed', err);
+            if (totalEl) totalEl.textContent = 'Could not load saved picks.';
+            if (breakdownEl) breakdownEl.textContent = err.message || 'Leaderboard load failed.';
+        }
+    }
+
+    function applySubmittedPredictorPicks(savedPicks) {
+        const semi1 = normalizeSemiPicks(savedPicks.semi1, predictorConfig.semi1Acts || []);
+        const semi2 = normalizeSemiPicks(savedPicks.semi2, predictorConfig.semi2Acts || []);
+        predictorState.semi1 = semi1;
+        predictorState.semi2 = semi2;
+        predictorState.final = normalizeFinalPicks(savedPicks.final, predictorConfig.qualifiedForFinal || []);
+        predictorState.locks = {
+            semi1: countQualifiersInBoard(semi1) === 10,
+            semi2: countQualifiersInBoard(semi2) === 10
+        };
+    }
+
+    function normalizeFinalPicks(savedFinal, acts) {
+        if (!Array.isArray(savedFinal)) return Array(10).fill(null);
+        const byCountry = new Map((acts || []).map(act => [act.country, act]));
+        return Array.from({ length: 10 }, (_, i) => {
+            const pick = savedFinal[i];
+            if (!pick) return null;
+            if (typeof pick === 'object' && pick.country) return pick;
+            return byCountry.get(pick) || null;
+        });
+    }
+
+    function countQualifiersInBoard(board) {
+        return Object.values(board || {}).filter(value => value === true).length;
     }
 
     function normalizeSemiPicks(savedBoard, acts) {
