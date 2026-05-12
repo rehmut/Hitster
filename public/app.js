@@ -922,15 +922,8 @@ document.addEventListener('DOMContentLoaded', () => {
         normalizePredictorLocks();
 
         const saveBtn = document.getElementById('btn-predictor-save');
-        const submitBtn = document.getElementById('btn-predictor-submit');
-        const scoreBtn = document.getElementById('btn-predictor-score');
         const resetBtn = document.getElementById('btn-predictor-reset');
-        if (saveBtn) saveBtn.onclick = () => {
-            savePredictorPicks();
-            renderPredictor();
-        };
-        if (submitBtn) submitBtn.onclick = submitPredictorPicks;
-        if (scoreBtn) scoreBtn.onclick = calculatePredictorScore;
+        if (saveBtn) saveBtn.onclick = savePredictorSubmission;
         if (resetBtn) {
             resetBtn.onclick = () => {
                 predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), locks: { semi1: false, semi2: false } };
@@ -980,15 +973,17 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.locks.semi2 = Boolean(predictorState.locks.semi2) && countSemiQualifiers('semi2') === 10;
     }
 
-    async function submitPredictorPicks() {
+    async function savePredictorSubmission() {
         if (!predictorState) return;
         savePredictorPicks();
 
         const totalEl = document.getElementById('predictor-score-total');
         const breakdownEl = document.getElementById('predictor-score-breakdown');
-        if (!predictorState.locks?.semi1 || !predictorState.locks?.semi2) {
-            if (totalEl) totalEl.textContent = 'Lock both semifinals before submitting.';
-            if (breakdownEl) breakdownEl.textContent = 'Each semifinal needs exactly 10 qualifiers.';
+        const picks = buildSubmittedPredictorPicks();
+        if (Object.keys(picks).length === 0) {
+            if (totalEl) totalEl.textContent = 'Draft saved on this device.';
+            if (breakdownEl) breakdownEl.textContent = 'Lock a semifinal to save it to the leaderboard.';
+            renderPredictor();
             return;
         }
 
@@ -999,14 +994,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = {
             name,
             season: predictorConfig?.season || '2026',
-            picks: {
-                semi1: predictorState.semi1 || {},
-                semi2: predictorState.semi2 || {},
-                final: predictorState.final || []
-            }
+            picks
         };
 
-        if (totalEl) totalEl.textContent = 'Submitting picks to the leaderboard...';
+        if (totalEl) totalEl.textContent = 'Saving picks...';
         if (breakdownEl) breakdownEl.textContent = '';
 
         try {
@@ -1021,15 +1012,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const result = await response.json();
             const score = result.submission?.score;
-            if (totalEl) totalEl.textContent = `Picks submitted for ${name}. Server score: ${score?.total ?? 0}`;
+            if (totalEl) totalEl.textContent = `Picks saved for ${name}. Current score: ${score?.total ?? 0}`;
             if (breakdownEl && score) {
                 breakdownEl.textContent = `Semi 1: ${score.semi1.points}/${score.semi1.max} | Semi 2: ${score.semi2.points}/${score.semi2.max} | Final: ${score.final.points}`;
             }
         } catch (err) {
-            console.error('Prediction submit failed', err);
-            if (totalEl) totalEl.textContent = 'Could not submit picks.';
+            console.error('Prediction save failed', err);
+            if (totalEl) totalEl.textContent = 'Could not save picks to the leaderboard.';
             if (breakdownEl) breakdownEl.textContent = err.message || 'Server submission failed.';
         }
+    }
+
+    function buildSubmittedPredictorPicks() {
+        normalizePredictorLocks();
+        const picks = {};
+        if (predictorState.locks?.semi1) {
+            picks.semi1 = predictorState.semi1 || {};
+        }
+        if (predictorState.locks?.semi2) {
+            picks.semi2 = predictorState.semi2 || {};
+        }
+        const finalPicks = (predictorState.final || []).filter(Boolean);
+        if (finalPicks.length > 0) {
+            picks.final = predictorState.final || [];
+        }
+        return picks;
     }
 
     function extractServerError(text) {

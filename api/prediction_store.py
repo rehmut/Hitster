@@ -161,6 +161,14 @@ def _validate_semifinal(name, picks, acts):
         raise ValueError(f"{name} contains unknown countries: {', '.join(unknown)}")
 
 
+def _clean_semifinal_picks(picks):
+    return {country: bool(value) for country, value in picks.items() if isinstance(value, bool)}
+
+
+def _clean_final_picks(final):
+    return final[:10] if isinstance(final, list) else []
+
+
 def normalize_prediction_submission(data):
     config = get_prediction_config()
     name = str(data.get("name", "")).strip()[:30] or "Anonymous"
@@ -168,33 +176,62 @@ def normalize_prediction_submission(data):
     if not isinstance(picks, dict):
         raise ValueError("picks must be an object")
 
-    semi1 = picks.get("semi1") or {}
-    semi2 = picks.get("semi2") or {}
-    final = picks.get("final") or []
-    if not isinstance(final, list):
-        raise ValueError("final must be a list")
+    normalized_picks = {}
+    semi1 = picks.get("semi1")
+    semi2 = picks.get("semi2")
+    final = picks.get("final")
 
-    _validate_semifinal("semi1", semi1, config.get("semi1Acts", []))
-    _validate_semifinal("semi2", semi2, config.get("semi2Acts", []))
+    if semi1 is not None:
+        _validate_semifinal("semi1", semi1, config.get("semi1Acts", []))
+        normalized_picks["semi1"] = _clean_semifinal_picks(semi1)
+    if semi2 is not None:
+        _validate_semifinal("semi2", semi2, config.get("semi2Acts", []))
+        normalized_picks["semi2"] = _clean_semifinal_picks(semi2)
+    if final is not None and not isinstance(final, list):
+        raise ValueError("final must be a list")
+    if final is not None:
+        normalized_picks["final"] = _clean_final_picks(final)
+    if not normalized_picks:
+        raise ValueError("at least one semifinal or final pick set is required")
 
     return {
         "name": name,
         "season": str(config.get("season", data.get("season", "2026"))),
-        "picks": {
-            "semi1": {country: bool(value) for country, value in semi1.items() if isinstance(value, bool)},
-            "semi2": {country: bool(value) for country, value in semi2.items() if isinstance(value, bool)},
-            "final": final[:10],
-        },
+        "picks": normalized_picks,
         "submitted_at": int(time.time()),
     }
+
+
+def _merge_prediction_picks(existing, incoming):
+    merged = dict(existing or {})
+    for board in ("semi1", "semi2"):
+        if board in incoming:
+            merged[board] = incoming[board]
+    if "final" in incoming:
+        merged["final"] = incoming["final"]
+    return merged
 
 
 def add_prediction_submission(data):
     config = get_prediction_config()
     submission = normalize_prediction_submission(data)
-    submission["score"] = score_prediction(submission["picks"], config)
 
     entries = get_prediction_submissions()
+    for idx in range(len(entries) - 1, -1, -1):
+        entry = entries[idx]
+        if entry.get("season") != submission["season"]:
+            continue
+        if str(entry.get("name", "")).strip().lower() != submission["name"].lower():
+            continue
+        merged = dict(entry)
+        merged["picks"] = _merge_prediction_picks(entry.get("picks", {}), submission["picks"])
+        merged["submitted_at"] = submission["submitted_at"]
+        merged["score"] = score_prediction(merged["picks"], config)
+        entries[idx] = merged
+        save_prediction_submissions(entries)
+        return merged
+
+    submission["score"] = score_prediction(submission["picks"], config)
     entries.append(submission)
     entries = entries[-200:]
     save_prediction_submissions(entries)
