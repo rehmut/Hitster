@@ -161,6 +161,11 @@ def _validate_semifinal(name, picks, acts):
         raise ValueError(f"{name} contains unknown countries: {', '.join(unknown)}")
 
 
+def _validate_voting_open(config, board):
+    if config.get("votingOpen", {}).get(board) is False:
+        raise ValueError(f"{board} voting is closed")
+
+
 def _clean_semifinal_picks(picks):
     return {country: bool(value) for country, value in picks.items() if isinstance(value, bool)}
 
@@ -182,14 +187,17 @@ def normalize_prediction_submission(data):
     final = picks.get("final")
 
     if semi1 is not None:
+        _validate_voting_open(config, "semi1")
         _validate_semifinal("semi1", semi1, config.get("semi1Acts", []))
         normalized_picks["semi1"] = _clean_semifinal_picks(semi1)
     if semi2 is not None:
+        _validate_voting_open(config, "semi2")
         _validate_semifinal("semi2", semi2, config.get("semi2Acts", []))
         normalized_picks["semi2"] = _clean_semifinal_picks(semi2)
     if final is not None and not isinstance(final, list):
         raise ValueError("final must be a list")
     if final is not None:
+        _validate_voting_open(config, "final")
         normalized_picks["final"] = _clean_final_picks(final)
     if not normalized_picks:
         raise ValueError("at least one semifinal or final pick set is required")

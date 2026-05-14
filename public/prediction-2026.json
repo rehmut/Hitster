@@ -1,5 +1,10 @@
 {
   "season": "2026",
+  "votingOpen": {
+    "semi1": false,
+    "semi2": false,
+    "final": true
+  },
   "semi1Acts": [
     { "country": "Georgia", "artist": "Bzikebi", "title": "On Replay" },
     { "country": "Portugal", "artist": "Bandidos do Cante", "title": "Rosa" },
@@ -34,7 +39,33 @@
     { "country": "Ukraine", "artist": "LELEKA", "title": "Ridnym" },
     { "country": "Latvia", "artist": "Atvara", "title": "n" }
   ],
-  "qualifiedForFinal": [],
+  "qualifiedForFinal": [
+    { "country": "Greece", "artist": "Akylas", "title": "Ferto" },
+    { "country": "Finland", "artist": "Linda Lampenius x Pete Parkkonen", "title": "Liekinheitin" },
+    { "country": "Belgium", "artist": "ESSYLA", "title": "Dancing on the Ice" },
+    { "country": "Sweden", "artist": "FELICIA", "title": "My System" },
+    { "country": "Croatia", "artist": "LELEK", "title": "Andromeda" },
+    { "country": "Israel", "artist": "Noam Bettan", "title": "Michelle" },
+    { "country": "Lithuania", "artist": "Lion Ceccah", "title": "Solo Quiero Mas" },
+    { "country": "Serbia", "artist": "LAVINA", "title": "Kraj Mene" },
+    { "country": "Moldova", "artist": "Satoshi", "title": "Viva, Moldova!" },
+    { "country": "Poland", "artist": "ALICJA", "title": "Pray" },
+    { "country": "Denmark", "artist": "Soren Torpegaard Lund", "title": "For Vi Gar Hjem" },
+    { "country": "Australia", "artist": "Delta Goodrem", "title": "Eclipse" },
+    { "country": "Romania", "artist": "Alexandra Cpitnescu", "title": "Choke Me" },
+    { "country": "Ukraine", "artist": "LELEKA", "title": "Ridnym" },
+    { "country": "Bulgaria", "artist": "DARA", "title": "Bangaranga" },
+    { "country": "Albania", "artist": "Alis", "title": "Nan" },
+    { "country": "Czechia", "artist": "Daniel Zizka", "title": "CROSSROADS" },
+    { "country": "Malta", "artist": "AIDAN", "title": "Bella" },
+    { "country": "Norway", "artist": "JONAS LOVV", "title": "YA YA YA" },
+    { "country": "Cyprus", "artist": "Antigoni", "title": "JALLA" },
+    { "country": "Austria", "artist": "COSMO", "title": "Tanzschein" },
+    { "country": "France", "artist": "Monroe", "title": "Regarde !" },
+    { "country": "Germany", "artist": "Sarah Engels", "title": "Fire" },
+    { "country": "Italy", "artist": "Sal Da Vinci", "title": "Per Sempre Si" },
+    { "country": "United Kingdom", "artist": "LOOK MUM NO COMPUTER", "title": "Eins, Zwei, Drei" }
+  ],
   "results": {
     "semi1": [
       "Greece",
@@ -48,7 +79,18 @@
       "Moldova",
       "Poland"
     ],
-    "semi2": [],
+    "semi2": [
+      "Denmark",
+      "Australia",
+      "Romania",
+      "Ukraine",
+      "Bulgaria",
+      "Albania",
+      "Czechia",
+      "Malta",
+      "Norway",
+      "Cyprus"
+    ],
     "final": []
   }
 }

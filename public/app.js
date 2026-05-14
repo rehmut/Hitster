@@ -1047,7 +1047,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const picks = buildSubmittedPredictorPicks();
         if (Object.keys(picks).length === 0) {
             if (totalEl) totalEl.textContent = 'Draft saved on this device.';
-            if (breakdownEl) breakdownEl.textContent = 'Lock a semifinal to save it to the leaderboard.';
+            if (breakdownEl) {
+                breakdownEl.textContent = isPredictorBoardOpen('final')
+                    ? 'Add final picks to save them to the leaderboard.'
+                    : 'Lock a semifinal to save it to the leaderboard.';
+            }
             renderPredictor();
             return;
         }
@@ -1091,14 +1095,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildSubmittedPredictorPicks() {
         normalizePredictorLocks();
         const picks = {};
-        if (predictorState.locks?.semi1) {
+        if (isPredictorBoardOpen('semi1') && predictorState.locks?.semi1) {
             picks.semi1 = predictorState.semi1 || {};
         }
-        if (predictorState.locks?.semi2) {
+        if (isPredictorBoardOpen('semi2') && predictorState.locks?.semi2) {
             picks.semi2 = predictorState.semi2 || {};
         }
         const finalPicks = (predictorState.final || []).filter(Boolean);
-        if (finalPicks.length > 0) {
+        if (isPredictorBoardOpen('final') && finalPicks.length > 0) {
             picks.final = predictorState.final || [];
         }
         return picks;
@@ -1113,10 +1117,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPredictor() {
         if (!predictorConfig || !predictorState) return;
-        renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], true);
-        renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], true);
+        renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], isPredictorBoardOpen('semi1'));
+        renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], isPredictorBoardOpen('semi2'));
         const finalUnlocked = (predictorConfig.qualifiedForFinal || []).length > 0;
-        renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked);
+        renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
 
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
@@ -1134,30 +1138,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPredictorBoard(boardKey, acts, enabled) {
         if (boardKey === 'semi1' || boardKey === 'semi2') {
-            renderSemiQualifierBoard(boardKey, acts);
+            renderSemiQualifierBoard(boardKey, acts, enabled);
             return;
         }
 
         renderFinalRankingBoard(boardKey, acts, enabled);
     }
 
-    function renderSemiQualifierBoard(boardKey, acts) {
+    function renderSemiQualifierBoard(boardKey, acts, enabled) {
         const poolEl = document.getElementById(`${boardKey}-pool`);
         if (!poolEl) return;
 
         const picks = predictorState[boardKey] || {};
         const locked = Boolean(predictorState.locks?.[boardKey]);
+        const closed = !enabled;
         const qualifierCount = countSemiQualifiers(boardKey);
         poolEl.innerHTML = '';
         const lockPanel = document.createElement('div');
-        lockPanel.className = `semi-lock-panel${locked ? ' locked' : ''}`;
+        lockPanel.className = `semi-lock-panel${locked ? ' locked' : ''}${closed ? ' closed' : ''}`;
         lockPanel.innerHTML = `
             <div>
                 <strong>${qualifierCount}/10 qualifiers picked</strong>
-                <span>${locked ? 'Picks are locked.' : 'Pick exactly 10 qualifiers to lock this semifinal.'}</span>
+                <span>${closed ? 'Voting is closed for this semifinal.' : (locked ? 'Picks are locked.' : 'Pick exactly 10 qualifiers to lock this semifinal.')}</span>
             </div>
-            <button class="semi-lock-btn" type="button" ${!locked && qualifierCount !== 10 ? 'disabled' : ''}>
-                ${locked ? 'Unlock picks' : 'Lock semifinal'}
+            <button class="semi-lock-btn" type="button" ${closed || (!locked && qualifierCount !== 10) ? 'disabled' : ''}>
+                ${closed ? 'Voting closed' : (locked ? 'Unlock picks' : 'Lock semifinal')}
             </button>
         `;
         const lockBtn = lockPanel.querySelector('.semi-lock-btn');
@@ -1166,7 +1171,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         acts.forEach(act => {
             const pick = picks[act.country];
-            const yesDisabled = locked || (pick !== true && qualifierCount >= 10);
+            const yesDisabled = closed || locked || (pick !== true && qualifierCount >= 10);
             const isPlayingAct = isPredictorActPlaying(act);
             const card = document.createElement('div');
             card.className = `semi-act-card${pick === true ? ' picked-yes' : ''}${pick === false ? ' picked-no' : ''}${locked ? ' locked' : ''}${isPlayingAct ? ' is-playing' : ''}`;
@@ -1178,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 <div class="semi-pick-controls" aria-label="Prediction for ${act.country}">
                     <button class="semi-pick yes" type="button" aria-pressed="${pick === true}" ${yesDisabled ? 'disabled' : ''}>✓</button>
-                    <button class="semi-pick no" type="button" aria-pressed="${pick === false}" ${locked ? 'disabled' : ''}>×</button>
+                    <button class="semi-pick no" type="button" aria-pressed="${pick === false}" ${closed || locked ? 'disabled' : ''}>×</button>
                 </div>
             `;
 
@@ -1193,6 +1198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setSemiPick(boardKey, country, willQualify) {
+        if (!isPredictorBoardOpen(boardKey)) return;
         if (predictorState.locks?.[boardKey]) return;
         predictorState[boardKey] = predictorState[boardKey] || {};
         if (willQualify && predictorState[boardKey][country] !== true && countSemiQualifiers(boardKey) >= 10) return;
@@ -1210,11 +1216,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toggleSemiLock(boardKey) {
+        if (!isPredictorBoardOpen(boardKey)) return;
         predictorState.locks = predictorState.locks || { semi1: false, semi2: false };
         if (!predictorState.locks[boardKey] && countSemiQualifiers(boardKey) !== 10) return;
         predictorState.locks[boardKey] = !predictorState.locks[boardKey];
         savePredictorPicks();
         renderPredictor();
+    }
+
+    function isPredictorBoardOpen(boardKey) {
+        const votingOpen = predictorConfig?.votingOpen || {};
+        return votingOpen[boardKey] !== false;
     }
 
     function renderFinalRankingBoard(boardKey, acts, enabled) {
