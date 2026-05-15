@@ -237,7 +237,6 @@
         <div id="view-menu" class="view hidden">
             <div class="menu-card">
                 <h2>Select Game Mode</h2>
-                <button id="btn-mode-predictor" class="btn-primary full-width">ESC Predictor 2026</button>
                 <button id="btn-mode-esc2026" class="btn-primary full-width">ESC 2026 Country Quiz</button>
                 <button id="btn-mode-timeline" class="btn-secondary full-width">📅 Timeline Mode</button>
                 <button id="btn-mode-country" class="btn-secondary full-width">🌍 Country Mode</button>
@@ -345,7 +344,7 @@
             </section>
 
             <section class="predictor-grid">
-                <article class="predictor-card">
+                <article class="predictor-card" id="semi1-predictor-card">
                     <h3>Semifinal 1 Predictor</h3>
                     <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
                     <div class="predictor-layout semi-layout">
@@ -353,7 +352,7 @@
                     </div>
                 </article>
 
-                <article class="predictor-card">
+                <article class="predictor-card" id="semi2-predictor-card">
                     <h3>Semifinal 2 Predictor</h3>
                     <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
                     <div class="predictor-layout semi-layout">
@@ -364,8 +363,7 @@
                 <article class="predictor-card">
                     <h3>Grand Final Predictor</h3>
                     <p class="predictor-sub" id="final-predictor-sub">Unlocks after semifinals are complete</p>
-                    <div class="predictor-layout">
-                        <ol id="final-slots" class="rank-slots"></ol>
+                    <div class="predictor-layout final-layout">
                         <div id="final-pool" class="act-pool"></div>
                     </div>
                 </article>

@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const timelinePlayBtn = document.getElementById('play-btn');
     const countryPlayBtn = document.getElementById('country-play-btn');
     const modeButtons = [
-        document.getElementById('btn-mode-predictor'),
         document.getElementById('btn-mode-timeline'),
         document.getElementById('btn-mode-country'),
         document.getElementById('btn-mode-esc2026')
@@ -91,10 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event Listeners for Menu
-    if (modeButtons[0]) modeButtons[0].onclick = () => startGame('predictor');
-    if (modeButtons[1]) modeButtons[1].onclick = () => startGame('timeline');
-    if (modeButtons[2]) modeButtons[2].onclick = () => startGame('country');
-    if (modeButtons[3]) modeButtons[3].onclick = () => startGame('esc2026-country');
+    if (modeButtons[0]) modeButtons[0].onclick = () => startGame('timeline');
+    if (modeButtons[1]) modeButtons[1].onclick = () => startGame('country');
+    if (modeButtons[2]) modeButtons[2].onclick = () => startGame('esc2026-country');
     if (audioToggleBtn) audioToggleBtn.onclick = () => toggleGlobalMute();
     const multiplayerBtn = document.getElementById('btn-mode-multiplayer');
     if (multiplayerBtn) multiplayerBtn.onclick = () => showView('lobby');
@@ -1117,8 +1115,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPredictor() {
         if (!predictorConfig || !predictorState) return;
-        renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], isPredictorBoardOpen('semi1'));
-        renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], isPredictorBoardOpen('semi2'));
+        updateSemifinalVisibility('semi1');
+        updateSemifinalVisibility('semi2');
+        if (isPredictorBoardOpen('semi1')) {
+            renderPredictorBoard('semi1', predictorConfig.semi1Acts || [], true);
+        }
+        if (isPredictorBoardOpen('semi2')) {
+            renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], true);
+        }
         const finalUnlocked = (predictorConfig.qualifiedForFinal || []).length > 0;
         renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
 
@@ -1131,9 +1135,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusText = document.getElementById('predictor-status-text');
         if (statusText) {
             statusText.textContent = finalUnlocked
-                ? 'Semifinals are set. Predict the Grand Final top 10 too.'
+                ? 'Final picks are open. Choose your Grand Final top 10.'
                 : 'Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.';
         }
+    }
+
+    function updateSemifinalVisibility(boardKey) {
+        const card = document.getElementById(`${boardKey}-predictor-card`);
+        if (card) card.classList.toggle('hidden', !isPredictorBoardOpen(boardKey));
     }
 
     function renderPredictorBoard(boardKey, acts, enabled) {
@@ -1229,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return votingOpen[boardKey] !== false;
     }
 
-    function renderFinalRankingBoard(boardKey, acts, enabled) {
+    function renderFinalRankingBoardLegacy(boardKey, acts, enabled) {
         const slotsEl = document.getElementById(`${boardKey}-slots`);
         const poolEl = document.getElementById(`${boardKey}-pool`);
         if (!slotsEl || !poolEl) return;
@@ -1315,6 +1324,69 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             poolEl.appendChild(btn);
         });
+    }
+
+    function renderFinalRankingBoard(boardKey, acts, enabled) {
+        const poolEl = document.getElementById(`${boardKey}-pool`);
+        if (!poolEl) return;
+
+        poolEl.innerHTML = '';
+        poolEl.classList.add('final-act-list');
+        acts.forEach(act => {
+            const selectedRank = getFinalRankForAct(act);
+            const isPlayingAct = isPredictorActPlaying(act);
+            const card = document.createElement('div');
+            card.className = `semi-act-card final-act-card${selectedRank ? ' picked-yes' : ''}${isPlayingAct ? ' is-playing' : ''}${enabled ? '' : ' locked'}`;
+            card.innerHTML = `
+                <button class="semi-act-main" type="button" aria-label="${isPlayingAct ? 'Stop' : 'Play'} ${act.country}">
+                    <span class="play-indicator" aria-hidden="true"></span>
+                    <span class="semi-country">${act.country}</span>
+                    <span class="semi-song">${act.artist} - ${act.title}</span>
+                </button>
+                <div class="final-rank-control">
+                    <select class="final-rank-select" ${enabled ? '' : 'disabled'} aria-label="Final rank for ${act.country}">
+                        ${buildFinalRankOptions(selectedRank)}
+                    </select>
+                </div>
+            `;
+            const mainBtn = card.querySelector('.semi-act-main');
+            const rankSelect = card.querySelector('.final-rank-select');
+            mainBtn.onclick = () => playPredictorSnippet(act);
+            rankSelect.onchange = () => setFinalRank(act, rankSelect.value);
+            poolEl.appendChild(card);
+        });
+    }
+
+    function buildFinalRankOptions(selectedRank) {
+        const picks = predictorState.final || [];
+        const usedRanks = new Set(picks.map((act, idx) => act ? idx + 1 : null).filter(Boolean));
+        let options = '<option value="">No rank</option>';
+        for (let rank = 1; rank <= 10; rank++) {
+            const selected = selectedRank === rank;
+            const disabled = usedRanks.has(rank) && !selected;
+            options += `<option value="${rank}"${selected ? ' selected' : ''}${disabled ? ' disabled' : ''}>#${rank}</option>`;
+        }
+        return options;
+    }
+
+    function getFinalRankForAct(act) {
+        const picks = predictorState.final || [];
+        const idx = picks.findIndex(pick => pick && pick.country === act.country);
+        return idx >= 0 ? idx + 1 : null;
+    }
+
+    function setFinalRank(act, rankValue) {
+        predictorState.final = predictorState.final || Array(10).fill(null);
+        predictorState.final = Array.from({ length: 10 }, (_, idx) => {
+            const pick = predictorState.final[idx];
+            return pick && pick.country === act.country ? null : pick;
+        });
+        const rank = Number(rankValue);
+        if (rank >= 1 && rank <= 10) {
+            predictorState.final[rank - 1] = act;
+        }
+        savePredictorPicks(false);
+        renderPredictor();
     }
 
     function handlePredictorDrop(targetBoard, targetSlotIndex) {
