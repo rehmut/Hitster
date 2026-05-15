@@ -915,6 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
             winner: saved?.winner || '',
             lastPlace: saved?.lastPlace || '',
             germanyPlace: saved?.germanyPlace || '',
+            funPicks: Object.assign({ staging: '', vocals: '', surprise: '' }, saved?.funPicks || {}),
             locks: {
                 semi1: Boolean(saved?.locks?.semi1),
                 semi2: Boolean(saved?.locks?.semi2)
@@ -929,7 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadBtn) loadBtn.onclick = loadSubmittedPredictorPicks;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', locks: { semi1: false, semi2: false } };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', funPicks: { staging: '', vocals: '', surprise: '' }, locks: { semi1: false, semi2: false } };
                 savePredictorPicks();
                 renderPredictor();
             };
@@ -981,6 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.winner = savedPicks.winner || '';
         predictorState.lastPlace = savedPicks.lastPlace || '';
         predictorState.germanyPlace = savedPicks.germanyPlace || '';
+        predictorState.funPicks = Object.assign({ staging: '', vocals: '', surprise: '' }, savedPicks.funPicks || {});
         predictorState.locks = {
             semi1: countQualifiersInBoard(semi1) === 10,
             semi2: countQualifiersInBoard(semi2) === 10
@@ -1106,11 +1108,14 @@ document.addEventListener('DOMContentLoaded', () => {
             picks.semi2 = predictorState.semi2 || {};
         }
         const finalPicks = (predictorState.final || []).filter(Boolean);
-        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace)) {
+        const funPicks = predictorState.funPicks || {};
+        const hasFunPicks = Object.values(funPicks).some(Boolean);
+        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace || hasFunPicks)) {
             picks.final = predictorState.final || [];
             if (predictorState.winner) picks.winner = predictorState.winner;
             if (predictorState.lastPlace) picks.lastPlace = predictorState.lastPlace;
             if (predictorState.germanyPlace) picks.germanyPlace = predictorState.germanyPlace;
+            if (hasFunPicks) picks.funPicks = funPicks;
         }
         return picks;
     }
@@ -1133,19 +1138,20 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPredictorBoard('semi2', predictorConfig.semi2Acts || [], true);
         }
         const finalUnlocked = (predictorConfig.qualifiedForFinal || []).length > 0;
-        renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
         renderFinalSpecialPicks(predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
+        const finalPool = document.getElementById('final-pool');
+        if (finalPool) finalPool.innerHTML = '';
 
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
             finalSub.textContent = finalUnlocked
-                ? 'Top 10 final placements'
+                ? 'Top 10, winner, last place, Germany place and fun picks'
                 : 'Unlocks when qualifiedForFinal is filled in prediction-2026.json';
         }
         const statusText = document.getElementById('predictor-status-text');
         if (statusText) {
             statusText.textContent = finalUnlocked
-                ? 'Final picks are open. Choose your Grand Final top 10.'
+                ? 'Final picks are open. Make every pick from the dropdowns.'
                 : 'Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.';
         }
     }
@@ -1156,6 +1162,108 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderFinalSpecialPicks(acts, enabled) {
+        const container = document.getElementById('final-special-picks');
+        if (!container) return;
+        if (!acts.length) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = `
+            <div class="final-dropdown-group">
+                <h4>Top 10</h4>
+                ${Array.from({ length: 10 }, (_, idx) => `
+                    <label>
+                        <span>#${idx + 1}</span>
+                        <select class="final-top-select" data-rank-index="${idx}" ${enabled ? '' : 'disabled'}>
+                            ${buildFinalTopOptions(acts, idx)}
+                        </select>
+                    </label>
+                `).join('')}
+            </div>
+            <div class="final-dropdown-group">
+                <h4>Scored extras</h4>
+                <label>
+                    <span>Winner song</span>
+                    <select id="final-winner-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.winner, 'Choose winner')}
+                    </select>
+                </label>
+                <label>
+                    <span>Last place</span>
+                    <select id="final-last-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.lastPlace, 'Choose last place')}
+                    </select>
+                </label>
+                <label>
+                    <span>Germany place</span>
+                    <select id="germany-place-select" ${enabled ? '' : 'disabled'}>
+                        ${buildPlaceOptions(acts.length, predictorState.germanyPlace)}
+                    </select>
+                </label>
+            </div>
+            <div class="final-dropdown-group">
+                <h4>Fun picks</h4>
+                <label>
+                    <span>Best staging</span>
+                    <select id="fun-staging-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.funPicks?.staging, 'Choose act')}
+                    </select>
+                </label>
+                <label>
+                    <span>Best vocals</span>
+                    <select id="fun-vocals-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.funPicks?.vocals, 'Choose act')}
+                    </select>
+                </label>
+                <label>
+                    <span>Biggest surprise</span>
+                    <select id="fun-surprise-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.funPicks?.surprise, 'Choose act')}
+                    </select>
+                </label>
+            </div>
+        `;
+        container.querySelectorAll('.final-top-select').forEach(select => {
+            select.onchange = () => setFinalTopPick(Number(select.dataset.rankIndex), select.value, acts);
+        });
+        const winnerSelect = document.getElementById('final-winner-select');
+        const lastSelect = document.getElementById('final-last-select');
+        const germanySelect = document.getElementById('germany-place-select');
+        const funStagingSelect = document.getElementById('fun-staging-select');
+        const funVocalsSelect = document.getElementById('fun-vocals-select');
+        const funSurpriseSelect = document.getElementById('fun-surprise-select');
+        if (winnerSelect) winnerSelect.onchange = () => setFinalSpecialPick('winner', winnerSelect.value);
+        if (lastSelect) lastSelect.onchange = () => setFinalSpecialPick('lastPlace', lastSelect.value);
+        if (germanySelect) germanySelect.onchange = () => setFinalSpecialPick('germanyPlace', germanySelect.value);
+        if (funStagingSelect) funStagingSelect.onchange = () => setFunPick('staging', funStagingSelect.value);
+        if (funVocalsSelect) funVocalsSelect.onchange = () => setFunPick('vocals', funVocalsSelect.value);
+        if (funSurpriseSelect) funSurpriseSelect.onchange = () => setFunPick('surprise', funSurpriseSelect.value);
+    }
+
+    function buildFinalTopOptions(acts, rankIndex) {
+        const current = predictorState.final?.[rankIndex]?.country || '';
+        const usedCountries = new Set((predictorState.final || []).map((act, idx) => idx === rankIndex || !act ? null : act.country).filter(Boolean));
+        const options = [`<option value="">Choose #${rankIndex + 1}</option>`];
+        acts.forEach(act => {
+            const selected = act.country === current ? ' selected' : '';
+            const disabled = usedCountries.has(act.country) ? ' disabled' : '';
+            options.push(`<option value="${escapeHtml(act.country)}"${selected}${disabled}>${escapeHtml(act.country)} - ${escapeHtml(act.artist)}</option>`);
+        });
+        return options.join('');
+    }
+
+    function setFinalTopPick(rankIndex, country, acts) {
+        predictorState.final = predictorState.final || Array(10).fill(null);
+        predictorState.final = Array.from({ length: 10 }, (_, idx) => {
+            const pick = predictorState.final[idx];
+            return pick && pick.country === country ? null : pick;
+        });
+        predictorState.final[rankIndex] = acts.find(act => act.country === country) || null;
+        savePredictorPicks(false);
+        renderPredictor();
+    }
+
+    function renderFinalSpecialPicksLegacy(acts, enabled) {
         const container = document.getElementById('final-special-picks');
         if (!container) return;
         if (!acts.length) {
@@ -1210,6 +1318,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setFinalSpecialPick(key, value) {
         predictorState[key] = value;
+        savePredictorPicks(false);
+        renderPredictor();
+    }
+
+    function setFunPick(key, value) {
+        predictorState.funPicks = predictorState.funPicks || { staging: '', vocals: '', surprise: '' };
+        predictorState.funPicks[key] = value;
         savePredictorPicks(false);
         renderPredictor();
     }
@@ -1729,7 +1844,10 @@ document.addEventListener('DOMContentLoaded', () => {
             buildPredictionPickLine('Final top 10', getFinalPickedCountries(picks.final)),
             buildPredictionPickLine('Winner', picks.winner ? [picks.winner] : []),
             buildPredictionPickLine('Last place', picks.lastPlace ? [picks.lastPlace] : []),
-            buildPredictionPickLine('Germany place', picks.germanyPlace ? [`#${picks.germanyPlace}`] : [])
+            buildPredictionPickLine('Germany place', picks.germanyPlace ? [`#${picks.germanyPlace}`] : []),
+            buildPredictionPickLine('Best staging', picks.funPicks?.staging ? [picks.funPicks.staging] : []),
+            buildPredictionPickLine('Best vocals', picks.funPicks?.vocals ? [picks.funPicks.vocals] : []),
+            buildPredictionPickLine('Biggest surprise', picks.funPicks?.surprise ? [picks.funPicks.surprise] : [])
         );
         return panel;
     }

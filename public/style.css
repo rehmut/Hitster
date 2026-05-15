@@ -1338,9 +1338,25 @@ button.feature-cta.gradient {
 
 .final-special-picks {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
     margin: 0 0 14px;
+}
+
+.final-dropdown-group {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(139, 92, 246, 0.12);
+}
+
+.final-dropdown-group h4 {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.9rem;
 }
 
 .final-special-picks label {
