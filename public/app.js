@@ -915,7 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
             winner: saved?.winner || '',
             lastPlace: saved?.lastPlace || '',
             germanyPlace: saved?.germanyPlace || '',
-            funPicks: Object.assign({ staging: '', vocals: '', surprise: '' }, saved?.funPicks || {}),
+            favorite: saved?.favorite || '',
             locks: {
                 semi1: Boolean(saved?.locks?.semi1),
                 semi2: Boolean(saved?.locks?.semi2)
@@ -930,7 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadBtn) loadBtn.onclick = loadSubmittedPredictorPicks;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', funPicks: { staging: '', vocals: '', surprise: '' }, locks: { semi1: false, semi2: false } };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', favorite: '', locks: { semi1: false, semi2: false } };
                 savePredictorPicks();
                 renderPredictor();
             };
@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.winner = savedPicks.winner || '';
         predictorState.lastPlace = savedPicks.lastPlace || '';
         predictorState.germanyPlace = savedPicks.germanyPlace || '';
-        predictorState.funPicks = Object.assign({ staging: '', vocals: '', surprise: '' }, savedPicks.funPicks || {});
+        predictorState.favorite = savedPicks.favorite || '';
         predictorState.locks = {
             semi1: countQualifiersInBoard(semi1) === 10,
             semi2: countQualifiersInBoard(semi2) === 10
@@ -1108,14 +1108,12 @@ document.addEventListener('DOMContentLoaded', () => {
             picks.semi2 = predictorState.semi2 || {};
         }
         const finalPicks = (predictorState.final || []).filter(Boolean);
-        const funPicks = predictorState.funPicks || {};
-        const hasFunPicks = Object.values(funPicks).some(Boolean);
-        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace || hasFunPicks)) {
+        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace || predictorState.favorite)) {
             picks.final = predictorState.final || [];
             if (predictorState.winner) picks.winner = predictorState.winner;
             if (predictorState.lastPlace) picks.lastPlace = predictorState.lastPlace;
             if (predictorState.germanyPlace) picks.germanyPlace = predictorState.germanyPlace;
-            if (hasFunPicks) picks.funPicks = funPicks;
+            if (predictorState.favorite) picks.favorite = predictorState.favorite;
         }
         return picks;
     }
@@ -1145,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
             finalSub.textContent = finalUnlocked
-                ? 'Top 10, winner, last place, Germany place and fun picks'
+                ? 'Top 10, winner, last place, Germany place and your favorite'
                 : 'Unlocks when qualifiedForFinal is filled in prediction-2026.json';
         }
         const statusText = document.getElementById('predictor-status-text');
@@ -1202,23 +1200,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </label>
             </div>
             <div class="final-dropdown-group">
-                <h4>Fun picks</h4>
+                <h4>Fun pick</h4>
                 <label>
-                    <span>Best staging</span>
-                    <select id="fun-staging-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.funPicks?.staging, 'Choose act')}
-                    </select>
-                </label>
-                <label>
-                    <span>Best vocals</span>
-                    <select id="fun-vocals-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.funPicks?.vocals, 'Choose act')}
-                    </select>
-                </label>
-                <label>
-                    <span>Biggest surprise</span>
-                    <select id="fun-surprise-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.funPicks?.surprise, 'Choose act')}
+                    <span>Your favorite</span>
+                    <select id="favorite-select" ${enabled ? '' : 'disabled'}>
+                        ${buildCountryOptions(acts, predictorState.favorite, 'Choose favorite')}
                     </select>
                 </label>
             </div>
@@ -1229,15 +1215,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const winnerSelect = document.getElementById('final-winner-select');
         const lastSelect = document.getElementById('final-last-select');
         const germanySelect = document.getElementById('germany-place-select');
-        const funStagingSelect = document.getElementById('fun-staging-select');
-        const funVocalsSelect = document.getElementById('fun-vocals-select');
-        const funSurpriseSelect = document.getElementById('fun-surprise-select');
+        const favoriteSelect = document.getElementById('favorite-select');
         if (winnerSelect) winnerSelect.onchange = () => setFinalSpecialPick('winner', winnerSelect.value);
         if (lastSelect) lastSelect.onchange = () => setFinalSpecialPick('lastPlace', lastSelect.value);
         if (germanySelect) germanySelect.onchange = () => setFinalSpecialPick('germanyPlace', germanySelect.value);
-        if (funStagingSelect) funStagingSelect.onchange = () => setFunPick('staging', funStagingSelect.value);
-        if (funVocalsSelect) funVocalsSelect.onchange = () => setFunPick('vocals', funVocalsSelect.value);
-        if (funSurpriseSelect) funSurpriseSelect.onchange = () => setFunPick('surprise', funSurpriseSelect.value);
+        if (favoriteSelect) favoriteSelect.onchange = () => setFinalSpecialPick('favorite', favoriteSelect.value);
     }
 
     function buildFinalTopOptions(acts, rankIndex) {
@@ -1318,13 +1300,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setFinalSpecialPick(key, value) {
         predictorState[key] = value;
-        savePredictorPicks(false);
-        renderPredictor();
-    }
-
-    function setFunPick(key, value) {
-        predictorState.funPicks = predictorState.funPicks || { staging: '', vocals: '', surprise: '' };
-        predictorState.funPicks[key] = value;
         savePredictorPicks(false);
         renderPredictor();
     }
@@ -1845,9 +1820,7 @@ document.addEventListener('DOMContentLoaded', () => {
             buildPredictionPickLine('Winner', picks.winner ? [picks.winner] : []),
             buildPredictionPickLine('Last place', picks.lastPlace ? [picks.lastPlace] : []),
             buildPredictionPickLine('Germany place', picks.germanyPlace ? [`#${picks.germanyPlace}`] : []),
-            buildPredictionPickLine('Best staging', picks.funPicks?.staging ? [picks.funPicks.staging] : []),
-            buildPredictionPickLine('Best vocals', picks.funPicks?.vocals ? [picks.funPicks.vocals] : []),
-            buildPredictionPickLine('Biggest surprise', picks.funPicks?.surprise ? [picks.funPicks.surprise] : [])
+            buildPredictionPickLine('Your favorite', picks.favorite ? [picks.favorite] : [])
         );
         return panel;
     }

@@ -204,7 +204,7 @@ def normalize_prediction_submission(data):
     winner = picks.get("winner")
     last_place = picks.get("lastPlace")
     germany_place = picks.get("germanyPlace")
-    fun_picks = picks.get("funPicks")
+    favorite = picks.get("favorite")
 
     if semi1 is not None:
         _validate_voting_open(config, "semi1")
@@ -237,16 +237,10 @@ def normalize_prediction_submission(data):
         if place < 1 or place > finalist_count:
             raise ValueError(f"germanyPlace must be between 1 and {finalist_count}")
         normalized_picks["germanyPlace"] = place
-    if isinstance(fun_picks, dict):
-        clean_fun_picks = {}
-        for field in ("staging", "vocals", "surprise"):
-            country = fun_picks.get(field)
-            if country:
-                _validate_voting_open(config, "final")
-                _validate_final_country(config, f"funPicks.{field}", country)
-                clean_fun_picks[field] = str(country)
-        if clean_fun_picks:
-            normalized_picks["funPicks"] = clean_fun_picks
+    if favorite:
+        _validate_voting_open(config, "final")
+        _validate_final_country(config, "favorite", favorite)
+        normalized_picks["favorite"] = str(favorite)
     if not normalized_picks:
         raise ValueError("at least one semifinal or final pick set is required")
 
@@ -265,7 +259,7 @@ def _merge_prediction_picks(existing, incoming):
             merged[board] = incoming[board]
     if "final" in incoming:
         merged["final"] = incoming["final"]
-    for field in ("winner", "lastPlace", "germanyPlace", "funPicks"):
+    for field in ("winner", "lastPlace", "germanyPlace", "favorite"):
         if field in incoming:
             merged[field] = incoming[field]
     return merged
