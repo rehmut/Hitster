@@ -1336,6 +1336,38 @@ button.feature-cta.gradient {
     max-height: none;
 }
 
+.final-special-picks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 14px;
+}
+
+.final-special-picks label {
+    display: grid;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 0.78rem;
+}
+
+.final-special-picks select {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px rgba(21, 12, 64, 0.1);
+    font: 700 0.82rem 'Plus Jakarta Sans', sans-serif;
+    min-width: 0;
+}
+
+.final-special-picks select:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1.5px var(--brand-purple), 0 0 0 3px rgba(139, 92, 246, 0.14);
+}
+
 .final-act-card {
     grid-template-columns: minmax(0, 1fr) 104px;
 }
@@ -2068,6 +2100,14 @@ button.feature-cta.gradient {
 
     .semi-pick {
         width: 100%;
+    }
+
+    .final-special-picks {
+        grid-template-columns: 1fr;
+    }
+
+    .final-act-card {
+        grid-template-columns: 1fr;
     }
 
     .modal-content { padding: 30px 22px; border-radius: 20px; }

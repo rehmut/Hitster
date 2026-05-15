@@ -912,6 +912,9 @@ document.addEventListener('DOMContentLoaded', () => {
             semi1: normalizeSemiPicks(saved?.semi1, predictorConfig.semi1Acts || []),
             semi2: normalizeSemiPicks(saved?.semi2, predictorConfig.semi2Acts || []),
             final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null),
+            winner: saved?.winner || '',
+            lastPlace: saved?.lastPlace || '',
+            germanyPlace: saved?.germanyPlace || '',
             locks: {
                 semi1: Boolean(saved?.locks?.semi1),
                 semi2: Boolean(saved?.locks?.semi2)
@@ -926,7 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadBtn) loadBtn.onclick = loadSubmittedPredictorPicks;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), locks: { semi1: false, semi2: false } };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', locks: { semi1: false, semi2: false } };
                 savePredictorPicks();
                 renderPredictor();
             };
@@ -975,6 +978,9 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.semi1 = semi1;
         predictorState.semi2 = semi2;
         predictorState.final = normalizeFinalPicks(savedPicks.final, predictorConfig.qualifiedForFinal || []);
+        predictorState.winner = savedPicks.winner || '';
+        predictorState.lastPlace = savedPicks.lastPlace || '';
+        predictorState.germanyPlace = savedPicks.germanyPlace || '';
         predictorState.locks = {
             semi1: countQualifiersInBoard(semi1) === 10,
             semi2: countQualifiersInBoard(semi2) === 10
@@ -1100,8 +1106,11 @@ document.addEventListener('DOMContentLoaded', () => {
             picks.semi2 = predictorState.semi2 || {};
         }
         const finalPicks = (predictorState.final || []).filter(Boolean);
-        if (isPredictorBoardOpen('final') && finalPicks.length > 0) {
+        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace)) {
             picks.final = predictorState.final || [];
+            if (predictorState.winner) picks.winner = predictorState.winner;
+            if (predictorState.lastPlace) picks.lastPlace = predictorState.lastPlace;
+            if (predictorState.germanyPlace) picks.germanyPlace = predictorState.germanyPlace;
         }
         return picks;
     }
@@ -1125,6 +1134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const finalUnlocked = (predictorConfig.qualifiedForFinal || []).length > 0;
         renderPredictorBoard('final', predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
+        renderFinalSpecialPicks(predictorConfig.qualifiedForFinal || [], finalUnlocked && isPredictorBoardOpen('final'));
 
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
@@ -1143,6 +1153,75 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateSemifinalVisibility(boardKey) {
         const card = document.getElementById(`${boardKey}-predictor-card`);
         if (card) card.classList.toggle('hidden', !isPredictorBoardOpen(boardKey));
+    }
+
+    function renderFinalSpecialPicks(acts, enabled) {
+        const container = document.getElementById('final-special-picks');
+        if (!container) return;
+        if (!acts.length) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = `
+            <label>
+                <span>Winner song</span>
+                <select id="final-winner-select" ${enabled ? '' : 'disabled'}>
+                    ${buildCountryOptions(acts, predictorState.winner, 'Choose winner')}
+                </select>
+            </label>
+            <label>
+                <span>Last place</span>
+                <select id="final-last-select" ${enabled ? '' : 'disabled'}>
+                    ${buildCountryOptions(acts, predictorState.lastPlace, 'Choose last place')}
+                </select>
+            </label>
+            <label>
+                <span>Germany place</span>
+                <select id="germany-place-select" ${enabled ? '' : 'disabled'}>
+                    ${buildPlaceOptions(acts.length, predictorState.germanyPlace)}
+                </select>
+            </label>
+        `;
+        const winnerSelect = document.getElementById('final-winner-select');
+        const lastSelect = document.getElementById('final-last-select');
+        const germanySelect = document.getElementById('germany-place-select');
+        if (winnerSelect) winnerSelect.onchange = () => setFinalSpecialPick('winner', winnerSelect.value);
+        if (lastSelect) lastSelect.onchange = () => setFinalSpecialPick('lastPlace', lastSelect.value);
+        if (germanySelect) germanySelect.onchange = () => setFinalSpecialPick('germanyPlace', germanySelect.value);
+    }
+
+    function buildCountryOptions(acts, selectedCountry, placeholder) {
+        const options = [`<option value="">${placeholder}</option>`];
+        acts.forEach(act => {
+            const selected = act.country === selectedCountry ? ' selected' : '';
+            options.push(`<option value="${escapeHtml(act.country)}"${selected}>${escapeHtml(act.country)} - ${escapeHtml(act.artist)}</option>`);
+        });
+        return options.join('');
+    }
+
+    function buildPlaceOptions(maxPlace, selectedPlace) {
+        const selectedNumber = Number(selectedPlace);
+        let options = '<option value="">Choose place</option>';
+        for (let place = 1; place <= maxPlace; place++) {
+            options += `<option value="${place}"${selectedNumber === place ? ' selected' : ''}>#${place}</option>`;
+        }
+        return options;
+    }
+
+    function setFinalSpecialPick(key, value) {
+        predictorState[key] = value;
+        savePredictorPicks(false);
+        renderPredictor();
+    }
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
     }
 
     function renderPredictorBoard(boardKey, acts, enabled) {
@@ -1647,7 +1726,10 @@ document.addEventListener('DOMContentLoaded', () => {
         panel.append(
             buildPredictionPickLine('Semi 1 Q', getPickedCountries(picks.semi1, true)),
             buildPredictionPickLine('Semi 2 Q', getPickedCountries(picks.semi2, true)),
-            buildPredictionPickLine('Final top 10', getFinalPickedCountries(picks.final))
+            buildPredictionPickLine('Final top 10', getFinalPickedCountries(picks.final)),
+            buildPredictionPickLine('Winner', picks.winner ? [picks.winner] : []),
+            buildPredictionPickLine('Last place', picks.lastPlace ? [picks.lastPlace] : []),
+            buildPredictionPickLine('Germany place', picks.germanyPlace ? [`#${picks.germanyPlace}`] : [])
         );
         return panel;
     }

@@ -112,31 +112,41 @@ def _score_semifinal(picks, acts, actual_results):
     return {"points": points, "max": len(acts), "available": True}
 
 
+def _country_name(entry):
+    return entry if isinstance(entry, str) else entry.get("country")
+
+
 def _score_final(picks, actual_results):
     if not actual_results:
-        return {"points": 0, "available": False}
+        return {"points": 0, "top10": 0, "winner": 0, "lastPlace": 0, "germanyPlace": 0, "available": False}
 
-    actual_map = {
-        (entry if isinstance(entry, str) else entry.get("country")): idx
-        for idx, entry in enumerate(actual_results)
-    }
-    points = 0
-    for idx, pick in enumerate(picks or []):
+    actual_countries = [_country_name(entry) for entry in actual_results]
+    top10_points = 0
+    for idx, pick in enumerate(picks.get("final", []) or []):
         if not pick:
             continue
-        country = pick if isinstance(pick, str) else pick.get("country")
-        if country not in actual_map:
-            continue
-        diff = abs(idx - actual_map[country])
-        if diff == 0:
-            points += 12
-        elif diff == 1:
-            points += 9
-        elif diff == 2:
-            points += 6
-        elif diff == 3:
-            points += 3
-    return {"points": points, "available": True}
+        country = _country_name(pick)
+        if idx < len(actual_countries) and country == actual_countries[idx]:
+            top10_points += 10
+
+    winner_points = 12 if picks.get("winner") and picks.get("winner") == actual_countries[0] else 0
+    last_points = 10 if picks.get("lastPlace") and picks.get("lastPlace") == actual_countries[-1] else 0
+    germany_place = picks.get("germanyPlace")
+    actual_germany_place = actual_countries.index("Germany") + 1 if "Germany" in actual_countries else None
+    try:
+        germany_pick = int(germany_place) if germany_place else None
+    except (TypeError, ValueError):
+        germany_pick = None
+    germany_points = 10 if germany_pick and actual_germany_place and germany_pick == actual_germany_place else 0
+    total = top10_points + winner_points + last_points + germany_points
+    return {
+        "points": total,
+        "top10": top10_points,
+        "winner": winner_points,
+        "lastPlace": last_points,
+        "germanyPlace": germany_points,
+        "available": True,
+    }
 
 
 def score_prediction(picks, config=None):
@@ -144,7 +154,7 @@ def score_prediction(picks, config=None):
     results = config.get("results", {})
     semi1 = _score_semifinal(picks.get("semi1", {}), config.get("semi1Acts", []), results.get("semi1", []))
     semi2 = _score_semifinal(picks.get("semi2", {}), config.get("semi2Acts", []), results.get("semi2", []))
-    final = _score_final(picks.get("final", []), results.get("final", []))
+    final = _score_final(picks, results.get("final", []))
     total = semi1["points"] + semi2["points"] + final["points"]
     return {"total": total, "semi1": semi1, "semi2": semi2, "final": final}
 
@@ -174,6 +184,12 @@ def _clean_final_picks(final):
     return final[:10] if isinstance(final, list) else []
 
 
+def _validate_final_country(config, field, country):
+    valid = {act.get("country") for act in config.get("qualifiedForFinal", [])}
+    if country and country not in valid:
+        raise ValueError(f"{field} contains unknown country: {country}")
+
+
 def normalize_prediction_submission(data):
     config = get_prediction_config()
     name = str(data.get("name", "")).strip()[:30] or "Anonymous"
@@ -185,6 +201,9 @@ def normalize_prediction_submission(data):
     semi1 = picks.get("semi1")
     semi2 = picks.get("semi2")
     final = picks.get("final")
+    winner = picks.get("winner")
+    last_place = picks.get("lastPlace")
+    germany_place = picks.get("germanyPlace")
 
     if semi1 is not None:
         _validate_voting_open(config, "semi1")
@@ -199,6 +218,24 @@ def normalize_prediction_submission(data):
     if final is not None:
         _validate_voting_open(config, "final")
         normalized_picks["final"] = _clean_final_picks(final)
+    if winner:
+        _validate_voting_open(config, "final")
+        _validate_final_country(config, "winner", winner)
+        normalized_picks["winner"] = str(winner)
+    if last_place:
+        _validate_voting_open(config, "final")
+        _validate_final_country(config, "lastPlace", last_place)
+        normalized_picks["lastPlace"] = str(last_place)
+    if germany_place:
+        _validate_voting_open(config, "final")
+        try:
+            place = int(germany_place)
+        except (TypeError, ValueError):
+            raise ValueError("germanyPlace must be a number")
+        finalist_count = len(config.get("qualifiedForFinal", [])) or 25
+        if place < 1 or place > finalist_count:
+            raise ValueError(f"germanyPlace must be between 1 and {finalist_count}")
+        normalized_picks["germanyPlace"] = place
     if not normalized_picks:
         raise ValueError("at least one semifinal or final pick set is required")
 
@@ -217,6 +254,9 @@ def _merge_prediction_picks(existing, incoming):
             merged[board] = incoming[board]
     if "final" in incoming:
         merged["final"] = incoming["final"]
+    for field in ("winner", "lastPlace", "germanyPlace"):
+        if field in incoming:
+            merged[field] = incoming[field]
     return merged
 
 
