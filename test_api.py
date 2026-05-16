@@ -3,6 +3,7 @@ import time
 
 import requests
 import server
+from api.prediction_store import score_prediction
 
 BASE_URL = "http://localhost:8000"
 
@@ -16,6 +17,32 @@ def expect_ok(response, step):
     if response.status_code != 200:
         raise AssertionError(f"{step} failed: {response.status_code} {response.text}")
     return response.json()
+
+
+def test_prediction_scores_keep_semifinal_and_final_separate():
+    config = {
+        "semi1Acts": [{"country": "A"}, {"country": "B"}],
+        "semi2Acts": [{"country": "C"}, {"country": "D"}],
+        "results": {
+            "semi1": ["A"],
+            "semi2": ["D"],
+            "final": ["A", "D", "Germany"],
+        },
+    }
+    picks = {
+        "semi1": {"A": True, "B": False},
+        "semi2": {"C": False, "D": True},
+        "final": [{"country": "A"}, {"country": "D"}],
+        "winner": "A",
+        "lastPlace": "Germany",
+        "germanyPlace": 3,
+    }
+
+    score = score_prediction(picks, config)
+
+    assert score["semifinal"] == 4
+    assert score["final"]["points"] == 52
+    assert score["total"] == 56
 
 def test_multiplayer_flow():
     host = "TesterHost"

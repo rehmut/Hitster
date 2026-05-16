@@ -155,8 +155,9 @@ def score_prediction(picks, config=None):
     semi1 = _score_semifinal(picks.get("semi1", {}), config.get("semi1Acts", []), results.get("semi1", []))
     semi2 = _score_semifinal(picks.get("semi2", {}), config.get("semi2Acts", []), results.get("semi2", []))
     final = _score_final(picks, results.get("final", []))
-    total = semi1["points"] + semi2["points"] + final["points"]
-    return {"total": total, "semi1": semi1, "semi2": semi2, "final": final}
+    semifinal_total = semi1["points"] + semi2["points"]
+    total = semifinal_total + final["points"]
+    return {"total": total, "semifinal": semifinal_total, "semi1": semi1, "semi2": semi2, "final": final}
 
 
 def _validate_semifinal(name, picks, acts):

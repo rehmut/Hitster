@@ -1087,9 +1087,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const result = await response.json();
             const score = result.submission?.score;
-            if (totalEl) totalEl.textContent = `Tipps für ${name} gespeichert. Aktueller Score: ${score?.total ?? 0}`;
+            if (totalEl) totalEl.textContent = `Tipps für ${name} gespeichert.`;
             if (breakdownEl && score) {
-                breakdownEl.textContent = `Semi 1: ${score.semi1.points}/${score.semi1.max} | Semi 2: ${score.semi2.points}/${score.semi2.max} | Final: ${score.final.points}`;
+                breakdownEl.textContent = `Semis: ${getSemifinalScore(score)} | Finale: ${score.final?.points ?? 0}`;
             }
         } catch (err) {
             console.error('Prediction save failed', err);
@@ -1729,13 +1729,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const semi1Score = scoreSemiQualificationBoard(predictorState.semi1, predictorConfig.semi1Acts || [], results.semi1 || []);
         const semi2Score = scoreSemiQualificationBoard(predictorState.semi2, predictorConfig.semi2Acts || [], results.semi2 || []);
         const finalScore = scoreFinalRankingBoard(predictorState, results.final || []);
-        const total = semi1Score.points + semi2Score.points + finalScore.points;
+        const semifinalTotal = semi1Score.points + semi2Score.points;
 
         const totalEl = document.getElementById('predictor-score-total');
         const breakdownEl = document.getElementById('predictor-score-breakdown');
-        if (totalEl) totalEl.textContent = `Gesamtpunkte: ${total}`;
+        if (totalEl) totalEl.textContent = `Semifinalpunkte: ${semifinalTotal} | Finalpunkte: ${finalScore.points}`;
         if (breakdownEl) {
-            breakdownEl.textContent = `Semi 1: ${semi1Score.points}/${semi1Score.max} | Semi 2: ${semi2Score.points}/${semi2Score.max} | Final-Platzierung: ${finalScore.points}`;
+            breakdownEl.textContent = `Semi 1: ${semi1Score.points}/${semi1Score.max} | Semi 2: ${semi2Score.points}/${semi2Score.max}. Die Punkte werden nicht ins Finale übertragen.`;
         }
     }
 
@@ -1826,7 +1826,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function preparePredictionLeaderboard(entries, mode) {
         const prepared = [...(entries || [])];
-        if (mode === 'prediction-final') {
+        if (isPredictionLeaderboardMode(mode)) {
             prepared.sort((a, b) => getLeaderboardScore(b, mode) - getLeaderboardScore(a, mode));
         }
         return prepared;
@@ -1891,9 +1891,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getLeaderboardScore(entry, mode) {
-        if (mode === 'prediction') return entry.score?.total ?? 0;
+        if (mode === 'prediction') return getSemifinalScore(entry.score);
         if (mode === 'prediction-final') return entry.score?.final?.points ?? 0;
         return entry.score ?? 0;
+    }
+
+    function getSemifinalScore(score) {
+        if (!score) return 0;
+        return score.semifinal ?? ((score.semi1?.points ?? 0) + (score.semi2?.points ?? 0));
     }
 
     function buildPredictionWinnerScreen(entry, entries, mode) {
@@ -1902,7 +1907,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const favorite = getFavoriteCrown(entries);
         panel.innerHTML = `
             <div class="winner-main">
-                <span class="winner-kicker">${mode === 'prediction-final' ? 'Final-Sieger' : 'Gesamtsieger'}</span>
+                <span class="winner-kicker">${mode === 'prediction-final' ? 'Final-Sieger' : 'Halbfinal-Sieger'}</span>
                 <h3>${escapeHtml(entry?.name || 'Anonymous')}</h3>
                 <p>${getLeaderboardScore(entry, mode)} Punkte</p>
             </div>
@@ -1937,6 +1942,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 buildPredictionPickLine('Semi 1 Q', getPickedCountries(picks.semi1, true), getSemiPickPoints(picks.semi1, 'semi1')),
                 buildPredictionPickLine('Semi 2 Q', getPickedCountries(picks.semi2, true), getSemiPickPoints(picks.semi2, 'semi2'))
             );
+            return panel;
         }
         panel.append(...buildFinalPickLines(entry));
         panel.append(buildPredictionPickLine('Dein Favorit', picks.favorite ? [picks.favorite] : [], null));
@@ -2020,7 +2026,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getLeaderboardModeLabel(mode) {
         const labels = {
-            prediction: 'ESC Predictor',
+            prediction: 'Semifinale',
             'prediction-final': 'Finale',
             timeline: 'Timeline Mode',
             country: 'Country Mode',
@@ -2032,7 +2038,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatPredictionScoreMeta(score, mode = 'prediction') {
         if (!score) return 'Server scored';
         if (mode === 'prediction-final') return `Finale ${score.final?.points ?? 0} Punkte`;
-        return `Semi 1 ${score.semi1?.points ?? 0}/${score.semi1?.max ?? 0} | Semi 2 ${score.semi2?.points ?? 0}/${score.semi2?.max ?? 0} | Final ${score.final?.points ?? 0}`;
+        return `Semi 1 ${score.semi1?.points ?? 0}/${score.semi1?.max ?? 0} | Semi 2 ${score.semi2?.points ?? 0}/${score.semi2?.max ?? 0}`;
     }
 
     function saveScore() {
