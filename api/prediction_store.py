@@ -116,10 +116,11 @@ def _country_name(entry):
     return entry if isinstance(entry, str) else entry.get("country")
 
 
-def _score_final(picks, actual_results):
+def _score_final(picks, actual_results, results=None):
     if not actual_results:
         return {"points": 0, "top10": 0, "lastPlace": 0, "germanyPlace": 0, "available": False}
 
+    results = results or {}
     actual_countries = [_country_name(entry) for entry in actual_results]
     top10_points = 0
     for idx, pick in enumerate((picks.get("final", []) or [])[:10]):
@@ -129,9 +130,12 @@ def _score_final(picks, actual_results):
         if idx < len(actual_countries) and country == actual_countries[idx]:
             top10_points += 10
 
-    last_points = 10 if picks.get("lastPlace") and picks.get("lastPlace") == actual_countries[-1] else 0
+    actual_last_place = results.get("finalLastPlace") or actual_countries[-1]
+    last_points = 10 if picks.get("lastPlace") and picks.get("lastPlace") == actual_last_place else 0
     germany_place = picks.get("germanyPlace")
-    actual_germany_place = actual_countries.index("Germany") + 1 if "Germany" in actual_countries else None
+    actual_germany_place = results.get("finalGermanyPlace")
+    if actual_germany_place is None:
+        actual_germany_place = actual_countries.index("Germany") + 1 if "Germany" in actual_countries else None
     try:
         germany_pick = int(germany_place) if germany_place else None
     except (TypeError, ValueError):
@@ -152,7 +156,7 @@ def score_prediction(picks, config=None):
     results = config.get("results", {})
     semi1 = _score_semifinal(picks.get("semi1", {}), config.get("semi1Acts", []), results.get("semi1", []))
     semi2 = _score_semifinal(picks.get("semi2", {}), config.get("semi2Acts", []), results.get("semi2", []))
-    final = _score_final(picks, results.get("final", []))
+    final = _score_final(picks, results.get("final", []), results)
     semifinal_total = semi1["points"] + semi2["points"]
     total = semifinal_total + final["points"]
     return {"total": total, "semifinal": semifinal_total, "semi1": semi1, "semi2": semi2, "final": final}

@@ -1,96 +1,329 @@
 {
-  "season": "2026",
-  "votingOpen": {
-    "semi1": false,
-    "semi2": false,
-    "final": true
-  },
-  "semi1Acts": [
-    { "country": "Georgia", "artist": "Bzikebi", "title": "On Replay" },
-    { "country": "Portugal", "artist": "Bandidos do Cante", "title": "Rosa" },
-    { "country": "Croatia", "artist": "LELEK", "title": "Andromeda" },
-    { "country": "Sweden", "artist": "FELICIA", "title": "My System" },
-    { "country": "Finland", "artist": "Linda Lampenius x Pete Parkkonen", "title": "Liekinheitin" },
-    { "country": "Moldova", "artist": "Satoshi", "title": "Viva, Moldova!" },
-    { "country": "Greece", "artist": "Akylas", "title": "Ferto" },
-    { "country": "Montenegro", "artist": "Tamara Zivkovi", "title": "Nova Zora" },
-    { "country": "Estonia", "artist": "Vanilla Ninja", "title": "Too Epic To Be True" },
-    { "country": "San Marino", "artist": "SENHIT", "title": "Superstar" },
-    { "country": "Poland", "artist": "ALICJA", "title": "Pray" },
-    { "country": "Belgium", "artist": "ESSYLA", "title": "Dancing on the Ice" },
-    { "country": "Lithuania", "artist": "Lion Ceccah", "title": "Solo Quiero Mas" },
-    { "country": "Serbia", "artist": "LAVINA", "title": "Kraj Mene" },
-    { "country": "Israel", "artist": "Noam Bettan", "title": "Michelle" }
-  ],
-  "semi2Acts": [
-    { "country": "Armenia", "artist": "SIMON", "title": "Paloma Rumba" },
-    { "country": "Romania", "artist": "Alexandra Cpitnescu", "title": "Choke Me" },
-    { "country": "Switzerland", "artist": "Veronica Fusaro", "title": "Alice" },
-    { "country": "Azerbaijan", "artist": "JIVA", "title": "Just Go" },
-    { "country": "Luxembourg", "artist": "Eva Marija", "title": "Mother Nature" },
-    { "country": "Bulgaria", "artist": "DARA", "title": "Bangaranga" },
-    { "country": "Czechia", "artist": "Daniel Zizka", "title": "CROSSROADS" },
-    { "country": "Albania", "artist": "Alis", "title": "Nan" },
-    { "country": "Denmark", "artist": "Soren Torpegaard Lund", "title": "For Vi Gar Hjem" },
-    { "country": "Cyprus", "artist": "Antigoni", "title": "JALLA" },
-    { "country": "Norway", "artist": "JONAS LOVV", "title": "YA YA YA" },
-    { "country": "Malta", "artist": "AIDAN", "title": "Bella" },
-    { "country": "Australia", "artist": "Delta Goodrem", "title": "Eclipse" },
-    { "country": "Ukraine", "artist": "LELEKA", "title": "Ridnym" },
-    { "country": "Latvia", "artist": "Atvara", "title": "n" }
-  ],
-  "qualifiedForFinal": [
-    { "country": "Greece", "artist": "Akylas", "title": "Ferto" },
-    { "country": "Finland", "artist": "Linda Lampenius x Pete Parkkonen", "title": "Liekinheitin" },
-    { "country": "Belgium", "artist": "ESSYLA", "title": "Dancing on the Ice" },
-    { "country": "Sweden", "artist": "FELICIA", "title": "My System" },
-    { "country": "Croatia", "artist": "LELEK", "title": "Andromeda" },
-    { "country": "Israel", "artist": "Noam Bettan", "title": "Michelle" },
-    { "country": "Lithuania", "artist": "Lion Ceccah", "title": "Solo Quiero Mas" },
-    { "country": "Serbia", "artist": "LAVINA", "title": "Kraj Mene" },
-    { "country": "Moldova", "artist": "Satoshi", "title": "Viva, Moldova!" },
-    { "country": "Poland", "artist": "ALICJA", "title": "Pray" },
-    { "country": "Denmark", "artist": "Soren Torpegaard Lund", "title": "For Vi Gar Hjem" },
-    { "country": "Australia", "artist": "Delta Goodrem", "title": "Eclipse" },
-    { "country": "Romania", "artist": "Alexandra Cpitnescu", "title": "Choke Me" },
-    { "country": "Ukraine", "artist": "LELEKA", "title": "Ridnym" },
-    { "country": "Bulgaria", "artist": "DARA", "title": "Bangaranga" },
-    { "country": "Albania", "artist": "Alis", "title": "Nan" },
-    { "country": "Czechia", "artist": "Daniel Zizka", "title": "CROSSROADS" },
-    { "country": "Malta", "artist": "AIDAN", "title": "Bella" },
-    { "country": "Norway", "artist": "JONAS LOVV", "title": "YA YA YA" },
-    { "country": "Cyprus", "artist": "Antigoni", "title": "JALLA" },
-    { "country": "Austria", "artist": "COSMO", "title": "Tanzschein" },
-    { "country": "France", "artist": "Monroe", "title": "Regarde !" },
-    { "country": "Germany", "artist": "Sarah Engels", "title": "Fire" },
-    { "country": "Italy", "artist": "Sal Da Vinci", "title": "Per Sempre Si" },
-    { "country": "United Kingdom", "artist": "LOOK MUM NO COMPUTER", "title": "Eins, Zwei, Drei" }
-  ],
-  "results": {
-    "semi1": [
-      "Greece",
-      "Finland",
-      "Belgium",
-      "Sweden",
-      "Croatia",
-      "Israel",
-      "Lithuania",
-      "Serbia",
-      "Moldova",
-      "Poland"
-    ],
-    "semi2": [
-      "Denmark",
-      "Australia",
-      "Romania",
-      "Ukraine",
-      "Bulgaria",
-      "Albania",
-      "Czechia",
-      "Malta",
-      "Norway",
-      "Cyprus"
-    ],
-    "final": []
-  }
+    "season":  "2026",
+    "votingOpen":  {
+                       "semi1":  false,
+                       "semi2":  false,
+                       "final":  true
+                   },
+    "semi1Acts":  [
+                      {
+                          "country":  "Georgia",
+                          "artist":  "Bzikebi",
+                          "title":  "On Replay"
+                      },
+                      {
+                          "country":  "Portugal",
+                          "artist":  "Bandidos do Cante",
+                          "title":  "Rosa"
+                      },
+                      {
+                          "country":  "Croatia",
+                          "artist":  "LELEK",
+                          "title":  "Andromeda"
+                      },
+                      {
+                          "country":  "Sweden",
+                          "artist":  "FELICIA",
+                          "title":  "My System"
+                      },
+                      {
+                          "country":  "Finland",
+                          "artist":  "Linda Lampenius x Pete Parkkonen",
+                          "title":  "Liekinheitin"
+                      },
+                      {
+                          "country":  "Moldova",
+                          "artist":  "Satoshi",
+                          "title":  "Viva, Moldova!"
+                      },
+                      {
+                          "country":  "Greece",
+                          "artist":  "Akylas",
+                          "title":  "Ferto"
+                      },
+                      {
+                          "country":  "Montenegro",
+                          "artist":  "Tamara Zivkovi",
+                          "title":  "Nova Zora"
+                      },
+                      {
+                          "country":  "Estonia",
+                          "artist":  "Vanilla Ninja",
+                          "title":  "Too Epic To Be True"
+                      },
+                      {
+                          "country":  "San Marino",
+                          "artist":  "SENHIT",
+                          "title":  "Superstar"
+                      },
+                      {
+                          "country":  "Poland",
+                          "artist":  "ALICJA",
+                          "title":  "Pray"
+                      },
+                      {
+                          "country":  "Belgium",
+                          "artist":  "ESSYLA",
+                          "title":  "Dancing on the Ice"
+                      },
+                      {
+                          "country":  "Lithuania",
+                          "artist":  "Lion Ceccah",
+                          "title":  "Solo Quiero Mas"
+                      },
+                      {
+                          "country":  "Serbia",
+                          "artist":  "LAVINA",
+                          "title":  "Kraj Mene"
+                      },
+                      {
+                          "country":  "Israel",
+                          "artist":  "Noam Bettan",
+                          "title":  "Michelle"
+                      }
+                  ],
+    "semi2Acts":  [
+                      {
+                          "country":  "Armenia",
+                          "artist":  "SIMON",
+                          "title":  "Paloma Rumba"
+                      },
+                      {
+                          "country":  "Romania",
+                          "artist":  "Alexandra Cpitnescu",
+                          "title":  "Choke Me"
+                      },
+                      {
+                          "country":  "Switzerland",
+                          "artist":  "Veronica Fusaro",
+                          "title":  "Alice"
+                      },
+                      {
+                          "country":  "Azerbaijan",
+                          "artist":  "JIVA",
+                          "title":  "Just Go"
+                      },
+                      {
+                          "country":  "Luxembourg",
+                          "artist":  "Eva Marija",
+                          "title":  "Mother Nature"
+                      },
+                      {
+                          "country":  "Bulgaria",
+                          "artist":  "DARA",
+                          "title":  "Bangaranga"
+                      },
+                      {
+                          "country":  "Czechia",
+                          "artist":  "Daniel Zizka",
+                          "title":  "CROSSROADS"
+                      },
+                      {
+                          "country":  "Albania",
+                          "artist":  "Alis",
+                          "title":  "Nan"
+                      },
+                      {
+                          "country":  "Denmark",
+                          "artist":  "Soren Torpegaard Lund",
+                          "title":  "For Vi Gar Hjem"
+                      },
+                      {
+                          "country":  "Cyprus",
+                          "artist":  "Antigoni",
+                          "title":  "JALLA"
+                      },
+                      {
+                          "country":  "Norway",
+                          "artist":  "JONAS LOVV",
+                          "title":  "YA YA YA"
+                      },
+                      {
+                          "country":  "Malta",
+                          "artist":  "AIDAN",
+                          "title":  "Bella"
+                      },
+                      {
+                          "country":  "Australia",
+                          "artist":  "Delta Goodrem",
+                          "title":  "Eclipse"
+                      },
+                      {
+                          "country":  "Ukraine",
+                          "artist":  "LELEKA",
+                          "title":  "Ridnym"
+                      },
+                      {
+                          "country":  "Latvia",
+                          "artist":  "Atvara",
+                          "title":  "n"
+                      }
+                  ],
+    "qualifiedForFinal":  [
+                              {
+                                  "country":  "Greece",
+                                  "artist":  "Akylas",
+                                  "title":  "Ferto"
+                              },
+                              {
+                                  "country":  "Finland",
+                                  "artist":  "Linda Lampenius x Pete Parkkonen",
+                                  "title":  "Liekinheitin"
+                              },
+                              {
+                                  "country":  "Belgium",
+                                  "artist":  "ESSYLA",
+                                  "title":  "Dancing on the Ice"
+                              },
+                              {
+                                  "country":  "Sweden",
+                                  "artist":  "FELICIA",
+                                  "title":  "My System"
+                              },
+                              {
+                                  "country":  "Croatia",
+                                  "artist":  "LELEK",
+                                  "title":  "Andromeda"
+                              },
+                              {
+                                  "country":  "Israel",
+                                  "artist":  "Noam Bettan",
+                                  "title":  "Michelle"
+                              },
+                              {
+                                  "country":  "Lithuania",
+                                  "artist":  "Lion Ceccah",
+                                  "title":  "Solo Quiero Mas"
+                              },
+                              {
+                                  "country":  "Serbia",
+                                  "artist":  "LAVINA",
+                                  "title":  "Kraj Mene"
+                              },
+                              {
+                                  "country":  "Moldova",
+                                  "artist":  "Satoshi",
+                                  "title":  "Viva, Moldova!"
+                              },
+                              {
+                                  "country":  "Poland",
+                                  "artist":  "ALICJA",
+                                  "title":  "Pray"
+                              },
+                              {
+                                  "country":  "Denmark",
+                                  "artist":  "Soren Torpegaard Lund",
+                                  "title":  "For Vi Gar Hjem"
+                              },
+                              {
+                                  "country":  "Australia",
+                                  "artist":  "Delta Goodrem",
+                                  "title":  "Eclipse"
+                              },
+                              {
+                                  "country":  "Romania",
+                                  "artist":  "Alexandra Cpitnescu",
+                                  "title":  "Choke Me"
+                              },
+                              {
+                                  "country":  "Ukraine",
+                                  "artist":  "LELEKA",
+                                  "title":  "Ridnym"
+                              },
+                              {
+                                  "country":  "Bulgaria",
+                                  "artist":  "DARA",
+                                  "title":  "Bangaranga"
+                              },
+                              {
+                                  "country":  "Albania",
+                                  "artist":  "Alis",
+                                  "title":  "Nan"
+                              },
+                              {
+                                  "country":  "Czechia",
+                                  "artist":  "Daniel Zizka",
+                                  "title":  "CROSSROADS"
+                              },
+                              {
+                                  "country":  "Malta",
+                                  "artist":  "AIDAN",
+                                  "title":  "Bella"
+                              },
+                              {
+                                  "country":  "Norway",
+                                  "artist":  "JONAS LOVV",
+                                  "title":  "YA YA YA"
+                              },
+                              {
+                                  "country":  "Cyprus",
+                                  "artist":  "Antigoni",
+                                  "title":  "JALLA"
+                              },
+                              {
+                                  "country":  "Austria",
+                                  "artist":  "COSMO",
+                                  "title":  "Tanzschein"
+                              },
+                              {
+                                  "country":  "France",
+                                  "artist":  "Monroe",
+                                  "title":  "Regarde !"
+                              },
+                              {
+                                  "country":  "Germany",
+                                  "artist":  "Sarah Engels",
+                                  "title":  "Fire"
+                              },
+                              {
+                                  "country":  "Italy",
+                                  "artist":  "Sal Da Vinci",
+                                  "title":  "Per Sempre Si"
+                              },
+                              {
+                                  "country":  "United Kingdom",
+                                  "artist":  "LOOK MUM NO COMPUTER",
+                                  "title":  "Eins, Zwei, Drei"
+                              }
+                          ],
+    "results":  {
+                    "semi1":  [
+                                  "Greece",
+                                  "Finland",
+                                  "Belgium",
+                                  "Sweden",
+                                  "Croatia",
+                                  "Israel",
+                                  "Lithuania",
+                                  "Serbia",
+                                  "Moldova",
+                                  "Poland"
+                              ],
+                    "semi2":  [
+                                  "Denmark",
+                                  "Australia",
+                                  "Romania",
+                                  "Ukraine",
+                                  "Bulgaria",
+                                  "Albania",
+                                  "Czechia",
+                                  "Malta",
+                                  "Norway",
+                                  "Cyprus"
+                              ],
+                    "final":  [
+                                  "Bulgaria",
+                                  "Israel",
+                                  "Romania",
+                                  "Australia",
+                                  "Italy",
+                                  "Finland",
+                                  "Denmark",
+                                  "Moldova",
+                                  "Ukraine",
+                                  "Greece"
+                              ],
+                    "finalGermanyPlace":  23,
+                    "finalLastPlace":  "United Kingdom"
+                }
 }

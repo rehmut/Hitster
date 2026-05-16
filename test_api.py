@@ -26,7 +26,9 @@ def test_prediction_scores_keep_semifinal_and_final_separate():
         "results": {
             "semi1": ["A"],
             "semi2": ["D"],
-            "final": ["A", "D", "Germany"],
+            "final": ["A", "D"],
+            "finalGermanyPlace": 23,
+            "finalLastPlace": "Germany",
         },
     }
     picks = {
@@ -34,7 +36,7 @@ def test_prediction_scores_keep_semifinal_and_final_separate():
         "semi2": {"C": False, "D": True},
         "final": [{"country": "A"}, {"country": "D"}],
         "lastPlace": "Germany",
-        "germanyPlace": 3,
+        "germanyPlace": 23,
     }
 
     score = score_prediction(picks, config)

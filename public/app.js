@@ -1799,7 +1799,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (isPredictionLeaderboardMode(mode)) {
+        if (shouldShowPredictionWinner(entries[0], mode)) {
             list.appendChild(buildPredictionWinnerScreen(entries[0], entries, mode));
         }
 
@@ -1852,6 +1852,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function getSemifinalScore(score) {
         if (!score) return 0;
         return score.semifinal ?? ((score.semi1?.points ?? 0) + (score.semi2?.points ?? 0));
+    }
+
+    function shouldShowPredictionWinner(entry, mode) {
+        if (!isPredictionLeaderboardMode(mode) || !entry) return false;
+        if (mode === 'prediction-final') return Boolean(entry.score?.final?.available);
+        return Boolean(entry.score?.semi1?.available || entry.score?.semi2?.available);
     }
 
     function buildPredictionWinnerScreen(entry, entries, mode) {
@@ -1950,8 +1956,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 points: country && actualCountries[idx] === country ? 10 : 0
             };
         });
-        const lastPlace = picks.lastPlace && actualCountries.at(-1) === picks.lastPlace ? 10 : 0;
-        const actualGermanyPlace = actualCountries.indexOf('Germany') + 1;
+        const actualLastPlace = predictorConfig?.results?.finalLastPlace || actualCountries.at(-1);
+        const lastPlace = picks.lastPlace && actualLastPlace === picks.lastPlace ? 10 : 0;
+        const actualGermanyPlace = predictorConfig?.results?.finalGermanyPlace ?? (actualCountries.indexOf('Germany') + 1);
         const germanyPlace = Number(picks.germanyPlace) && actualGermanyPlace === Number(picks.germanyPlace) ? 10 : 0;
         return { top10, lastPlace, germanyPlace };
     }
