@@ -1947,13 +1947,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function getFinalPickDetails(picks) {
         const actual = predictorConfig?.results?.final || [];
         const actualCountries = actual.map(result => typeof result === 'string' ? result : result.country);
+        const actualMap = new Map(actualCountries.map((country, idx) => [country, idx]));
         const top10 = Array.from({ length: 10 }, (_, idx) => {
             const pick = picks.final?.[idx];
             const country = pick ? (typeof pick === 'string' ? pick : pick.country) : '';
             return {
                 rank: idx + 1,
                 country,
-                points: country && actualCountries[idx] === country ? 10 : 0
+                points: country && actualMap.has(country) ? getFinalRankPoints(idx, actualMap.get(country)) : 0
             };
         });
         const actualLastPlace = predictorConfig?.results?.finalLastPlace || actualCountries.at(-1);
@@ -1961,6 +1962,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const actualGermanyPlace = predictorConfig?.results?.finalGermanyPlace ?? (actualCountries.indexOf('Germany') + 1);
         const germanyPlace = Number(picks.germanyPlace) && actualGermanyPlace === Number(picks.germanyPlace) ? 10 : 0;
         return { top10, lastPlace, germanyPlace };
+    }
+
+    function getFinalRankPoints(predictedIdx, actualIdx) {
+        const diff = Math.abs(predictedIdx - actualIdx);
+        if (diff === 0) return 12;
+        if (diff === 1) return 9;
+        if (diff === 2) return 6;
+        if (diff === 3) return 3;
+        return 0;
     }
 
     function formatPickDisplay(value) {

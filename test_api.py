@@ -42,8 +42,30 @@ def test_prediction_scores_keep_semifinal_and_final_separate():
     score = score_prediction(picks, config)
 
     assert score["semifinal"] == 4
-    assert score["final"]["points"] == 40
-    assert score["total"] == 44
+    assert score["final"]["points"] == 44
+    assert score["total"] == 48
+
+
+def test_final_top10_near_misses_still_score():
+    config = {
+        "semi1Acts": [],
+        "semi2Acts": [],
+        "results": {
+            "final": ["Bulgaria", "Israel", "Romania", "Australia"],
+        },
+    }
+    picks = {
+        "final": [
+            {"country": "Israel"},
+            {"country": "Romania"},
+            {"country": "Australia"},
+            {"country": "Bulgaria"},
+        ],
+    }
+
+    score = score_prediction(picks, config)
+
+    assert score["final"]["top10"] == 30
 
 def test_multiplayer_flow():
     host = "TesterHost"

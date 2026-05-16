@@ -116,6 +116,19 @@ def _country_name(entry):
     return entry if isinstance(entry, str) else entry.get("country")
 
 
+def _final_rank_points(predicted_idx, actual_idx):
+    diff = abs(predicted_idx - actual_idx)
+    if diff == 0:
+        return 12
+    if diff == 1:
+        return 9
+    if diff == 2:
+        return 6
+    if diff == 3:
+        return 3
+    return 0
+
+
 def _score_final(picks, actual_results, results=None):
     if not actual_results:
         return {"points": 0, "top10": 0, "lastPlace": 0, "germanyPlace": 0, "available": False}
@@ -123,12 +136,13 @@ def _score_final(picks, actual_results, results=None):
     results = results or {}
     actual_countries = [_country_name(entry) for entry in actual_results]
     top10_points = 0
+    actual_map = {country: idx for idx, country in enumerate(actual_countries)}
     for idx, pick in enumerate((picks.get("final", []) or [])[:10]):
         if not pick:
             continue
         country = _country_name(pick)
-        if idx < len(actual_countries) and country == actual_countries[idx]:
-            top10_points += 10
+        if country in actual_map:
+            top10_points += _final_rank_points(idx, actual_map[country])
 
     actual_last_place = results.get("finalLastPlace") or actual_countries[-1]
     last_points = 10 if picks.get("lastPlace") and picks.get("lastPlace") == actual_last_place else 0
