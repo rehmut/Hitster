@@ -190,6 +190,19 @@ def _validate_final_country(config, field, country):
         raise ValueError(f"{field} contains unknown country: {country}")
 
 
+def _all_prediction_countries(config):
+    countries = set()
+    for key in ("semi1Acts", "semi2Acts", "qualifiedForFinal"):
+        countries.update(act.get("country") for act in config.get(key, []) if act.get("country"))
+    return countries
+
+
+def _validate_favorite_country(config, country):
+    valid = _all_prediction_countries(config)
+    if country and country not in valid:
+        raise ValueError(f"favorite contains unknown country: {country}")
+
+
 def normalize_prediction_submission(data):
     config = get_prediction_config()
     name = str(data.get("name", "")).strip()[:30] or "Anonymous"
@@ -239,7 +252,7 @@ def normalize_prediction_submission(data):
         normalized_picks["germanyPlace"] = place
     if favorite:
         _validate_voting_open(config, "final")
-        _validate_final_country(config, "favorite", favorite)
+        _validate_favorite_country(config, favorite)
         normalized_picks["favorite"] = str(favorite)
     if not normalized_picks:
         raise ValueError("at least one semifinal or final pick set is required")
@@ -299,4 +312,4 @@ def get_prediction_leaderboard():
         refreshed["score"] = score_prediction(refreshed.get("picks", {}), config)
         entries.append(refreshed)
     entries.sort(key=lambda item: item.get("score", {}).get("total", 0), reverse=True)
-    return entries[:50]
+    return entries[:200]

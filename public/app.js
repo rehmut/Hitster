@@ -942,10 +942,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalEl = document.getElementById('predictor-score-total');
         const breakdownEl = document.getElementById('predictor-score-breakdown');
         const storedName = localStorage.getItem('esc-predictor-player-name') || '';
-        const name = (window.prompt('Name used for the saved picks:', storedName) || '').trim();
+        const name = (window.prompt('Name deiner gespeicherten Tipps:', storedName) || '').trim();
         if (!name) return;
 
-        if (totalEl) totalEl.textContent = 'Loading saved picks...';
+        if (totalEl) totalEl.textContent = 'Gespeicherte Tipps werden geladen...';
         if (breakdownEl) breakdownEl.textContent = '';
 
         try {
@@ -956,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 String(entry.name || '').trim().toLowerCase() === name.toLowerCase()
             );
             if (!match) {
-                if (totalEl) totalEl.textContent = 'No saved picks found for that name.';
+                if (totalEl) totalEl.textContent = 'Keine gespeicherten Tipps für diesen Namen gefunden.';
                 return;
             }
 
@@ -964,12 +964,12 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('esc-predictor-player-name', match.name || name);
             savePredictorPicks(false);
             renderPredictor();
-            if (totalEl) totalEl.textContent = `Loaded saved picks for ${match.name || name}.`;
-            if (breakdownEl) breakdownEl.textContent = 'Unlock a semifinal, edit it, lock it again, then Save Picks.';
+            if (totalEl) totalEl.textContent = `Tipps für ${match.name || name} geladen.`;
+            if (breakdownEl) breakdownEl.textContent = 'Halbfinale entsperren, bearbeiten, wieder sperren und dann Tipps speichern.';
         } catch (err) {
             console.error('Prediction load failed', err);
-            if (totalEl) totalEl.textContent = 'Could not load saved picks.';
-            if (breakdownEl) breakdownEl.textContent = err.message || 'Leaderboard load failed.';
+            if (totalEl) totalEl.textContent = 'Gespeicherte Tipps konnten nicht geladen werden.';
+            if (breakdownEl) breakdownEl.textContent = err.message || 'Leaderboard konnte nicht geladen werden.';
         }
     }
 
@@ -1035,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
         normalizePredictorLocks();
         localStorage.setItem('esc-predictor-2026', JSON.stringify(predictorState));
         const totalEl = document.getElementById('predictor-score-total');
-        if (showMessage && totalEl) totalEl.textContent = 'Draft saved on this device.';
+        if (showMessage && totalEl) totalEl.textContent = 'Entwurf auf diesem Gerät gespeichert.';
     }
 
     function normalizePredictorLocks() {
@@ -1052,18 +1052,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const breakdownEl = document.getElementById('predictor-score-breakdown');
         const picks = buildSubmittedPredictorPicks();
         if (Object.keys(picks).length === 0) {
-            if (totalEl) totalEl.textContent = 'Draft saved on this device.';
+            if (totalEl) totalEl.textContent = 'Entwurf auf diesem Gerät gespeichert.';
             if (breakdownEl) {
                 breakdownEl.textContent = isPredictorBoardOpen('final')
-                    ? 'Add final picks to save them to the leaderboard.'
-                    : 'Lock a semifinal to save it to the leaderboard.';
+                    ? 'Füge Finaltipps hinzu, um sie im Leaderboard zu speichern.'
+                    : 'Sperre ein Halbfinale, um es im Leaderboard zu speichern.';
             }
             renderPredictor();
             return;
         }
 
         const storedName = localStorage.getItem('esc-predictor-player-name') || '';
-        const name = (window.prompt('Name for the prediction leaderboard:', storedName) || '').trim() || 'Anonymous';
+        const name = (window.prompt('Name für das Prediction-Leaderboard:', storedName) || '').trim() || 'Anonymous';
         localStorage.setItem('esc-predictor-player-name', name);
 
         const payload = {
@@ -1072,7 +1072,7 @@ document.addEventListener('DOMContentLoaded', () => {
             picks
         };
 
-        if (totalEl) totalEl.textContent = 'Saving picks...';
+        if (totalEl) totalEl.textContent = 'Tipps werden gespeichert...';
         if (breakdownEl) breakdownEl.textContent = '';
 
         try {
@@ -1087,14 +1087,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const result = await response.json();
             const score = result.submission?.score;
-            if (totalEl) totalEl.textContent = `Picks saved for ${name}. Current score: ${score?.total ?? 0}`;
+            if (totalEl) totalEl.textContent = `Tipps für ${name} gespeichert. Aktueller Score: ${score?.total ?? 0}`;
             if (breakdownEl && score) {
                 breakdownEl.textContent = `Semi 1: ${score.semi1.points}/${score.semi1.max} | Semi 2: ${score.semi2.points}/${score.semi2.max} | Final: ${score.final.points}`;
             }
         } catch (err) {
             console.error('Prediction save failed', err);
-            if (totalEl) totalEl.textContent = 'Could not save picks to the leaderboard.';
-            if (breakdownEl) breakdownEl.textContent = err.message || 'Server submission failed.';
+            if (totalEl) totalEl.textContent = 'Tipps konnten nicht im Leaderboard gespeichert werden.';
+            if (breakdownEl) breakdownEl.textContent = err.message || 'Server-Übertragung fehlgeschlagen.';
         }
     }
 
@@ -1143,14 +1143,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
             finalSub.textContent = finalUnlocked
-                ? 'Top 10, winner, last place, Germany place and your favorite'
-                : 'Unlocks when qualifiedForFinal is filled in prediction-2026.json';
+                ? 'Top 10, Sieger, letzter Platz, Deutschland-Platz und dein Favorit'
+                : 'Wird freigeschaltet, sobald qualifiedForFinal in prediction-2026.json gefüllt ist';
         }
         const statusText = document.getElementById('predictor-status-text');
         if (statusText) {
             statusText.textContent = finalUnlocked
-                ? 'Final picks are open. Make every pick from the dropdowns.'
-                : 'Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.';
+                ? 'Finale ist offen. Wähle deine Tipps direkt bei den Songs.'
+                : 'Tippe pro Halbfinale, wer weiterkommt. Die Final-Prognose öffnet nach den Semifinals.';
         }
     }
 
@@ -1166,12 +1166,13 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = '';
             return;
         }
+        const favoriteActs = getAllPredictionActs();
         container.innerHTML = `
             <div class="final-dropdown-group">
                 <h4>Top 10</h4>
                 ${Array.from({ length: 10 }, (_, idx) => `
                     <label>
-                        <span>#${idx + 1}</span>
+                        <span>Platz ${idx + 1}</span>
                         <select class="final-top-select" data-rank-index="${idx}" ${enabled ? '' : 'disabled'}>
                             ${buildFinalTopOptions(acts, idx)}
                         </select>
@@ -1179,32 +1180,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 `).join('')}
             </div>
             <div class="final-dropdown-group">
-                <h4>Scored extras</h4>
+                <h4>Bonustipps</h4>
                 <label>
-                    <span>Winner song</span>
+                    <span>Siegersong</span>
                     <select id="final-winner-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.winner, 'Choose winner')}
+                        ${buildCountryOptions(acts, predictorState.winner, 'Sieger wählen')}
                     </select>
                 </label>
                 <label>
-                    <span>Last place</span>
+                    <span>Letzter Platz</span>
                     <select id="final-last-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.lastPlace, 'Choose last place')}
+                        ${buildCountryOptions(acts, predictorState.lastPlace, 'Letzten Platz wählen')}
                     </select>
                 </label>
                 <label>
-                    <span>Germany place</span>
+                    <span>Deutschland-Platz</span>
                     <select id="germany-place-select" ${enabled ? '' : 'disabled'}>
                         ${buildPlaceOptions(acts.length, predictorState.germanyPlace)}
                     </select>
                 </label>
             </div>
             <div class="final-dropdown-group">
-                <h4>Fun pick</h4>
+                <h4>Bauchgefühl</h4>
                 <label>
-                    <span>Your favorite</span>
+                    <span>Dein Favorit</span>
                     <select id="favorite-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.favorite, 'Choose favorite')}
+                        ${buildCountryOptions(favoriteActs, predictorState.favorite, 'Favorit wählen')}
                     </select>
                 </label>
             </div>
@@ -1225,13 +1226,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildFinalTopOptions(acts, rankIndex) {
         const current = predictorState.final?.[rankIndex]?.country || '';
         const usedCountries = new Set((predictorState.final || []).map((act, idx) => idx === rankIndex || !act ? null : act.country).filter(Boolean));
-        const options = [`<option value="">Choose #${rankIndex + 1}</option>`];
+        const options = [`<option value="">Platz ${rankIndex + 1} wählen</option>`];
         acts.forEach(act => {
             const selected = act.country === current ? ' selected' : '';
             const disabled = usedCountries.has(act.country) ? ' disabled' : '';
-            options.push(`<option value="${escapeHtml(act.country)}"${selected}${disabled}>${escapeHtml(act.country)} - ${escapeHtml(act.artist)}</option>`);
+            options.push(`<option value="${escapeHtml(act.country)}"${selected}${disabled}>${formatActOption(act)}</option>`);
         });
         return options.join('');
+    }
+
+    function getAllPredictionActs() {
+        const byCountry = new Map();
+        [
+            ...(predictorConfig?.semi1Acts || []),
+            ...(predictorConfig?.semi2Acts || []),
+            ...(predictorConfig?.qualifiedForFinal || [])
+        ].forEach(act => {
+            if (act?.country && !byCountry.has(act.country)) byCountry.set(act.country, act);
+        });
+        return Array.from(byCountry.values()).sort((a, b) => a.country.localeCompare(b.country));
     }
 
     function setFinalTopPick(rankIndex, country, acts) {
@@ -1284,18 +1297,76 @@ document.addEventListener('DOMContentLoaded', () => {
         const options = [`<option value="">${placeholder}</option>`];
         acts.forEach(act => {
             const selected = act.country === selectedCountry ? ' selected' : '';
-            options.push(`<option value="${escapeHtml(act.country)}"${selected}>${escapeHtml(act.country)} - ${escapeHtml(act.artist)}</option>`);
+            options.push(`<option value="${escapeHtml(act.country)}"${selected}>${formatActOption(act)}</option>`);
         });
         return options.join('');
     }
 
     function buildPlaceOptions(maxPlace, selectedPlace) {
         const selectedNumber = Number(selectedPlace);
-        let options = '<option value="">Choose place</option>';
+        let options = '<option value="">Platz wählen</option>';
         for (let place = 1; place <= maxPlace; place++) {
-            options += `<option value="${place}"${selectedNumber === place ? ' selected' : ''}>#${place}</option>`;
+            options += `<option value="${place}"${selectedNumber === place ? ' selected' : ''}>Platz ${place}</option>`;
         }
         return options;
+    }
+
+    function formatActOption(act) {
+        return `${countryFlag(act.country)} ${escapeHtml(act.country)} - ${escapeHtml(act.artist)}`;
+    }
+
+    function countryFlag(country) {
+        const flags = {
+            Albania: '🇦🇱',
+            Armenia: '🇦🇲',
+            Australia: '🇦🇺',
+            Austria: '🇦🇹',
+            Azerbaijan: '🇦🇿',
+            Belarus: '🇧🇾',
+            Belgium: '🇧🇪',
+            'Bosnia and Herzegovina': '🇧🇦',
+            Bulgaria: '🇧🇬',
+            Croatia: '🇭🇷',
+            Cyprus: '🇨🇾',
+            Czechia: '🇨🇿',
+            Denmark: '🇩🇰',
+            Estonia: '🇪🇪',
+            Finland: '🇫🇮',
+            France: '🇫🇷',
+            Georgia: '🇬🇪',
+            Germany: '🇩🇪',
+            Greece: '🇬🇷',
+            Hungary: '🇭🇺',
+            Iceland: '🇮🇸',
+            Ireland: '🇮🇪',
+            Israel: '🇮🇱',
+            Italy: '🇮🇹',
+            Latvia: '🇱🇻',
+            Lithuania: '🇱🇹',
+            Luxembourg: '🇱🇺',
+            Malta: '🇲🇹',
+            Moldova: '🇲🇩',
+            Monaco: '🇲🇨',
+            Montenegro: '🇲🇪',
+            Netherlands: '🇳🇱',
+            'North Macedonia': '🇲🇰',
+            Norway: '🇳🇴',
+            Poland: '🇵🇱',
+            Portugal: '🇵🇹',
+            Romania: '🇷🇴',
+            Russia: '🇷🇺',
+            'San Marino': '🇸🇲',
+            Serbia: '🇷🇸',
+            'Serbia and Montenegro': '🇷🇸',
+            Spain: '🇪🇸',
+            Sweden: '🇸🇪',
+            Switzerland: '🇨🇭',
+            Turkey: '🇹🇷',
+            Ukraine: '🇺🇦',
+            'United Kingdom': '🇬🇧',
+            Yugoslavia: '🇷🇸'
+        };
+        return flags[country] || '🏳️';
     }
 
     function setFinalSpecialPick(key, value) {
@@ -1336,11 +1407,11 @@ document.addEventListener('DOMContentLoaded', () => {
         lockPanel.className = `semi-lock-panel${locked ? ' locked' : ''}${closed ? ' closed' : ''}`;
         lockPanel.innerHTML = `
             <div>
-                <strong>${qualifierCount}/10 qualifiers picked</strong>
-                <span>${closed ? 'Voting is closed for this semifinal.' : (locked ? 'Picks are locked.' : 'Pick exactly 10 qualifiers to lock this semifinal.')}</span>
+                <strong>${qualifierCount}/10 Qualifikanten gewählt</strong>
+                <span>${closed ? 'Voting ist für dieses Halbfinale geschlossen.' : (locked ? 'Tipps sind gesperrt.' : 'Wähle genau 10 Qualifikanten, um das Halbfinale zu sperren.')}</span>
             </div>
             <button class="semi-lock-btn" type="button" ${closed || (!locked && qualifierCount !== 10) ? 'disabled' : ''}>
-                ${closed ? 'Voting closed' : (locked ? 'Unlock picks' : 'Lock semifinal')}
+                ${closed ? 'Voting geschlossen' : (locked ? 'Tipps entsperren' : 'Halbfinale sperren')}
             </button>
         `;
         const lockBtn = lockPanel.querySelector('.semi-lock-btn');
@@ -1356,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <button class="semi-act-main" type="button" aria-label="${isPlayingAct ? 'Stop' : 'Play'} ${act.country}">
                     <span class="play-indicator" aria-hidden="true"></span>
-                    <span class="semi-country">${act.country}</span>
+                    <span class="semi-country"><span class="country-flag" aria-hidden="true">${countryFlag(act.country)}</span>${act.country}</span>
                     <span class="semi-song">${act.artist} - ${act.title}</span>
                 </button>
                 <div class="semi-pick-controls" aria-label="Prediction for ${act.country}">
@@ -1509,7 +1580,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <button class="semi-act-main" type="button" aria-label="${isPlayingAct ? 'Stop' : 'Play'} ${act.country}">
                     <span class="play-indicator" aria-hidden="true"></span>
-                    <span class="semi-country">${act.country}</span>
+                    <span class="semi-country"><span class="country-flag" aria-hidden="true">${countryFlag(act.country)}</span>${act.country}</span>
                     <span class="semi-song">${act.artist} - ${act.title}</span>
                 </button>
                 <div class="final-rank-control">
@@ -1529,11 +1600,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildFinalRankOptions(selectedRank) {
         const picks = predictorState.final || [];
         const usedRanks = new Set(picks.map((act, idx) => act ? idx + 1 : null).filter(Boolean));
-        let options = '<option value="">No rank</option>';
+        let options = '<option value="">Kein Platz</option>';
         for (let rank = 1; rank <= 10; rank++) {
             const selected = selectedRank === rank;
             const disabled = usedRanks.has(rank) && !selected;
-            options += `<option value="${rank}"${selected ? ' selected' : ''}${disabled ? ' disabled' : ''}>#${rank}</option>`;
+            options += `<option value="${rank}"${selected ? ' selected' : ''}${disabled ? ' disabled' : ''}>Platz ${rank}</option>`;
         }
         return options;
     }
@@ -1657,14 +1728,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = predictorConfig.results || {};
         const semi1Score = scoreSemiQualificationBoard(predictorState.semi1, predictorConfig.semi1Acts || [], results.semi1 || []);
         const semi2Score = scoreSemiQualificationBoard(predictorState.semi2, predictorConfig.semi2Acts || [], results.semi2 || []);
-        const finalScore = scoreFinalRankingBoard(predictorState.final, results.final || []);
+        const finalScore = scoreFinalRankingBoard(predictorState, results.final || []);
         const total = semi1Score.points + semi2Score.points + finalScore.points;
 
         const totalEl = document.getElementById('predictor-score-total');
         const breakdownEl = document.getElementById('predictor-score-breakdown');
-        if (totalEl) totalEl.textContent = `Total points: ${total}`;
+        if (totalEl) totalEl.textContent = `Gesamtpunkte: ${total}`;
         if (breakdownEl) {
-            breakdownEl.textContent = `Semi 1 calls: ${semi1Score.points}/${semi1Score.max} | Semi 2 calls: ${semi2Score.points}/${semi2Score.max} | Final ranking: ${finalScore.points}`;
+            breakdownEl.textContent = `Semi 1: ${semi1Score.points}/${semi1Score.max} | Semi 2: ${semi2Score.points}/${semi2Score.max} | Final-Platzierung: ${finalScore.points}`;
         }
     }
 
@@ -1686,16 +1757,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!actualResults || actualResults.length === 0) {
             return { points: 0 };
         }
-        const actualMap = new Map(actualResults.map((act, idx) => [typeof act === 'string' ? act : act.country, idx]));
-        let points = 0;
-        picks.forEach((pick, idx) => {
-            if (!pick || !actualMap.has(pick.country)) return;
-            const diff = Math.abs(idx - actualMap.get(pick.country));
-            if (diff === 0) points += 12;
-            else if (diff === 1) points += 9;
-            else if (diff === 2) points += 6;
-            else if (diff === 3) points += 3;
-        });
+        const details = getFinalPickDetails(picks || {});
+        const points = details.top10.reduce((sum, detail) => sum + detail.points, 0)
+            + details.winner
+            + details.lastPlace
+            + details.germanyPlace;
         return { points };
     }
 
@@ -1728,15 +1794,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!list) return;
 
         updateLeaderboardTabs(mode);
-        list.innerHTML = 'Loading...';
+        list.innerHTML = 'Wird geladen...';
 
         try {
-            const entries = mode === 'prediction'
-                ? await fetchPredictionLeaderboard()
+            const entries = isPredictionLeaderboardMode(mode)
+                ? preparePredictionLeaderboard(await fetchPredictionLeaderboard(), mode)
                 : await fetchGameLeaderboard(mode);
             renderLeaderboardEntries(list, entries, mode);
         } catch (err) {
-            list.innerHTML = 'Error loading leaderboard.';
+            list.innerHTML = 'Leaderboard konnte nicht geladen werden.';
             console.error(err);
         }
     }
@@ -1754,6 +1820,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     }
 
+    function isPredictionLeaderboardMode(mode) {
+        return mode === 'prediction' || mode === 'prediction-final';
+    }
+
+    function preparePredictionLeaderboard(entries, mode) {
+        const prepared = [...(entries || [])];
+        if (mode === 'prediction-final') {
+            prepared.sort((a, b) => getLeaderboardScore(b, mode) - getLeaderboardScore(a, mode));
+        }
+        return prepared;
+    }
+
     async function fetchGameLeaderboard(mode) {
         const response = await fetch('/api/leaderboard');
         if (!response.ok) throw new Error(await response.text());
@@ -1764,18 +1842,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderLeaderboardEntries(list, entries, mode) {
         list.innerHTML = '';
         if (!entries || entries.length === 0) {
-            list.innerHTML = `<p>No scores yet for ${getLeaderboardModeLabel(mode)}.</p>`;
+            list.innerHTML = `<p>Noch keine Scores für ${getLeaderboardModeLabel(mode)}.</p>`;
             return;
+        }
+
+        if (isPredictionLeaderboardMode(mode)) {
+            list.appendChild(buildPredictionWinnerScreen(entries[0], entries, mode));
         }
 
         entries.forEach((entry, i) => {
             const item = document.createElement('div');
             item.className = 'leaderboard-item';
-            const score = mode === 'prediction'
-                ? entry.score?.total ?? 0
-                : entry.score ?? 0;
-            const meta = mode === 'prediction'
-                ? formatPredictionScoreMeta(entry.score)
+            item.classList.add(`rank-${i + 1}`);
+            const score = getLeaderboardScore(entry, mode);
+            const meta = isPredictionLeaderboardMode(mode)
+                ? formatPredictionScoreMeta(entry.score, mode)
                 : getLeaderboardModeLabel(entry.mode);
             const rank = document.createElement('span');
             rank.className = 'rank';
@@ -1791,48 +1872,135 @@ document.addEventListener('DOMContentLoaded', () => {
             const scoreWrap = document.createElement('span');
             scoreWrap.className = 'score-wrap';
             scoreWrap.append(scoreEl);
-            if (mode === 'prediction') {
+            if (isPredictionLeaderboardMode(mode)) {
                 const picksToggle = document.createElement('button');
                 picksToggle.className = 'leaderboard-picks-toggle';
                 picksToggle.type = 'button';
-                picksToggle.textContent = 'View picks';
+                picksToggle.textContent = 'Tipps ansehen';
                 picksToggle.onclick = () => item.classList.toggle('show-picks');
                 scoreWrap.append(picksToggle);
             }
 
             nameWrap.append(name, metaEl);
             item.append(rank, nameWrap, scoreWrap);
-            if (mode === 'prediction') {
-                item.appendChild(buildPredictionPicksPanel(entry));
+            if (isPredictionLeaderboardMode(mode)) {
+                item.appendChild(buildPredictionPicksPanel(entry, mode));
             }
             list.appendChild(item);
         });
     }
 
-    function buildPredictionPicksPanel(entry) {
-        const panel = document.createElement('div');
-        panel.className = 'prediction-picks-panel';
-        const picks = entry.picks || {};
-        panel.append(
-            buildPredictionPickLine('Semi 1 Q', getPickedCountries(picks.semi1, true)),
-            buildPredictionPickLine('Semi 2 Q', getPickedCountries(picks.semi2, true)),
-            buildPredictionPickLine('Final top 10', getFinalPickedCountries(picks.final)),
-            buildPredictionPickLine('Winner', picks.winner ? [picks.winner] : []),
-            buildPredictionPickLine('Last place', picks.lastPlace ? [picks.lastPlace] : []),
-            buildPredictionPickLine('Germany place', picks.germanyPlace ? [`#${picks.germanyPlace}`] : []),
-            buildPredictionPickLine('Your favorite', picks.favorite ? [picks.favorite] : [])
-        );
+    function getLeaderboardScore(entry, mode) {
+        if (mode === 'prediction') return entry.score?.total ?? 0;
+        if (mode === 'prediction-final') return entry.score?.final?.points ?? 0;
+        return entry.score ?? 0;
+    }
+
+    function buildPredictionWinnerScreen(entry, entries, mode) {
+        const panel = document.createElement('section');
+        panel.className = 'leaderboard-winner-card';
+        const favorite = getFavoriteCrown(entries);
+        panel.innerHTML = `
+            <div class="winner-main">
+                <span class="winner-kicker">${mode === 'prediction-final' ? 'Final-Sieger' : 'Gesamtsieger'}</span>
+                <h3>${escapeHtml(entry?.name || 'Anonymous')}</h3>
+                <p>${getLeaderboardScore(entry, mode)} Punkte</p>
+            </div>
+            <div class="winner-favorite">
+                <span>Unser Favorit</span>
+                <strong>${favorite ? `${countryFlag(favorite.country)} ${escapeHtml(favorite.country)}` : 'Noch offen'}</strong>
+                <small>${favorite ? `${favorite.count} ${favorite.count === 1 ? 'Stimme' : 'Stimmen'}` : 'Noch keine Favoriten-Tipps'}</small>
+            </div>
+        `;
+        panel.appendChild(buildPredictionPicksPanel(entry, mode, true));
         return panel;
     }
 
-    function buildPredictionPickLine(label, countries) {
+    function getFavoriteCrown(entries) {
+        const counts = new Map();
+        (entries || []).forEach(entry => {
+            const favorite = entry?.picks?.favorite;
+            if (!favorite) return;
+            counts.set(favorite, (counts.get(favorite) || 0) + 1);
+        });
+        if (counts.size === 0) return null;
+        const [country, count] = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+        return { country, count };
+    }
+
+    function buildPredictionPicksPanel(entry, mode = 'prediction', expanded = false) {
+        const panel = document.createElement('div');
+        panel.className = `prediction-picks-panel${expanded ? ' always-visible' : ''}`;
+        const picks = entry.picks || {};
+        if (mode === 'prediction') {
+            panel.append(
+                buildPredictionPickLine('Semi 1 Q', getPickedCountries(picks.semi1, true), getSemiPickPoints(picks.semi1, 'semi1')),
+                buildPredictionPickLine('Semi 2 Q', getPickedCountries(picks.semi2, true), getSemiPickPoints(picks.semi2, 'semi2'))
+            );
+        }
+        panel.append(...buildFinalPickLines(entry));
+        panel.append(buildPredictionPickLine('Dein Favorit', picks.favorite ? [picks.favorite] : [], null));
+        return panel;
+    }
+
+    function buildPredictionPickLine(label, countries, points = null) {
         const row = document.createElement('p');
         const strong = document.createElement('strong');
         const span = document.createElement('span');
+        const score = document.createElement('em');
         strong.textContent = label;
-        span.textContent = countries.length ? countries.join(', ') : 'No picks yet';
-        row.append(strong, span);
+        span.textContent = countries.length ? countries.map(formatPickDisplay).join(', ') : 'Noch keine Tipps';
+        if (points !== null) score.textContent = `${points} Pkt.`;
+        row.append(strong, span, score);
         return row;
+    }
+
+    function buildFinalPickLines(entry) {
+        const picks = entry.picks || {};
+        const finalDetails = getFinalPickDetails(picks);
+        const lines = finalDetails.top10.map(detail =>
+            buildPredictionPickLine(`Platz ${detail.rank}`, detail.country ? [detail.country] : [], detail.points)
+        );
+        lines.push(
+            buildPredictionPickLine('Sieger', picks.winner ? [picks.winner] : [], finalDetails.winner),
+            buildPredictionPickLine('Letzter Platz', picks.lastPlace ? [picks.lastPlace] : [], finalDetails.lastPlace),
+            buildPredictionPickLine('Deutschland-Platz', picks.germanyPlace ? [`Platz ${picks.germanyPlace}`] : [], finalDetails.germanyPlace)
+        );
+        return lines;
+    }
+
+    function getSemiPickPoints(board, boardKey) {
+        const results = predictorConfig?.results?.[boardKey] || [];
+        if (!board || !results.length) return 0;
+        const actual = new Set(results.map(result => typeof result === 'string' ? result : result.country));
+        const acts = predictorConfig?.[`${boardKey}Acts`] || [];
+        return acts.reduce((sum, act) => {
+            const pick = board[act.country];
+            return sum + (typeof pick === 'boolean' && pick === actual.has(act.country) ? 1 : 0);
+        }, 0);
+    }
+
+    function getFinalPickDetails(picks) {
+        const actual = predictorConfig?.results?.final || [];
+        const actualCountries = actual.map(result => typeof result === 'string' ? result : result.country);
+        const top10 = Array.from({ length: 10 }, (_, idx) => {
+            const pick = picks.final?.[idx];
+            const country = pick ? (typeof pick === 'string' ? pick : pick.country) : '';
+            return {
+                rank: idx + 1,
+                country,
+                points: country && actualCountries[idx] === country ? 10 : 0
+            };
+        });
+        const winner = picks.winner && actualCountries[0] === picks.winner ? 12 : 0;
+        const lastPlace = picks.lastPlace && actualCountries.at(-1) === picks.lastPlace ? 10 : 0;
+        const actualGermanyPlace = actualCountries.indexOf('Germany') + 1;
+        const germanyPlace = Number(picks.germanyPlace) && actualGermanyPlace === Number(picks.germanyPlace) ? 10 : 0;
+        return { top10, winner, lastPlace, germanyPlace };
+    }
+
+    function formatPickDisplay(value) {
+        return /^Platz\s+\d+$/i.test(String(value)) ? value : `${countryFlag(value)} ${value}`;
     }
 
     function getPickedCountries(board, value) {
@@ -1853,6 +2021,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getLeaderboardModeLabel(mode) {
         const labels = {
             prediction: 'ESC Predictor',
+            'prediction-final': 'Finale',
             timeline: 'Timeline Mode',
             country: 'Country Mode',
             'esc2026-country': 'ESC 2026 Country Quiz'
@@ -1860,8 +2029,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return labels[mode] || mode || 'Unknown mode';
     }
 
-    function formatPredictionScoreMeta(score) {
+    function formatPredictionScoreMeta(score, mode = 'prediction') {
         if (!score) return 'Server scored';
+        if (mode === 'prediction-final') return `Finale ${score.final?.points ?? 0} Punkte`;
         return `Semi 1 ${score.semi1?.points ?? 0}/${score.semi1?.max ?? 0} | Semi 2 ${score.semi2?.points ?? 0}/${score.semi2?.max ?? 0} | Final ${score.final?.points ?? 0}`;
     }
 

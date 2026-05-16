@@ -337,24 +337,24 @@
             <section class="predictor-hero">
                 <div>
                     <p class="hero-kicker">Eurovision 2026</p>
-                    <h2>Predict the ESC Results</h2>
-                    <p id="predictor-status-text">Pick each semifinal act as qualifier or non-qualifier. Final prediction unlocks after semifinals are complete.</p>
+                    <h2>Tippe die ESC Ergebnisse</h2>
+                    <p id="predictor-status-text">Tippe pro Halbfinale, wer weiterkommt. Die Final-Prognose öffnet nach den Semifinals.</p>
                 </div>
                 <div class="hero-badge">✨</div>
             </section>
 
             <section class="predictor-grid">
                 <article class="predictor-card" id="semi1-predictor-card">
-                    <h3>Semifinal 1 Predictor</h3>
-                    <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
+                    <h3>Halbfinale 1 Predictor</h3>
+                    <p class="predictor-sub">Song antippen zum Reinhören, dann Weiter oder Raus wählen</p>
                     <div class="predictor-layout semi-layout">
                         <div id="semi1-pool" class="act-pool semi-act-list"></div>
                     </div>
                 </article>
 
                 <article class="predictor-card" id="semi2-predictor-card">
-                    <h3>Semifinal 2 Predictor</h3>
-                    <p class="predictor-sub">Tap an act to play it, then choose ✓ or ×</p>
+                    <h3>Halbfinale 2 Predictor</h3>
+                    <p class="predictor-sub">Song antippen zum Reinhören, dann Weiter oder Raus wählen</p>
                     <div class="predictor-layout semi-layout">
                         <div id="semi2-pool" class="act-pool semi-act-list"></div>
                     </div>
@@ -362,7 +362,7 @@
 
                 <article class="predictor-card">
                     <h3>Grand Final Predictor</h3>
-                    <p class="predictor-sub" id="final-predictor-sub">Unlocks after semifinals are complete</p>
+                    <p class="predictor-sub" id="final-predictor-sub">Öffnet nach den Semifinals</p>
                     <div id="final-special-picks" class="final-special-picks"></div>
                     <div class="predictor-layout final-layout">
                         <div id="final-pool" class="act-pool"></div>
@@ -371,14 +371,14 @@
             </section>
 
             <section class="predictor-actions">
-                <button id="btn-predictor-save" class="btn-primary" type="button">Save Picks</button>
-                <button id="btn-predictor-load" class="btn-secondary" type="button">Edit Saved Picks</button>
-                <button id="btn-predictor-reset" class="btn-link" type="button">Reset Picks</button>
+                <button id="btn-predictor-save" class="btn-primary" type="button">Tipps speichern</button>
+                <button id="btn-predictor-load" class="btn-secondary" type="button">Gespeicherte Tipps bearbeiten</button>
+                <button id="btn-predictor-reset" class="btn-link" type="button">Tipps zurücksetzen</button>
             </section>
 
             <section class="predictor-scoreboard" id="predictor-scoreboard">
-                <h3>Prediction Score</h3>
-                <p id="predictor-score-total">No score yet.</p>
+                <h3>Punktestand</h3>
+                <p id="predictor-score-total">Noch kein Score.</p>
                 <p id="predictor-score-breakdown" class="predictor-sub"></p>
             </section>
         </div>
@@ -401,6 +401,7 @@
                 <h2>🏆 Leaderboard</h2>
                 <div class="leaderboard-tabs" id="leaderboard-tabs" aria-label="Leaderboard modes">
                     <button class="leaderboard-tab active" data-mode="prediction" type="button">Predictor</button>
+                    <button class="leaderboard-tab" data-mode="prediction-final" type="button">Finale</button>
                     <button class="leaderboard-tab" data-mode="timeline" type="button">Timeline</button>
                     <button class="leaderboard-tab" data-mode="country" type="button">Country</button>
                     <button class="leaderboard-tab" data-mode="esc2026-country" type="button">ESC 2026</button>
