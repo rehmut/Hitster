@@ -33,7 +33,6 @@ def test_prediction_scores_keep_semifinal_and_final_separate():
         "semi1": {"A": True, "B": False},
         "semi2": {"C": False, "D": True},
         "final": [{"country": "A"}, {"country": "D"}],
-        "winner": "A",
         "lastPlace": "Germany",
         "germanyPlace": 3,
     }
@@ -41,8 +40,8 @@ def test_prediction_scores_keep_semifinal_and_final_separate():
     score = score_prediction(picks, config)
 
     assert score["semifinal"] == 4
-    assert score["final"]["points"] == 52
-    assert score["total"] == 56
+    assert score["final"]["points"] == 40
+    assert score["total"] == 44
 
 def test_multiplayer_flow():
     host = "TesterHost"

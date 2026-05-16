@@ -118,7 +118,7 @@ def _country_name(entry):
 
 def _score_final(picks, actual_results):
     if not actual_results:
-        return {"points": 0, "top10": 0, "winner": 0, "lastPlace": 0, "germanyPlace": 0, "available": False}
+        return {"points": 0, "top10": 0, "lastPlace": 0, "germanyPlace": 0, "available": False}
 
     actual_countries = [_country_name(entry) for entry in actual_results]
     top10_points = 0
@@ -129,7 +129,6 @@ def _score_final(picks, actual_results):
         if idx < len(actual_countries) and country == actual_countries[idx]:
             top10_points += 10
 
-    winner_points = 12 if picks.get("winner") and picks.get("winner") == actual_countries[0] else 0
     last_points = 10 if picks.get("lastPlace") and picks.get("lastPlace") == actual_countries[-1] else 0
     germany_place = picks.get("germanyPlace")
     actual_germany_place = actual_countries.index("Germany") + 1 if "Germany" in actual_countries else None
@@ -138,11 +137,10 @@ def _score_final(picks, actual_results):
     except (TypeError, ValueError):
         germany_pick = None
     germany_points = 10 if germany_pick and actual_germany_place and germany_pick == actual_germany_place else 0
-    total = top10_points + winner_points + last_points + germany_points
+    total = top10_points + last_points + germany_points
     return {
         "points": total,
         "top10": top10_points,
-        "winner": winner_points,
         "lastPlace": last_points,
         "germanyPlace": germany_points,
         "available": True,
@@ -215,7 +213,6 @@ def normalize_prediction_submission(data):
     semi1 = picks.get("semi1")
     semi2 = picks.get("semi2")
     final = picks.get("final")
-    winner = picks.get("winner")
     last_place = picks.get("lastPlace")
     germany_place = picks.get("germanyPlace")
     favorite = picks.get("favorite")
@@ -233,10 +230,6 @@ def normalize_prediction_submission(data):
     if final is not None:
         _validate_voting_open(config, "final")
         normalized_picks["final"] = _clean_final_picks(final)
-    if winner:
-        _validate_voting_open(config, "final")
-        _validate_final_country(config, "winner", winner)
-        normalized_picks["winner"] = str(winner)
     if last_place:
         _validate_voting_open(config, "final")
         _validate_final_country(config, "lastPlace", last_place)
@@ -273,7 +266,7 @@ def _merge_prediction_picks(existing, incoming):
             merged[board] = incoming[board]
     if "final" in incoming:
         merged["final"] = incoming["final"]
-    for field in ("winner", "lastPlace", "germanyPlace", "favorite"):
+    for field in ("lastPlace", "germanyPlace", "favorite"):
         if field in incoming:
             merged[field] = incoming[field]
     return merged

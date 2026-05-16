@@ -912,7 +912,6 @@ document.addEventListener('DOMContentLoaded', () => {
             semi1: normalizeSemiPicks(saved?.semi1, predictorConfig.semi1Acts || []),
             semi2: normalizeSemiPicks(saved?.semi2, predictorConfig.semi2Acts || []),
             final: Array.from({ length: 10 }, (_, i) => saved?.final?.[i] || null),
-            winner: saved?.winner || '',
             lastPlace: saved?.lastPlace || '',
             germanyPlace: saved?.germanyPlace || '',
             favorite: saved?.favorite || '',
@@ -930,7 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadBtn) loadBtn.onclick = loadSubmittedPredictorPicks;
         if (resetBtn) {
             resetBtn.onclick = () => {
-                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), winner: '', lastPlace: '', germanyPlace: '', favorite: '', locks: { semi1: false, semi2: false } };
+                predictorState = { semi1: {}, semi2: {}, final: Array(10).fill(null), lastPlace: '', germanyPlace: '', favorite: '', locks: { semi1: false, semi2: false } };
                 savePredictorPicks();
                 renderPredictor();
             };
@@ -979,7 +978,6 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.semi1 = semi1;
         predictorState.semi2 = semi2;
         predictorState.final = normalizeFinalPicks(savedPicks.final, predictorConfig.qualifiedForFinal || []);
-        predictorState.winner = savedPicks.winner || '';
         predictorState.lastPlace = savedPicks.lastPlace || '';
         predictorState.germanyPlace = savedPicks.germanyPlace || '';
         predictorState.favorite = savedPicks.favorite || '';
@@ -1108,9 +1106,8 @@ document.addEventListener('DOMContentLoaded', () => {
             picks.semi2 = predictorState.semi2 || {};
         }
         const finalPicks = (predictorState.final || []).filter(Boolean);
-        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.winner || predictorState.lastPlace || predictorState.germanyPlace || predictorState.favorite)) {
+        if (isPredictorBoardOpen('final') && (finalPicks.length > 0 || predictorState.lastPlace || predictorState.germanyPlace || predictorState.favorite)) {
             picks.final = predictorState.final || [];
-            if (predictorState.winner) picks.winner = predictorState.winner;
             if (predictorState.lastPlace) picks.lastPlace = predictorState.lastPlace;
             if (predictorState.germanyPlace) picks.germanyPlace = predictorState.germanyPlace;
             if (predictorState.favorite) picks.favorite = predictorState.favorite;
@@ -1143,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalSub = document.getElementById('final-predictor-sub');
         if (finalSub) {
             finalSub.textContent = finalUnlocked
-                ? 'Top 10, Sieger, letzter Platz, Deutschland-Platz und dein Favorit'
+                ? 'Top 10, letzter Platz, Deutschland-Platz und dein Favorit'
                 : 'Wird freigeschaltet, sobald qualifiedForFinal in prediction-2026.json gefüllt ist';
         }
         const statusText = document.getElementById('predictor-status-text');
@@ -1182,12 +1179,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="final-dropdown-group">
                 <h4>Bonustipps</h4>
                 <label>
-                    <span>Siegersong</span>
-                    <select id="final-winner-select" ${enabled ? '' : 'disabled'}>
-                        ${buildCountryOptions(acts, predictorState.winner, 'Sieger wählen')}
-                    </select>
-                </label>
-                <label>
                     <span>Letzter Platz</span>
                     <select id="final-last-select" ${enabled ? '' : 'disabled'}>
                         ${buildCountryOptions(acts, predictorState.lastPlace, 'Letzten Platz wählen')}
@@ -1213,11 +1204,9 @@ document.addEventListener('DOMContentLoaded', () => {
         container.querySelectorAll('.final-top-select').forEach(select => {
             select.onchange = () => setFinalTopPick(Number(select.dataset.rankIndex), select.value, acts);
         });
-        const winnerSelect = document.getElementById('final-winner-select');
         const lastSelect = document.getElementById('final-last-select');
         const germanySelect = document.getElementById('germany-place-select');
         const favoriteSelect = document.getElementById('favorite-select');
-        if (winnerSelect) winnerSelect.onchange = () => setFinalSpecialPick('winner', winnerSelect.value);
         if (lastSelect) lastSelect.onchange = () => setFinalSpecialPick('lastPlace', lastSelect.value);
         if (germanySelect) germanySelect.onchange = () => setFinalSpecialPick('germanyPlace', germanySelect.value);
         if (favoriteSelect) favoriteSelect.onchange = () => setFinalSpecialPick('favorite', favoriteSelect.value);
@@ -1256,41 +1245,6 @@ document.addEventListener('DOMContentLoaded', () => {
         predictorState.final[rankIndex] = acts.find(act => act.country === country) || null;
         savePredictorPicks(false);
         renderPredictor();
-    }
-
-    function renderFinalSpecialPicksLegacy(acts, enabled) {
-        const container = document.getElementById('final-special-picks');
-        if (!container) return;
-        if (!acts.length) {
-            container.innerHTML = '';
-            return;
-        }
-        container.innerHTML = `
-            <label>
-                <span>Winner song</span>
-                <select id="final-winner-select" ${enabled ? '' : 'disabled'}>
-                    ${buildCountryOptions(acts, predictorState.winner, 'Choose winner')}
-                </select>
-            </label>
-            <label>
-                <span>Last place</span>
-                <select id="final-last-select" ${enabled ? '' : 'disabled'}>
-                    ${buildCountryOptions(acts, predictorState.lastPlace, 'Choose last place')}
-                </select>
-            </label>
-            <label>
-                <span>Germany place</span>
-                <select id="germany-place-select" ${enabled ? '' : 'disabled'}>
-                    ${buildPlaceOptions(acts.length, predictorState.germanyPlace)}
-                </select>
-            </label>
-        `;
-        const winnerSelect = document.getElementById('final-winner-select');
-        const lastSelect = document.getElementById('final-last-select');
-        const germanySelect = document.getElementById('germany-place-select');
-        if (winnerSelect) winnerSelect.onchange = () => setFinalSpecialPick('winner', winnerSelect.value);
-        if (lastSelect) lastSelect.onchange = () => setFinalSpecialPick('lastPlace', lastSelect.value);
-        if (germanySelect) germanySelect.onchange = () => setFinalSpecialPick('germanyPlace', germanySelect.value);
     }
 
     function buildCountryOptions(acts, selectedCountry, placeholder) {
@@ -1759,7 +1713,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const details = getFinalPickDetails(picks || {});
         const points = details.top10.reduce((sum, detail) => sum + detail.points, 0)
-            + details.winner
             + details.lastPlace
             + details.germanyPlace;
         return { points };
@@ -1968,7 +1921,6 @@ document.addEventListener('DOMContentLoaded', () => {
             buildPredictionPickLine(`Platz ${detail.rank}`, detail.country ? [detail.country] : [], detail.points)
         );
         lines.push(
-            buildPredictionPickLine('Sieger', picks.winner ? [picks.winner] : [], finalDetails.winner),
             buildPredictionPickLine('Letzter Platz', picks.lastPlace ? [picks.lastPlace] : [], finalDetails.lastPlace),
             buildPredictionPickLine('Deutschland-Platz', picks.germanyPlace ? [`Platz ${picks.germanyPlace}`] : [], finalDetails.germanyPlace)
         );
@@ -1998,11 +1950,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 points: country && actualCountries[idx] === country ? 10 : 0
             };
         });
-        const winner = picks.winner && actualCountries[0] === picks.winner ? 12 : 0;
         const lastPlace = picks.lastPlace && actualCountries.at(-1) === picks.lastPlace ? 10 : 0;
         const actualGermanyPlace = actualCountries.indexOf('Germany') + 1;
         const germanyPlace = Number(picks.germanyPlace) && actualGermanyPlace === Number(picks.germanyPlace) ? 10 : 0;
-        return { top10, winner, lastPlace, germanyPlace };
+        return { top10, lastPlace, germanyPlace };
     }
 
     function formatPickDisplay(value) {
